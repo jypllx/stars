@@ -1,9 +1,11 @@
-from flask import Flask
+from flask import Flask, render_template, request, redirect
 import psycopg2
 import json
 import datetime
-app = Flask(__name__)
 
+app = Flask(__name__)
+login_manager = LoginManager()
+login_manager.init_app(app)
 
 enco = lambda obj: (
     obj.isoformat()
@@ -15,9 +17,20 @@ enco = lambda obj: (
 conn = psycopg2.connect("dbname=%s user=%s" % ('spaces','spaces'))
 
 
-@app.route('/api')
+@app.route('/')
 def hello_world():
     return 'Hello, World!'
+
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+@app.route('/signin', methods=['POST'])
+def sign_in():
+    user = request.form['login']
+    pwd  = request.form['password']
+    print("is %s %s" % (user, pwd))
+    return redirect('/api/channels')
 
 @app.route('/api/channels')
 def get_channels():
