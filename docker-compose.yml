@@ -1,17 +1,15 @@
 web:
-  restart: always
   build: ./web
   expose:
     - "8000"
   links:
     - postgres:postgres
   volumes:
-    - /usr/src/app/static
+    - ./web:/usr/src/app
   env_file: .env
-  command: /usr/local/bin/gunicorn -w 2 -b :8000 app:app
+  command: /usr/local/bin/gunicorn -w 2 -b :8000 app:app  --config /usr/src/app/gunicorn.py
 
 nginx:
-  restart: always
   build: ./nginx/
   ports:
     - "80:80"
@@ -23,14 +21,12 @@ nginx:
     - web:web
 
 data:
-  restart: always
   image: postgres:latest
   volumes:
-    - /var/lib/postgresql
+    - /var/lib/postgres
 #  command: true
 
 postgres:
-  restart: always
   image: postgres:latest
   volumes_from:
     - data

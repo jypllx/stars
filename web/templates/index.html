@@ -2,26 +2,35 @@
 
 {% block content %}
 
-<div class="text-center">
-  <h1>Welcome!</h1>
-</div>
-
-<br>
-
-<form action="/" method="POST">
-  <div class="form-group">
-    <input name="text" class="form-control input-lg" type="text" placeholder="Enter a message" required>
-  </div>
-  <input type="submit" class="btn btn-primary btn-lg btn-block" value="Submit">
-</form>
-
-<br>
-<hr>
-
 <div>
-  {% for post in posts %}
-    <h4 class="well"><strong>{{post.text}}</strong> - <em>{{post.date_posted.strftime('%Y-%m-%d')}}</em></h4>
-  {% endfor %}
+    <form class="form-inline" method="post">
+      <div class="form-group">
+        <input type="text" class="form-control" name="search" placeholder="Rechercher..." value="{{search}}">
+        <button type="submit" class="btn btn-default">Submit</button>
+    </div>
+</form>
+</div>
+<div>
+    <table>
+        {% for channel in channels %}
+        <div class="well">
+            <div class="row">
+                <div class="col-xs-4">
+                    <img src="{{channel.img_url}}" class="img-thumbnail">
+                </div>
+                <div class="col-xs-8">
+                   <h4>
+                        <strong>{{channel.name}}</strong> - <em>{{channel.genre}}</em>
+                    </h4>
+                    <p>{{channel.description}}</p>
+                    <div>
+                        <a href="channels/{{channel.id}}">Voir</a>
+                    </div>    
+                </div>
+            </div>
+        </div>            
+        {% endfor %}
+    </table>
 </div>
 
 {% endblock %}

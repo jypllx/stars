@@ -1,0 +1,36 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+<div>
+    <div class="well">
+        <div class="row">
+            <div class="col-xs-4">
+                <img src="{{channel.img_url}}" class="img-thumbnail">
+            </div>
+            <div class="col-xs-8">
+             <h4>
+                <strong>{{channel.name}}</strong> - <em>{{channel.genre}}</em>
+            </h4>
+            <p>{{channel.description}}</p>
+            <div>
+                <a href="channels/{{channel.id}}">Voir</a>
+            </div>    
+        </div>
+    </div>
+</div>
+<table>
+    {% for item in items %}
+    <div class="item">
+        <h4>{{item.name}}</h4>
+        <p>{{item.description}}</p>
+        <audio controls>
+            <source src="{{item.audio_url}}" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+        {% endfor %}
+    </table>
+</div>
+
+{% endblock %}

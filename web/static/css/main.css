@@ -3,3 +3,16 @@
 .container {
   max-width: 500px;
 }
+
+.item {
+    padding: 20px;
+    margin: 20px 0;
+    border: 1px solid #eee;
+    border-left-width: 5px;
+    border-left-color:#4C58E8;
+    border-radius: 3px;
+}
+
+.item h4 {
+    color: #4C58E8;
+}
