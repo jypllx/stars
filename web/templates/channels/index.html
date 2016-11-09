@@ -2,14 +2,16 @@
 
 {% block content %}
 
+<h1>Podcasts</h1>
 <div>
     <form class="form-inline" method="post">
-      <div class="form-group">
-        <input type="text" class="form-control" name="search" placeholder="Rechercher..." value="{{search}}">
-        <button type="submit" class="btn btn-default">Submit</button>
-    </div>
-</form>
+        <div class="form-group">
+            <input type="text" class="form-control" name="search" placeholder="Rechercher..." value="{{search}}">
+            <button type="submit" class="btn btn-default">Submit</button>
+        </div>
+    </form>
 </div>
+<br/>
 <div>
     <table>
         {% for channel in channels %}

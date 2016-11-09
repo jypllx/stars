@@ -9,6 +9,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <!-- styles -->
     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
     {% block css %}{% endblock %}
   </head>
@@ -19,12 +20,12 @@
         <ul class="nav navbar-nav">
           <li {% if request.path == url_for('channels_index') %} class="active" {% endif %}><a href="{{url_for('channels_index')}}">Podcasts</a></li>
           <li {% if request.path == url_for('playlists_index') %} class="active" {% endif %}><a href="{{url_for('playlists_index')}}">Playlists</a></li>
+          <li {% if request.path == url_for('items_index') %} class="active" {% endif %}><a href="{{url_for('items_index')}}">Items</a></li>
         </ul>
       </div>
     </div>
   </nav>
     <div class="container" id="main">
-      <br>
       <!-- child template -->
       {% block content %}{% endblock %}
     </div>

@@ -1,0 +1,40 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+<h1>Episodes</h1>
+<div>
+    <form class="form-inline" method="post">
+        <div class="form-group">
+            <input type="text" class="form-control" name="search" placeholder="Rechercher..." value="{{search}}">
+            <button type="submit" class="btn btn-default">Submit</button>
+        </div>
+    </form>
+</div>
+<br/>
+<div>
+    <table>
+        {% for item in items %}
+        <div class="well">
+            <h4>{{item.name}}</h4>
+            <div>
+                <i class="fa fa-clock-o fa-2x"></i>&nbsp;&nbsp;{{item.cat_name}}
+            </div>
+            <p>{{item.description}}</p>
+            <audio controls>
+                <source src="{{item.audio_url}}" type="audio/mpeg">
+                    Your browser does not support the audio element.
+            </audio>
+
+            <div class="dropdown">
+                <button class="btn" data-toggle="dropdown" ><i class="fa fa-plus"></i> Add to playlist</span></button>
+                <ul class="dropdown-menu">
+                    A FAIRE !!
+                </ul>
+            </div>
+        </div>
+        {% endfor %}
+    </table>
+</div>
+
+{% endblock %}

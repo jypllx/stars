@@ -36,7 +36,8 @@ class Item(db.Model):
     name            = db.Column(db.String())
     description     = db.Column(db.String())
     duration        = db.Column(db.Integer)
-    time_cat        = db.Column(db.Integer)
+    cat_time        = db.Column(db.Integer)
+    cat_name        = db.Column(db.String())
     audio_url       = db.Column(db.String())
     published       = db.Column(db.DateTime)
 
@@ -46,7 +47,7 @@ class Item(db.Model):
         self.channel_id     = channel_id
         self.audio_url      = audio_url
         self.published      = published
-        self.duration, self.time_cat = PodTime().getDurationCat(duration_str)
+        self.duration, self.cat_time, self.cat_name = PodTime().getDurationCat(duration_str)
 
     def __repr__(self):
         return '<id {}>'.format(self.id)

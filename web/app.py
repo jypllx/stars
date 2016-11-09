@@ -5,6 +5,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 # from flask.ext.openid import OpenID
 from config import BaseConfig
 import os
+import re
 
 app = Flask(__name__)
 app.config.from_object(BaseConfig)
@@ -30,31 +31,62 @@ def home():
 #@login_required
 def channels_index():
     search=''
+    q = Channel.query
     if request.method == 'POST':
         search=request.form['search']
-        channels=Channel.query.filter(Channel.name.ilike('%'+search+'%')).all()
-    else:
-        channels=db.session.query(Channel).all()
-    return render_template('index.html', channels=channels, search=search)
+        q=q.filter(Channel.name.ilike('%'+search+'%'))
+    channels = q.limit(25).all()
+    return render_template('channels/index.html', channels=channels, search=search)
     
 
 @app.route('/channels/<int:id>')
 def get_channel(id):
     channel=db.session.query(Channel).get(id)
-    items=Item.query.filter_by(channel_id=id).all()
-    return render_template('channel.html', channel=channel, items=items)
+    items=Item.query.filter_by(channel_id=id).limit(25).all()
+    return render_template('channels/view.html', channel=channel, items=items)
 
 
 @app.route('/playlists/', methods=['POST', 'GET'])
 def playlists_index():
     search=''
+    q=Playlist.query
     if request.method == 'POST':
         playlists=[]
-        # playlists=Playlist.query.filter(Playlist.name.ilike('%'+request.form['search']+'%')).all()
-        # search=request.form['search']
+        q.filter(Playlist.name.ilike('%'+request.form['search']+'%'))
+        search=request.form['search']
+    
+    playlists=q.all()
+    return render_template('playlists/index.html', playlists=playlists, search=search)
+
+
+@app.route('/playlists/add', methods=['POST'])
+def playlists_add():
+    p = Playlist(request.form['name'], request.form['description'])
+    db.session.add(p)
+    db.session.commit()
+    return redirect(url_for('playlists_index'))
+
+@app.route('/items/', methods=['POST', 'GET'])
+def items_index():
+    p = re.compile('(\d*)([mh])')
+    search=''
+    if request.method == 'POST':
+        search = request.form['search']
+        q = Item.query
+
+        elts = search.split(' ')
+        for elt in elts:
+            m = p.match(elt)
+            if m is not None:
+                if m.group()[1] == 'm':
+                    q = q.filter(Item.cat_time == int(m.group()[0])*60)
+            else:
+                q = q.filter(Item.name.ilike('%'+elt+"%"))
     else:
-        playlists=db.session.query(Playlist).all()
-    return render_template('index.html', playlists=playlists, search=search)
+        q=Item.query
+
+    items = q.limit(25).all()
+    return render_template('items/index.html', items=items, search=search)
 
 
 # @app.route('/playlists/add', methods=['POST', 'GET'])

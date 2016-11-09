@@ -2,10 +2,11 @@
 
 .container {
   max-width: 500px;
+
 }
 
-body {
-    padding-top:70px;
+#main {
+    padding-top:50px;
 }
 
 .item {
