@@ -3,7 +3,6 @@
 
 from parser.podcastparser import PodcastParser
 import json
-from config import BaseConfig
 
 def parse_json(pp, feed):
   with open(feed) as fd:
@@ -15,7 +14,7 @@ def parse_json(pp, feed):
 
 if __name__ == "__main__":
 
-  pp = PodcastParser(BaseConfig)
+  pp = PodcastParser()
 
   parse_json(pp, './spiders/france_inter.feeds.json')
   parse_json(pp, './spiders/rmc.feeds.json')

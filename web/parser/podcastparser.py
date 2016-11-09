@@ -3,18 +3,11 @@
 
 import xmltodict
 import urllib
-import psycopg2
 import os
+from app import db
+from models import *
 
 class PodcastParser:
- 
-  def __init__(self, config):
-
-    self.conn = psycopg2.connect("host=%s dbname=%s user=%s port=%s" % (
-      config.DB_SERVICE, config.DB_NAME, config.DB_USER, config.DB_PORT))
-
-  def __del__(self):
-    self.conn.close()
 
   def parse(self, url):
     """Parses an XML feed and stores it to the db"""
@@ -26,42 +19,32 @@ class PodcastParser:
     with open(tmp_file) as fd:
       rss = xmltodict.parse(fd.read())['rss']
 
-    channel_id = self.getChannel(rss['channel'], url)
-    if channel_id == None:
-      channel_id = self.saveChannel(rss['channel'], url)
+    channel = self.getChannel(rss['channel'], url)
+    if channel is None:
+      channel = self.saveChannel(rss['channel'], url)
       
-    print("Channel id : %s %s" % (channel_id, rss['channel']['title']))
+    print("Channel id : %s %s" % (channel.id, rss['channel']['title']))
 
     if 'item' not in rss['channel']:
       return
     elif not isinstance(rss['channel']['item'], (list, tuple)):
         rss['channel']['item'] = [rss['channel']['item']]
     for item in rss['channel']['item']:
-      if self.existsItem(channel_id, item):
+      if self.existsItem(channel.id, item):
         pass
       else:
-        self.saveItem(channel_id, item)
+        self.saveItem(channel.id, item)
 
     os.remove(tmp_file)
 
+
   def getChannel(self, channel, url):
-    cur = self.conn.cursor()
-    cur.execute("SELECT id FROM channels WHERE name = %s AND url = %s;", (channel['title'], url))
-    res = cur.fetchall()
-    self.conn.commit()
-    cur.close
-    if (len(res) > 1):
-      print('More than one podcast for %s, %s' % (channel['title'], url))
-      raise Exception('Merde!!')
-    elif (len(res) == 1):
-      return res[0][0]
-    else:
-      return None
+    ch = Channel.query.filter(Channel.name.like(channel['title']), 
+      Channel.url.like(url)).first()
+    return ch
+
 
   def saveChannel(self, channel, url):
-    cur = self.conn.cursor()
-    sql = "INSERT INTO channels (url, name, genre, language, link, description, img_url) VALUES (%s, %s, %s, %s, %s, %s, %s);"
-
     if 'itunes:category' not in channel and 'category' in channel:
       channel['itunes:category'] = {}
       channel['itunes:category']['@text'] = channel['category']
@@ -69,49 +52,28 @@ class PodcastParser:
     if isinstance(channel['itunes:category'], (list, tuple)):
       channel['itunes:category'] = channel['itunes:category'][0]
 
-    cur.execute(sql, (url, 
-      channel['title'], 
-      channel['itunes:category']['@text'], 
-      channel['language'], 
-      channel['link'],
+    ch=Channel(channel['title'],
       channel['description'],
-      channel['itunes:image']['@href']))
-    self.conn.commit()
-    cur.execute("SELECT id FROM channels WHERE name = %s AND url = %s;", (channel['title'], url))
-    res = cur.fetchall()
+      channel['itunes:category']['@text'],
+      channel['language'],
+      url,
+      channel['link'],
+      channel['itunes:image']['@href'])
+    db.session.add(ch)
+    db.session.commit()
      
-    channel_id = res[0][0]
-    cur.close()
-    return channel_id
+    return ch
+
 
   def existsItem(self, channel_id, item):
-    cur = self.conn.cursor()
-    query = "SELECT id FROM items WHERE channel_id=%s AND audio_url=%s"
-    cur.execute(query, (channel_id, item['enclosure']['@url']))
-    res = cur.fetchall()
-    self.conn.commit()
-    cur.close
-    if (len(res) > 1):
-      print('More than one podcast for %s, %s' % (channel_id, item.title))
-      raise Exception('Merde!!')
-    elif (len(res) == 1):
+    it = Item.query.filter(Item.channel_id==channel_id, Item.audio_url.like(item['enclosure']['@url'])).first()
+    if it is not None:
       return True
     else:
       return False
+
     
   def saveItem(self, channel_id, item):
-    cur = self.conn.cursor()
-    sql="INSERT INTO items (channel_id, name, description, duration, audio_url, published) VALUES (%s, %s, %s, %s, %s, %s);"
-    cur.execute(sql, (channel_id, 
-                      item['title'], 
-                      item['description'],
-                      item['itunes:duration'], 
-                      item['enclosure']['@url'],
-                      item['pubDate']))
-    self.conn.commit()
-    cur.close()
-
-if __name__ == "__main__":
-  p = PodcastParser('spaces', 'spaces')
-  # p.parse('http://feeds.serialpodcast.org/serialpodcast')
-  p.parse('http://radiofrance-podcast.net/podcast09/rss_11739.xml')
+    it = Item(item['title'], item['description'], channel_id, item['itunes:duration'], item['enclosure']['@url'], item['pubDate'])
+    db.session.add(it)
+    db.session.commit()

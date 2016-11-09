@@ -1,4 +1,5 @@
 from app import db
+from podtime import PodTime
 
 class Channel(db.Model):
     __tablename__ = 'channels'
@@ -13,9 +14,14 @@ class Channel(db.Model):
     link            = db.Column(db.String())
     img_url         = db.Column(db.String())
 
-    def __init__(self, name, description):
+    def __init__(self, name, description, genre, language, url, link, img_url):
         self.name = name
         self.description = description
+        self.genre = genre
+        self.language = language
+        self.url = url
+        self.link = link
+        self.img_url = img_url
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
@@ -27,28 +33,33 @@ class Item(db.Model):
     id              = db.Column(db.Integer, primary_key=True)
     created         = db.Column(db.DateTime)
     channel_id      = db.Column(db.Integer)
-    item_id         = db.Column(db.String())
     name            = db.Column(db.String())
     description     = db.Column(db.String())
-    duration        = db.Column(db.String())
+    duration        = db.Column(db.Integer)
+    time_cat        = db.Column(db.Integer)
     audio_url       = db.Column(db.String())
     published       = db.Column(db.DateTime)
 
-    def __init__(self, name, description):
-        self.name = name
-        self.description = description
+    def __init__(self, name, description, channel_id, duration_str, audio_url, published):
+        self.name           = name
+        self.description    = description
+        self.channel_id     = channel_id
+        self.audio_url      = audio_url
+        self.published      = published
+        self.duration, self.time_cat = PodTime().getDurationCat(duration_str)
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
 
 
-class Playlists(db.Model):
+class Playlist(db.Model):
     __tablename__ = 'playlists'
 
     id              = db.Column(db.Integer, primary_key=True)
     created         = db.Column(db.DateTime)
     name            = db.Column(db.String())
     description     = db.Column(db.String())
+
 
     def __init__(self, name, description):
         self.name = name
