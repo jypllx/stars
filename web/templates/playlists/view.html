@@ -1,0 +1,30 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+<h1>Playlist</h1>
+<div>
+    <div class="well">
+        <div class="row">
+            <div>
+             <h4>
+                <strong>{{playlist.name}}</strong>
+            </h4>
+            <p>{{playlist.description}}</p>
+        </div>
+    </div>
+</div>
+<table>
+    {% for item in playlist.items %}
+    <div class="item">
+        <h4>{{item.name}}</h4>
+        <p>{{item.description}}</p>
+        <audio controls>
+            <source src="{{item.audio_url}}" type="audio/mpeg">
+                Your browser does not support the audio element.
+        </audio>
+    </div>
+    {% endfor %}
+</table>
+
+{% endblock %}

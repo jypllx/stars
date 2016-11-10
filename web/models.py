@@ -27,6 +27,14 @@ class Channel(db.Model):
         return '<id {}>'.format(self.id)
 
 
+r_playlists_items = db.Table('rel_playlists_items',
+    db.Column('playlist_id',    db.Integer, db.ForeignKey('playlists.id')),
+    db.Column('item_id',        db.Integer, db.ForeignKey('items.id')),
+    db.Column('rank',           db.Integer),
+    db.UniqueConstraint('playlist_id', 'item_id', name='_playlist_item_uc')
+)
+
+
 class Item(db.Model):
     __tablename__ = 'items'
 
@@ -40,6 +48,7 @@ class Item(db.Model):
     cat_name        = db.Column(db.String())
     audio_url       = db.Column(db.String())
     published       = db.Column(db.DateTime)
+    toto = db.Column(db.String())
 
     def __init__(self, name, description, channel_id, duration_str, audio_url, published):
         self.name           = name
@@ -60,7 +69,8 @@ class Playlist(db.Model):
     created         = db.Column(db.DateTime)
     name            = db.Column(db.String())
     description     = db.Column(db.String())
-
+    items           = db.relationship('Item', secondary=r_playlists_items,
+                            backref=db.backref('playlists'))
 
     def __init__(self, name, description):
         self.name = name

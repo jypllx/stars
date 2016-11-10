@@ -15,7 +15,7 @@
 <div>
     <table>
         {% for channel in channels %}
-        <div class="well">
+        <div class="well" id="{{channel.id}}">
             <div class="row">
                 <div class="col-xs-4">
                     <img src="{{channel.img_url}}" class="img-thumbnail">

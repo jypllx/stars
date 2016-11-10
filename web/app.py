@@ -35,7 +35,8 @@ def channels_index():
     if request.method == 'POST':
         search=request.form['search']
         q=q.filter(Channel.name.ilike('%'+search+'%'))
-    channels = q.limit(25).all()
+    channels = q.all()
+    #limit(25).
     return render_template('channels/index.html', channels=channels, search=search)
     
 
@@ -59,12 +60,19 @@ def playlists_index():
     return render_template('playlists/index.html', playlists=playlists, search=search)
 
 
+@app.route('/playlists/<int:id>')
+def get_playlist(id):
+    playlist=db.session.query(Playlist).get(id)
+    return render_template('playlists/view.html', playlist=playlist)
+
+
 @app.route('/playlists/add', methods=['POST'])
 def playlists_add():
     p = Playlist(request.form['name'], request.form['description'])
     db.session.add(p)
     db.session.commit()
     return redirect(url_for('playlists_index'))
+
 
 @app.route('/items/', methods=['POST', 'GET'])
 def items_index():
@@ -86,12 +94,18 @@ def items_index():
         q=Item.query
 
     items = q.limit(25).all()
-    return render_template('items/index.html', items=items, search=search)
+    playlists = Playlist.query.all()
+    return render_template('items/index.html', items=items, search=search, playlists=playlists)
 
+@app.route('/items/add_to_playlist', methods=['POST'])
+def add_item_to_playlist():
+    i = db.session.query(Item).get(request.form['item_id'])
+    p = db.session.query(Playlist).get(request.form['playlist_id'])
+    p.items.append(i)
+    db.session.add(p)
+    db.session.commit()
 
-# @app.route('/playlists/add', methods=['POST', 'GET'])
-# def playlists_add():
-#     pass
+    return redirect(url_for('playlists_index'))
 
 
 # @app.route('/login', methods=['GET', 'POST'])

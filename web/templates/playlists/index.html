@@ -19,13 +19,13 @@
 <div>
     <table>
         {% for playlist in playlists %}
-        <div class="well">
+        <div class="well" id="{{playlist.id}}">
             <h4>
              <strong>{{playlist.name}}</strong>
          </h4>
          <p>{{playlist.description}}</p>
          <div>
-            <a href="{{ url_for('playlists_index')}} {{playlist.id}}">Voir</a>
+            <a href="{{url_for('playlists_index')}}{{playlist.id}}">Voir</a>
         </div>
     </div>
     {% endfor %}

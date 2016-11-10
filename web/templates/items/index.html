@@ -15,7 +15,7 @@
 <div>
     <table>
         {% for item in items %}
-        <div class="well">
+        <div class="well" id="{{item.id}}">
             <h4>{{item.name}}</h4>
             <div>
                 <i class="fa fa-clock-o fa-2x"></i>&nbsp;&nbsp;{{item.cat_name}}
@@ -27,14 +27,31 @@
             </audio>
 
             <div class="dropdown">
-                <button class="btn" data-toggle="dropdown" ><i class="fa fa-plus"></i> Add to playlist</span></button>
+                <button class="btn" data-toggle="dropdown"><i class="fa fa-plus"></i>&nbsp;Add to playlist</span></button>
                 <ul class="dropdown-menu">
-                    A FAIRE !!
+                {% for playlist in playlists %}
+                    <li><a class="add_to_playlist" id="{{playlist.id}}.{{item.id}}" href="#">{{playlist.name}}</a></li>
+                {% endfor %}
                 </ul>
             </div>
         </div>
         {% endfor %}
     </table>
 </div>
-
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".add_to_playlist").click(function(){
+            var ids = $(this).attr('id').split(".")
+            console.log(ids)
+            console.log('{{ url_for('add_item_to_playlist') }}')
+            $.post('{{ url_for('add_item_to_playlist') }}',
+                {
+                    playlist_id:ids[0], item_id:ids[1]
+                }
+            );
+        });
+    });
+</script>
 {% endblock %}
