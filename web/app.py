@@ -1,11 +1,17 @@
 from flask import Flask, url_for, redirect
 from flask import request, render_template
 from flask.ext.sqlalchemy import SQLAlchemy
+
+import logging
+from logging.handlers import RotatingFileHandler
+
 # from flask.ext.login import LoginManager, login_required
 # from flask.ext.openid import OpenID
+
 from config import BaseConfig
 import os
 import re
+import sys
 
 app = Flask(__name__)
 app.config.from_object(BaseConfig)
@@ -74,33 +80,45 @@ def playlists_add():
     return redirect(url_for('playlists_index'))
 
 
+@app.route('/items/move/<way>/<int:playlist_id>/<int:item_id>')
+def item_move(way, playlist_id, item_id):
+    db.session.query(Playlist).get(playlist_id)
+    pass
+
+
 @app.route('/items/', methods=['POST', 'GET'])
 def items_index():
-    p = re.compile('(\d*)([mh])')
     search=''
+    q = Item.query
     if request.method == 'POST':
         search = request.form['search']
-        q = Item.query
 
         elts = search.split(' ')
         for elt in elts:
-            m = p.match(elt)
+
+            m = re.match('^(\d*)([mh])$', elt)
             if m is not None:
-                if m.group()[1] == 'm':
-                    q = q.filter(Item.cat_time == int(m.group()[0])*60)
+                # from min to secs
+                dur = int(m.groups()[0])*60
+                if m.groups()[1] == 'h':
+                    dur = dur*60
+
+                cat = PodTime().getCat(dur)
+
+                q = q.filter(Item.cat_time == cat)
             else:
                 q = q.filter(Item.name.ilike('%'+elt+"%"))
-    else:
-        q=Item.query
 
     items = q.limit(25).all()
     playlists = Playlist.query.all()
     return render_template('items/index.html', items=items, search=search, playlists=playlists)
 
+
 @app.route('/items/add_to_playlist', methods=['POST'])
 def add_item_to_playlist():
     i = db.session.query(Item).get(request.form['item_id'])
     p = db.session.query(Playlist).get(request.form['playlist_id'])
+    
     p.items.append(i)
     db.session.add(p)
     db.session.commit()
@@ -136,4 +154,7 @@ def add_item_to_playlist():
 
 
 if __name__ == '__main__':
+    handler = RotatingFileHandler('./logs.log', maxBytes=10000, backupCount=1)
+    handler.setLevel(logging.INFO)
+    app.logger.addHandler(handler)
     app.run()

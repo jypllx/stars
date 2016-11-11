@@ -17,7 +17,15 @@
 <table>
     {% for item in playlist.items %}
     <div class="item">
-        <h4>{{item.name}}</h4>
+        <div class="row">
+            <div class="col-xs-8"><h4>{{item.name}}</h4></div>
+            <div class="col-xs-4">
+                <div class="btn-group">
+                <a class='btn btn-default' href="/items/move/up/{{playlist.id}}/{{item.id}}"><i class='fa fa-caret-up'></i></a>
+                <a class='btn btn-default' href="/items/move/down/{{playlist.id}}/{{item.id}}"><i class="fa fa-caret-down"></i></a>
+                </div>
+            </div>
+        </div>
         <p>{{item.description}}</p>
         <audio controls>
             <source src="{{item.audio_url}}" type="audio/mpeg">

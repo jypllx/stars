@@ -21,9 +21,8 @@ class PodTime:
             if cat['range'][0] <= duration and duration < cat['range'][1]:
                 return duration, cat['id'], cat['name']
 
-    def getCat(duration):
-        
+    def getCat(self, duration):
         for cat in self.CATEGORIES:
-            if cat['id'] == name :
+            if cat['range'][0] <= int(duration) and int(duration) < cat['range'][1]:
                 return cat['id']
         raise 'Not Found'
