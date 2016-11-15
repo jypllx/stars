@@ -83,25 +83,23 @@ def playlists_add():
 @app.route('/items/move/<way>/<int:playlist_id>/<int:item_id>')
 def item_move(way, playlist_id, item_id):
     app.logger.info(way +' '+str(playlist_id)+' '+str(item_id))
-    p = db.session.query(Playlist).get(playlist_id)
 
-    for idx, item in enumerate(p.items):
-        if item_id == item.id:
-            break
-
+    r = RelPlaylistItem.query.filter(RelPlaylistItem.playlist_id==playlist_id,
+            RelPlaylistItem.item_id==item_id).first()
+    rank = r.rank
     if way == 'up':
-        if idx > 0:
-            i_up   = p.items[idx]
-            i_down = p.items[idx-1]
-
+        new_rank = rank - 1
     elif way == 'down':
-        if idx < len(p.items):
-            i_down = p.items[idx]
-            i_up   = p.items[idx+1]
+        new_rank = rank + 1
 
+    rm = RelPlaylistItem.query.filter(RelPlaylistItem.playlist_id==playlist_id,
+            RelPlaylistItem.rank==new_rank).first()
 
-    app.logger.info(str(idx))
-    pass
+    rm.rank=rank
+    r.rank=new_rank
+    db.session.commit()
+
+    return redirect(url_for('get_playlist', id=playlist_id))
 
 
 @app.route('/items/', methods=['POST', 'GET'])

@@ -18,11 +18,19 @@
     {% for it in playlist.ranked_items %}
     <div class="item">
         <div class="row">
-            <div class="col-xs-8"><h4>{{it.item.name}}</h4></div>
+            <div class="col-xs-8"><h4>{{it.item.name}}</h4>
+                <div>
+                    <i class="fa fa-clock-o fa-2x"></i>&nbsp;&nbsp;{{it.item.cat_name}}
+                </div>
+            </div>
             <div class="col-xs-4">
                 <div class="btn-group">
-                <a class='btn btn-default' href="/items/move/up/{{playlist.id}}/{{it.item_id}}"><i class='fa fa-caret-up'></i></a>
-                <a class='btn btn-default' href="/items/move/down/{{playlist.id}}/{{it.item_id}}"><i class="fa fa-caret-down"></i></a>
+                <a class='btn btn-default {% if it.rank == 0 %} disabled {% endif %}' 
+                    href="/items/move/up/{{playlist.id}}/{{it.item_id}}"
+                    ><i class='fa fa-caret-up'></i></a>
+                <a class='btn btn-default {% if it.rank == (playlist.ranked_items|length) -1 %} disabled {% endif %}' 
+                    href="/items/move/down/{{playlist.id}}/{{it.item_id}}"
+                    ><i class="fa fa-caret-down"></i></a>
                 </div>
             </div>
         </div>
