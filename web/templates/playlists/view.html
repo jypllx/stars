@@ -15,20 +15,20 @@
     </div>
 </div>
 <table>
-    {% for item in playlist.items %}
+    {% for it in playlist.ranked_items %}
     <div class="item">
         <div class="row">
-            <div class="col-xs-8"><h4>{{item.name}}</h4></div>
+            <div class="col-xs-8"><h4>{{it.item.name}}</h4></div>
             <div class="col-xs-4">
                 <div class="btn-group">
-                <a class='btn btn-default' href="/items/move/up/{{playlist.id}}/{{item.id}}"><i class='fa fa-caret-up'></i></a>
-                <a class='btn btn-default' href="/items/move/down/{{playlist.id}}/{{item.id}}"><i class="fa fa-caret-down"></i></a>
+                <a class='btn btn-default' href="/items/move/up/{{playlist.id}}/{{it.item_id}}"><i class='fa fa-caret-up'></i></a>
+                <a class='btn btn-default' href="/items/move/down/{{playlist.id}}/{{it.item_id}}"><i class="fa fa-caret-down"></i></a>
                 </div>
             </div>
         </div>
-        <p>{{item.description}}</p>
+        <p>{{it.item.description}}</p>
         <audio controls>
-            <source src="{{item.audio_url}}" type="audio/mpeg">
+            <source src="{{it.item.audio_url}}" type="audio/mpeg">
                 Your browser does not support the audio element.
         </audio>
     </div>

@@ -82,7 +82,25 @@ def playlists_add():
 
 @app.route('/items/move/<way>/<int:playlist_id>/<int:item_id>')
 def item_move(way, playlist_id, item_id):
-    db.session.query(Playlist).get(playlist_id)
+    app.logger.info(way +' '+str(playlist_id)+' '+str(item_id))
+    p = db.session.query(Playlist).get(playlist_id)
+
+    for idx, item in enumerate(p.items):
+        if item_id == item.id:
+            break
+
+    if way == 'up':
+        if idx > 0:
+            i_up   = p.items[idx]
+            i_down = p.items[idx-1]
+
+    elif way == 'down':
+        if idx < len(p.items):
+            i_down = p.items[idx]
+            i_up   = p.items[idx+1]
+
+
+    app.logger.info(str(idx))
     pass
 
 
@@ -116,11 +134,10 @@ def items_index():
 
 @app.route('/items/add_to_playlist', methods=['POST'])
 def add_item_to_playlist():
-    i = db.session.query(Item).get(request.form['item_id'])
-    p = db.session.query(Playlist).get(request.form['playlist_id'])
-    
-    p.items.append(i)
-    db.session.add(p)
+    nb_items = RelPlaylistItem.query.filter(RelPlaylistItem.playlist_id == request.form['playlist_id']).count()
+
+    r = RelPlaylistItem(request.form['playlist_id'], request.form['item_id'], nb_items)
+    db.session.add(r)
     db.session.commit()
 
     return redirect(url_for('playlists_index'))

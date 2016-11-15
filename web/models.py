@@ -27,13 +27,24 @@ class Channel(db.Model):
         return '<id {}>'.format(self.id)
 
 
-r_playlists_items = db.Table('rel_playlists_items',
-    db.Column('playlist_id',    db.Integer, db.ForeignKey('playlists.id')),
-    db.Column('item_id',        db.Integer, db.ForeignKey('items.id')),
-    db.Column('rank',           db.Integer),
-    db.UniqueConstraint('playlist_id', 'item_id', name='_playlist_item_uc')
-)
+class RelPlaylistItem(db.Model):
+    __tablename__ = 'rel_playlists_items'
 
+    playlist_id     = db.Column(db.Integer, db.ForeignKey('playlists.id'), primary_key=True)
+    item_id         = db.Column(db.Integer, db.ForeignKey('items.id'), primary_key=True)
+    rank            = db.Column(db.Integer)
+    item            = db.relationship('Item')
+    __table_args__  = (db.UniqueConstraint('playlist_id', 'item_id', name='_playlist_item_uc'),
+                     )
+
+    def __init__(self, playlist_id, item_id, rank):
+        self.playlist_id    = playlist_id
+        self.item_id        = item_id
+        self.rank           = rank
+
+    def __repr__(self):
+        return '<playlist_id %s><item_id %s><rank %s>' % (self.playlist_id,
+            self.item_id, self.rank)
 
 class Item(db.Model):
     __tablename__ = 'items'
@@ -48,7 +59,6 @@ class Item(db.Model):
     cat_name        = db.Column(db.String())
     audio_url       = db.Column(db.String())
     published       = db.Column(db.DateTime)
-    toto = db.Column(db.String())
 
     def __init__(self, name, description, channel_id, duration_str, audio_url, published):
         self.name           = name
@@ -59,7 +69,7 @@ class Item(db.Model):
         self.duration, self.cat_time, self.cat_name = PodTime().getDurationCat(duration_str)
 
     def __repr__(self):
-        return '<id {}>'.format(self.id)
+        return 'Item<id {}>'.format(self.id)
 
 
 class Playlist(db.Model):
@@ -69,16 +79,18 @@ class Playlist(db.Model):
     created         = db.Column(db.DateTime)
     name            = db.Column(db.String())
     description     = db.Column(db.String())
-    items           = db.relationship('Item', secondary=r_playlists_items,
-                            backref=db.backref('playlists'))
+    items           = db.relationship('RelPlaylistItem')
 
     def __init__(self, name, description):
         self.name = name
         self.description = description
 
     def __repr__(self):
-        return '<id {}>'.format(self.id)
+        return 'Playlist<id {}>'.format(self.id)
 
+    @property
+    def ranked_items(self):
+        return sorted(self.items, key=lambda x: x.rank)
 
 
 class User(db.Model):

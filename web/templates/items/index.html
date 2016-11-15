@@ -44,8 +44,6 @@
     $(document).ready(function(){
         $(".add_to_playlist").click(function(){
             var ids = $(this).attr('id').split(".")
-            console.log(ids)
-            console.log('{{ url_for('add_item_to_playlist') }}')
             $.post('{{ url_for('add_item_to_playlist') }}',
                 {
                     playlist_id:ids[0], item_id:ids[1]
