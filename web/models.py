@@ -1,5 +1,6 @@
 from app import db
 from podtime import PodTime
+from flask.ext.security import UserMixin, RoleMixin
 
 class Channel(db.Model):
     __tablename__ = 'channels'
@@ -92,28 +93,25 @@ class Playlist(db.Model):
     def ranked_items(self):
         return sorted(self.items, key=lambda x: x.rank)
 
+roles_users = db.Table('roles_users',
+        db.Column('user_id', db.Integer(), db.ForeignKey('users.id')),
+        db.Column('role_id', db.Integer(), db.ForeignKey('roles.id')))
 
-class User(db.Model):
+class Role(db.Model, RoleMixin):
+    __tablename__ = 'roles'
+    
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(80), unique=True)
+    description = db.Column(db.String(255))
+
+class User(db.Model, UserMixin):
     __tablename__ = 'users'
 
     id              = db.Column(db.Integer, primary_key=True)
     created         = db.Column(db.DateTime)
-    email           = db.Column(db.String())
-    password        = db.Column(db.String())
-    authenticated   = db.Column(db.Boolean, default=False)
-
-    def is_active(self):
-        """True, as all users are active."""
-        return True
-
-    def get_id(self):
-        """Return the email address to satisfy Flask-Login's requirements."""
-        return self.id
-
-    def is_authenticated(self):
-        """Return True if the user is authenticated."""
-        return self.authenticated
-
-    def is_anonymous(self):
-        """False, as anonymous users aren't supported."""
-        return False
+    email           = db.Column(db.String(255), unique=True)
+    password        = db.Column(db.String(255))
+    active          = db.Column(db.Boolean())
+    confirmed_at    = db.Column(db.DateTime)
+    roles           = db.relationship('Role', secondary=roles_users,
+                            backref=db.backref('users', lazy='dynamic'))
