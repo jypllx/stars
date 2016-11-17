@@ -1,40 +1,39 @@
 from flask import Flask, url_for, redirect
 from flask import request, render_template
 from flask.ext.sqlalchemy import SQLAlchemy
-
+from config import BaseConfig
 import logging
 from logging.handlers import RotatingFileHandler
-
-# from flask.ext.login import LoginManager, login_required
-# from flask.ext.openid import OpenID
-
-from config import BaseConfig
-import os
-import re
-import sys
+from flask.ext.security import Security, SQLAlchemyUserDatastore, \
+    login_required
+from flask.ext.login import logout_user
 
 app = Flask(__name__)
 app.config.from_object(BaseConfig)
 db = SQLAlchemy(app)
-# login_manager = LoginManager()
-# login_manager.init_app(app)
-# login_manager.login_view = 'login'
+
+import os
+import re
+import sys
 
 from models import *
 
+user_datastore = SQLAlchemyUserDatastore(db, User, Role)
+security = Security(app, user_datastore)
 
-# @login_manager.user_loader
-# def user_loader(id):
-#     return User.query.get(int(id))
-
+# @app.before_first_request
+# def create_user():
+#     user_datastore.create_user(email='admin@stars.com', password='1234')
+#     db.session.commit()
 
 @app.route('/')
+@login_required
 def home():
     return redirect(url_for('channels_index'))
 
 
 @app.route('/channels/', methods=['GET','POST'])
-#@login_required
+@login_required
 def channels_index():
     search=''
     q = Channel.query
@@ -47,6 +46,7 @@ def channels_index():
     
 
 @app.route('/channels/<int:id>')
+@login_required
 def get_channel(id):
     channel=db.session.query(Channel).get(id)
     items=Item.query.filter_by(channel_id=id).limit(25).all()
@@ -54,6 +54,7 @@ def get_channel(id):
 
 
 @app.route('/playlists/', methods=['POST', 'GET'])
+@login_required
 def playlists_index():
     search=''
     q=Playlist.query
@@ -67,12 +68,14 @@ def playlists_index():
 
 
 @app.route('/playlists/<int:id>')
+@login_required
 def get_playlist(id):
     playlist=db.session.query(Playlist).get(id)
     return render_template('playlists/view.html', playlist=playlist)
 
 
 @app.route('/playlists/add', methods=['POST'])
+@login_required
 def playlists_add():
     p = Playlist(request.form['name'], request.form['description'])
     db.session.add(p)
@@ -81,6 +84,7 @@ def playlists_add():
 
 
 @app.route('/items/move/<way>/<int:playlist_id>/<int:item_id>')
+@login_required
 def item_move(way, playlist_id, item_id):
     app.logger.info(way +' '+str(playlist_id)+' '+str(item_id))
 
@@ -103,6 +107,7 @@ def item_move(way, playlist_id, item_id):
 
 
 @app.route('/items/', methods=['POST', 'GET'])
+@login_required
 def items_index():
     search=''
     q = Item.query
@@ -131,6 +136,7 @@ def items_index():
 
 
 @app.route('/items/add_to_playlist', methods=['POST'])
+@login_required
 def add_item_to_playlist():
     nb_items = RelPlaylistItem.query.filter(RelPlaylistItem.playlist_id == request.form['playlist_id']).count()
 
@@ -141,31 +147,11 @@ def add_item_to_playlist():
     return redirect(url_for('playlists_index'))
 
 
-# @app.route('/login', methods=['GET', 'POST'])
-# # @oid.loginhandler
-# def login():
-#     form = LoginForm()
-#     if form.validate_on_submit():
-#         user = User.query.get(form.email.data)
-#         if user:
-#             if bcrypt.check_password_hash(user.password, form.password.data):
-#                 user.authenticated = True
-#                 db.session.add(user)
-#                 db.session.commit()
-#                 login_user(user, remember=True)
-#                 return redirect(url_for("/"))
-#     return render_template("login.html", form=form)
-
-
-# @app.route('/logout', methods=['GET'])
-# @login_required
-# def logout():
-#     user = current_user
-#     user.authenticated=False
-#     db.session.add(user)
-#     db.session.commit()
-#     logout_user()
-#     return render_template('logout.html')
+@app.route('/logout/')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
 
 
 if __name__ == '__main__':
