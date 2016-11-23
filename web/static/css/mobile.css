@@ -1,0 +1,41 @@
+/* custom styles */
+
+#main {
+    padding-bottom: 95px;
+}
+
+.col-xs-3 {
+    padding:3px;
+}
+
+.btn {
+    border-radius: 0;
+}
+
+.time-filter > .col-xs-3 {
+    padding: 0 0 0 0;
+}
+
+.time-filter-vshort > .btn-default {
+    background-color:#47fac4;
+}
+
+.time-filter-short > .btn-default {
+    background-color: #47faea;
+}
+
+.time-filter-long > .btn-default {
+    background-color: #47e3fa;
+}
+
+.time-filter-vlong > .btn-default {
+    background-color: #47affa;
+}
+
+.time-filter a.active {
+    border-width: 3px;
+}
+
+a.category {
+    height: 48px;
+}

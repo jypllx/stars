@@ -2,11 +2,10 @@ import sys
 
 class PodTime:
     CATEGORIES = [
-        {'id':0, 'name':'0-5 min' , 'range':[0, 6*60]},
-        {'id':1, 'name':'5-15 min' , 'range':[6*60,16*60]},
-        {'id':2, 'name':'15-30 min', 'range':[16*60, 35*60]},
-        {'id':3, 'name':'30-60 min', 'range':[35*60, 67*60]},
-        {'id':5, 'name':'+60 min'  , 'range':[60*60, 1000000000]}]
+        {'id':0, 'name':'5min' , 'range':[0, 6*60]},
+        {'id':1, 'name':'20min' , 'range':[6*60,23*60]},
+        {'id':2, 'name':'1h', 'range':[23*60, 65*60]},
+        {'id':5, 'name':'+1h'  , 'range':[60*60, 1000000000]}]
 
     def getDurationCat(self, duration_str):
         try :

@@ -33,7 +33,7 @@ class PodcastParser:
       if self.existsItem(channel.id, item):
         pass
       else:
-        self.saveItem(channel.id, item)
+        self.saveItem(channel, item)
 
     os.remove(tmp_file)
 
@@ -73,7 +73,7 @@ class PodcastParser:
       return False
 
     
-  def saveItem(self, channel_id, item):
-    it = Item(item['title'], item['description'], channel_id, item['itunes:duration'], item['enclosure']['@url'], item['pubDate'])
+  def saveItem(self, channel, item):
+    it = Item(item['title'], item['description'], channel.id, item['itunes:duration'], item['enclosure']['@url'], item['pubDate'], channel.genre)
     db.session.add(it)
     db.session.commit()

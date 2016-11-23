@@ -26,10 +26,22 @@ security = Security(app, user_datastore)
 #     user_datastore.create_user(email='admin@stars.com', password='1234')
 #     db.session.commit()
 
+@app.template_filter('sec2time')
+def _jinja2_sec2time(seconds):
+    if seconds is None:
+        return ''
+    m, s = divmod(int(seconds), 60)
+    h, m = divmod(m, 60)
+    if h == 0:
+        return "%s:%s" % (m, s)
+    else:
+        return "%s:%s:%s" % (h, m, s)
+
 @app.route('/')
-@login_required
+# @login_required
 def home():
-    return redirect(url_for('channels_index'))
+    # return redirect(url_for('channels_index'))
+    return render_template('choice.html')
 
 
 @app.route('/channels/', methods=['GET','POST'])
@@ -145,6 +157,44 @@ def add_item_to_playlist():
     db.session.commit()
 
     return redirect(url_for('playlists_index'))
+
+@app.route('/mob/home/', methods=['GET', 'POST'])
+def mob_home():
+    q = Item.query
+    cat_time=None
+    genre='News & Politics'
+    
+    if request.method == 'POST':
+        app.logger.info("%s , %s" % (request.form['cat_time'], request.form['genre']))
+        if request.form['cat_time'] != '':
+            cat_time = request.form['cat_time']
+            q = q.filter(Item.cat_time == cat_time)
+        genre = request.form['genre']
+
+    app.logger.info("%s , %s" % (cat_time, genre))
+
+    q = q.filter(Item.genre == genre)
+    item = q.order_by(Item.published.desc()).first()
+    
+    app.logger.info(item.name)
+
+    playlists = Playlist.query.limit(4).all()
+    return render_template('mobile/home.html', item=item, playlists=playlists, 
+        cat_time=cat_time,
+        genre=genre)
+
+
+@app.route('/mob/search/')
+def mob_search():
+    return render_template('mobile/home.html')
+
+@app.route('/mob/saved/')
+def mob_saved():
+    return render_template('mobile/home.html')
+
+@app.route('/mob/library/')
+def mob_library():
+    return render_template('mobile/home.html')
 
 
 @app.route('/logout/')

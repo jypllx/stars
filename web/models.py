@@ -62,13 +62,14 @@ class Item(db.Model):
     published       = db.Column(db.DateTime)
     genre           = db.Column(db.String())
 
-    def __init__(self, name, description, channel_id, duration_str, audio_url, published):
+    def __init__(self, name, description, channel_id, duration_str, audio_url, published, genre):
         self.name           = name
         self.description    = description
         self.channel_id     = channel_id
         self.audio_url      = audio_url
         self.published      = published
         self.duration, self.cat_time, self.cat_name = PodTime().getDurationCat(duration_str)
+        self.genre          = genre
 
     def __repr__(self):
         return 'Item<id {}>'.format(self.id)
