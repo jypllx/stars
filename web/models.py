@@ -60,6 +60,7 @@ class Item(db.Model):
     cat_name        = db.Column(db.String())
     audio_url       = db.Column(db.String())
     published       = db.Column(db.DateTime)
+    genre           = db.Column(db.String())
 
     def __init__(self, name, description, channel_id, duration_str, audio_url, published):
         self.name           = name
