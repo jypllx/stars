@@ -71,6 +71,17 @@ class Item(db.Model):
         self.duration, self.cat_time, self.cat_name = PodTime().getDurationCat(duration_str)
         self.genre          = genre
 
+    @property
+    def duration_str(self):
+        if self.duration is None:
+            return ''
+        m, s = divmod(int(self.duration), 60)
+        h, m = divmod(m, 60)
+        if h == 0:
+            return "%s:%s" % (m, s)
+        else:
+            return "%s:%s:%s" % (h, m, s)
+
     def __repr__(self):
         return 'Item<id {}>'.format(self.id)
 

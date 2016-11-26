@@ -15,6 +15,7 @@ db = SQLAlchemy(app)
 import os
 import re
 import sys
+import json
 
 from models import *
 
@@ -26,19 +27,9 @@ security = Security(app, user_datastore)
 #     user_datastore.create_user(email='admin@stars.com', password='1234')
 #     db.session.commit()
 
-@app.template_filter('sec2time')
-def _jinja2_sec2time(seconds):
-    if seconds is None:
-        return ''
-    m, s = divmod(int(seconds), 60)
-    h, m = divmod(m, 60)
-    if h == 0:
-        return "%s:%s" % (m, s)
-    else:
-        return "%s:%s:%s" % (h, m, s)
 
 @app.route('/')
-# @login_required
+@login_required
 def home():
     # return redirect(url_for('channels_index'))
     return render_template('choice.html')
@@ -158,41 +149,74 @@ def add_item_to_playlist():
 
     return redirect(url_for('playlists_index'))
 
-@app.route('/mob/home/', methods=['GET', 'POST'])
+@app.route('/mob/home/', methods=['GET'])
+@login_required
 def mob_home():
+    playlists = Playlist.query.order_by(Playlist.created.desc()).limit(4).all()
+    return render_template('mobile/home.html', playlists=playlists)
+
+@app.route('/mob/home/ajax', methods=['POST'])
+@login_required
+def mob_home_ajax():
     q = Item.query
-    cat_time=None
-    genre='News & Politics'
+    app.logger.info("%s , %s" % (request.form['cat_time'], request.form['genre']))    
+
+    cat_time = request.form['cat_time']
+    genre = request.form['genre']
+    if cat_time != '':
+        q = q.filter(Item.cat_time == cat_time)
+
+    if genre == 'Comedy':
+        q = q.filter(Item.genre == 'Comedy')
+    elif genre == 'Culture':
+        q = q.filter(Item.genre == 'Society & Culture')
+    elif genre == 'Sports':
+        q = q.filter(Item.genre == 'Sports & Recreation')
+    else:
+        q = q.filter(Item.genre == 'News & Politics')
     
-    if request.method == 'POST':
-        app.logger.info("%s , %s" % (request.form['cat_time'], request.form['genre']))
-        if request.form['cat_time'] != '':
-            cat_time = request.form['cat_time']
-            q = q.filter(Item.cat_time == cat_time)
-        genre = request.form['genre']
-
-    app.logger.info("%s , %s" % (cat_time, genre))
-
-    q = q.filter(Item.genre == genre)
     item = q.order_by(Item.published.desc()).first()
-    
-    app.logger.info(item.name)
+    data = {'item':
+        {
+            'name':'' if item is None else item.name[:30]+'...', 
+            'description': '' if item is None else item.description[:100]+'...',
+            'duration':'' if item is None else item.duration_str
+        }, 
+        'cat_time':cat_time, 'genre':genre}
 
-    playlists = Playlist.query.limit(4).all()
-    return render_template('mobile/home.html', item=item, playlists=playlists, 
-        cat_time=cat_time,
-        genre=genre)
 
+    return json.dumps(data)
+
+@app.route('/mob/playlist/', methods=['POST'])
+@login_required
+def mob_playlist_ajax():
+    playlist=db.session.query(Playlist).get(request.form['playlistId'])
+    item = None
+    if len(playlist.ranked_items) != 0:
+        item = playlist.ranked_items[0].item
+
+    data = {'item':
+        {
+            'name':'No podcast found!!!' if item is None else item.name[:30]+'...', 
+            'description': '' if item is None else item.description[:100]+'...',
+            'duration':'' if item is None else item.duration_str
+        }, 
+        'playlistId':request.form['playlistId']}
+
+    return json.dumps(data)
 
 @app.route('/mob/search/')
+@login_required
 def mob_search():
     return render_template('mobile/home.html')
 
 @app.route('/mob/saved/')
+@login_required
 def mob_saved():
     return render_template('mobile/home.html')
 
 @app.route('/mob/library/')
+@login_required
 def mob_library():
     return render_template('mobile/home.html')
 

@@ -8,47 +8,51 @@
     <p class="text-center"><b>Length</b></p>
 </div>
 <div class="row time-filter">
-    <div class="col-xs-3 time-filter-vshort"><button class="btn btn-block btn-default time-btn {% if cat_time == 0 %} active {% endif %}" value="0"><i class="fa fa-hourglass-o"></i>&nbsp;5m</button></div>
-    <div class="col-xs-3 time-filter-short"><button class="btn btn-block btn-default time-btn {% if cat_time == 1 %} active {% endif %}" value="1"><i class="fa fa-hourglass-end" value="1"></i>&nbsp;20m</button></div>
-    <div class="col-xs-3 time-filter-long"><button class="btn btn-block btn-default time-btn {% if cat_time == 2 %} active {% endif %}" value="2"><i class="fa fa-hourglass-half" value="2"></i>&nbsp;1h</button></div>
-    <div class="col-xs-3 time-filter-vlong"><button class="btn btn-block btn-default time-btn {% if cat_time == 3 %} active {% endif %}" value="3"><i class="fa fa-hourglass-start" value="3"></i>&nbsp;+1h</button></div>
+    <div class="col-xs-3"><button class="btn btn-block btn-default time-btn" value="0" id="time0"><i class="fa fa-hourglass-o"></i>&nbsp;5m</button></div>
+    <div class="col-xs-3"><button class="btn btn-block btn-default time-btn" value="1" id="time1"><i class="fa fa-hourglass-end"></i>&nbsp;20m</button></div>
+    <div class="col-xs-3"><button class="btn btn-block btn-default time-btn" value="2" id="time2"><i class="fa fa-hourglass-half"></i>&nbsp;1h</button></div>
+    <div class="col-xs-3"><button class="btn btn-block btn-default time-btn" value="3" id="time3"><i class="fa fa-hourglass-start"></i>&nbsp;+1h</button></div>
 </div>
 <br/>
 <div class="row">
     <p class="text-center"><b>Mood</b></p>
 </div>
 <div class="row">
-    <div class="col-xs-3"><button class="btn btn-default btn-block genre {% if genre == 'News & Politics' %} active {% endif %}" value="News & Politics">News</button></div>
-    <div class="col-xs-3"><button class="btn btn-default btn-block genre {% if genre == 'Comedy' %} active {% endif %}" value="Comedy">Fun</button></div>
-    <div class="col-xs-3"><button class="btn btn-default btn-block genre {% if genre == 'Society & Culture' %} active {% endif %}" value="Society & Culture">Culture</button></div>
-    <div class="col-xs-3"><button class="btn btn-default btn-block genre {% if genre == 'Sports & Recreation' %} active {% endif %}" value="Sports & Recreation">Sport</button></div>
+    <div class="col-xs-3"><button class="btn btn-default btn-block genre-btn" id="News">News</button></div>
+    <div class="col-xs-3"><button class="btn btn-default btn-block genre-btn" id="Comedy">Fun</button></div>
+    <div class="col-xs-3"><button class="btn btn-default btn-block genre-btn" id="Culture">Culture</button></div>
+    <div class="col-xs-3"><button class="btn btn-default btn-block genre-btn" id="Sports">Sport</button></div>
 </div>
-<div class="row">
-    <div class="col-xs-3">
-        <button class="genre btn btn-default btn-block"><i class="fa fa-play fa-2x"></i></button>
-    </div>
-    <div class="col-xs-9">
-        <p>{{item.name}}</p>
-        <p>{{item.description}}</p>
-        <p><i>{{item.duration|sec2time}}</i></p>
-    </div>
-</div>
-<div class="row">
-    <div class="col-xs-3">
-        <div><p class="text-center"><i class="fa fa-eye fa-2x"></i></p></div>
-        <div><p class="text-center">Follow</p></div>
-    </div>
-    <div class="col-xs-3">
-        <div><p class="text-center"><i class="fa fa-info-circle fa-2x"></i></p></div>
-        <div><p class="text-center">More info</p></div>
-    </div>
-    <div class="col-xs-3">
-        <div><p class="text-center"><i class="fa fa-forward fa-2x"></i></p></div>
-        <div><p class="text-center">Next</p></div>
-    </div>
-    <div class="col-xs-3">
-        <div><p class="text-center"><i class="fa fa-lightbulb-o fa-2x"></i></p></div>
-        <div><p class="text-center">Suggestons</p></div>
+<div class="row" id="filter">
+    <div class="col-xs-12">
+        <div class="row">
+            <div class="col-xs-3">
+                <button class="genre btn btn-default btn-block"><i class="fa fa-play fa-2x"></i></button>
+            </div>
+            <div class="col-xs-9">
+                <p class="item_name"></p>
+                <p class="item_description"></p>
+                <p><i class="item_duration"></i></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-3">
+                <div><p class="text-center"><i class="fa fa-eye fa-2x"></i></p></div>
+                <div><p class="text-center">Follow</p></div>
+            </div>
+            <div class="col-xs-3">
+                <div><p class="text-center"><i class="fa fa-info-circle fa-2x"></i></p></div>
+                <div><p class="text-center">More info</p></div>
+            </div>
+            <div class="col-xs-3">
+                <div><p class="text-center"><i class="fa fa-forward fa-2x"></i></p></div>
+                <div><p class="text-center">Next</p></div>
+            </div>
+            <div class="col-xs-3">
+                <div><p class="text-center"><i class="fa fa-lightbulb-o fa-2x"></i></p></div>
+                <div><p class="text-center">Suggestions</p></div>
+            </div>
+        </div>
     </div>
 </div>
 <br/>
@@ -56,46 +60,96 @@
     <p class="text-center"><b>Other&nbsp;topics</b></p>
 </div>
 <div class="row">
-    <div class="col-xs-3"><button class="btn btn-default btn-block topic">Trump</button></div>
-    <div class="col-xs-3"><button class="btn btn-default btn-block topic">Cop22</button></div>
-    <div class="col-xs-3"><button class="btn btn-default btn-block topic">Primaires</button></div>
-    <div class="col-xs-3"><button class="btn btn-default btn-block topic">...</button></div>
+    {% for playlist in playlists %}
+    <div class="col-xs-3"><button class="btn btn-default btn-block topic-btn" id="{{ playlist.id }}">{{ playlist.name }}</button></div>
+    {% endfor %}
+</div>
+<div class="row" id="playlist" style="display:none">
+    <div class="col-xs-3">
+        <button class="genre btn btn-default btn-block"><i class="fa fa-play fa-2x"></i></button>
+    </div>
+    <div class="col-xs-9">
+        <p class="item_name"></p>
+        <p class="item_description"></p>
+        <p><i class="item_duration"></i></p>
+    </div>
 </div>
 </div>
 {% endblock %}
 {% block js %}
 <script type="text/javascript">
-    $(document).ready(function(){
-        getCatTime = function() {
-            var cat_time = $(".time-btn.active").attr("value");
-            if (cat_time == undefined) {
-                cat_time = '';
-            }
-            return cat_time;
+    var genre = {'News & Politics': 'News',
+    'Comedy':'Comedy',
+}
+$(document).ready(function(){
+    getCatTime = function() {
+        var cat_time = $(".time-btn.active").attr("value");
+        if (cat_time == undefined) {
+            cat_time = '';
         }
-        getGenre = function() {
-            var genre = $(".genre.active").attr("value");
-            return genre
-        }
-        filter = function(cat_time, genre) {
-            $.post('{{ url_for('mob_home') }}',
-                {
-                    cat_time:cat_time, genre:genre
-                }
-            );
-        }
+        return cat_time;
+    }
+    getGenre = function() {
+        var genre = $(".genre-btn.active").attr("id");
+        return genre
+    }
+    filter = function(cat_time, genre) {
+        $.post('{{ url_for('mob_home_ajax') }}',
+        {
+            cat_time:cat_time, genre:genre
+        },
+        function(data) {
+            $('#playlist').css('display', 'none')
+            $('#filter').removeAttr('style')
+            obj = JSON.parse(data)
+            $('#filter .item_name').text(obj.item.name)
+            $('#filter .item_description').text(obj.item.description)
+            $('#filter .item_duration').text(obj.item.duration)
+            $(".genre-btn.active, .time-btn.active").removeClass('active')
+            $('#'+obj.genre).addClass('active')
+            if (obj.cat_time != '') {
+               $('#time'+obj.cat_time).addClass('active')
+           }
+       }
+       );
+    }
 
 
-        $(".time-btn").click(function(){
-            cat_time = $(this).attr("value")
-            console.log('t__ time:'+cat_time+' |genre:'+getGenre())
-            filter(cat_time, getGenre());
-        });
-        $(".genre").click(function(){
-            genre = $(this).attr("value")
-            console.log('g__ time:'+getCatTime()+' |genre:'+genre)
-            filter(getCatTime(), genre);
-        });
+    $(".time-btn").click(function(){
+        cat_time = $(this).attr("value")
+        filter(cat_time, getGenre());
     });
+    $(".genre-btn").click(function(){
+        genre = $(this).attr("id")
+        filter(getCatTime(), genre);
+    });
+
+    getPlaylist = function(playlistId) {
+        $.post('{{ url_for('mob_playlist_ajax')}}',
+        {
+            playlistId:playlistId
+        },
+        function(data) {
+            obj = JSON.parse(data)
+            $('#filter').css('display', 'none')
+            $('#playlist').removeAttr('style')
+            $('#playlist .item_name').text(obj.item.name)
+            $('#playlist .item_description').text(obj.item.description)
+            $('#playlist .item_duration').text(obj.item.duration)
+            $(".genre-btn.active, .time-btn.active").removeClass('active')
+            $('#'+obj.genre).addClass('active')
+            if (obj.playlistId != '') {
+               $('#'+obj.cat_time).addClass('active')
+           }
+       }
+       );
+    }
+
+    $(".topic-btn").click(function() {
+        getPlaylist($(this).attr("id"))
+    });
+
+    filter('', 'News')
+});
 </script>
 {% endblock %}
