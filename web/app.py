@@ -89,7 +89,7 @@ def playlists_add():
 @app.route('/items/move/<way>/<int:playlist_id>/<int:item_id>')
 @login_required
 def item_move(way, playlist_id, item_id):
-    app.logger.info(way +' '+str(playlist_id)+' '+str(item_id))
+    #app.logger.info(way +' '+str(playlist_id)+' '+str(item_id))
 
     r = RelPlaylistItem.query.filter(RelPlaylistItem.playlist_id==playlist_id,
             RelPlaylistItem.item_id==item_id).first()
@@ -159,7 +159,7 @@ def mob_home():
 @login_required
 def mob_home_ajax():
     q = Item.query
-    app.logger.info("%s , %s" % (request.form['cat_time'], request.form['genre']))    
+    #app.logger.info("%s , %s" % (request.form['cat_time'], request.form['genre']))    
 
     cat_time = request.form['cat_time']
     genre = request.form['genre']

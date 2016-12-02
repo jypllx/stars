@@ -1,0 +1,16 @@
+web:
+  links:
+    - postgres:postgres
+
+data:
+  image: postgres:latest
+  volumes:
+    - /var/lib/postgres
+#  command: true
+
+postgres:
+  image: postgres:latest
+  volumes_from:
+    - data
+  ports:
+    - "5432:5432"
