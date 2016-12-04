@@ -1,0 +1,52 @@
+{% extends "_base_mobile.html" %}
+
+{% block content %}
+<div class="row">
+    <h3><p class="text-center">Rechercher</p></h3>
+</div>
+<div class="row">
+    <input name="search" placeholder="Recherche" type="text" class="form-control">
+</div>
+<br/>
+<div class="row time-filter">
+    <div class="col-xs-3"><button class="btn btn-block btn-default time-btn" value="0" id="time0"><i class="fa fa-hourglass-o"></i>&nbsp;0-5m</button></div>
+    <div class="col-xs-3"><button class="btn btn-block btn-default time-btn" value="1" id="time1"><i class="fa fa-hourglass-end"></i>&nbsp;5-20m</button></div>
+    <div class="col-xs-3"><button class="btn btn-block btn-default time-btn" value="2" id="time2"><i class="fa fa-hourglass-half"></i>&nbsp;20m-1h</button></div>
+    <div class="col-xs-3"><button class="btn btn-block btn-default time-btn" value="3" id="time3"><i class="fa fa-hourglass-start"></i>&nbsp;+1h</button></div>
+</div>
+<br/>
+<div class="row time-filter">
+    <div class="col-xs-3"><button class="btn btn-block btn-default" value="0" id=""><p>News</p><p>&nbsp;</p></button></div>
+    <div class="col-xs-3"><button class="btn btn-block btn-default" value="1" id=""><p>Repor</p><p>tage</p></button></div>
+    <div class="col-xs-3"><button class="btn btn-block btn-default" value="2" id=""><p>Livre</p><p>&nbsp;</p></button></div>
+    <div class="col-xs-3"><button class="btn btn-block btn-default" value="3" id=""><p>Confé</p><p>rence</p></button></div>
+</div>
+<div class="row">
+    <p class="text-center"><b>Thème du moment</b></p>
+</div>
+<div class="row">
+    <div class="col-xs-3"><button class="btn btn-default btn-block genre-btn" id="News">News</button></div>
+    <div class="col-xs-3"><button class="btn btn-default btn-block genre-btn" id="Comedy">Fun</button></div>
+    <div class="col-xs-3"><button class="btn btn-default btn-block genre-btn" id="Culture">Culture</button></div>
+    <div class="col-xs-3"><button class="btn btn-default btn-block genre-btn" id="Sports">Sport</button></div>
+</div>
+<div class="row">
+    <p class="text-center"><b>S'évader</b></p>
+</div>
+<div class="row">
+    <div class="col-xs-3"><button class="btn btn-default btn-block genre-btn" id="News">News</button></div>
+    <div class="col-xs-3"><button class="btn btn-default btn-block genre-btn" id="Comedy">Fun</button></div>
+    <div class="col-xs-3"><button class="btn btn-default btn-block genre-btn" id="Culture">Culture</button></div>
+    <div class="col-xs-3"><button class="btn btn-default btn-block genre-btn" id="Sports">Sport</button></div>
+</div>
+<div class="row">
+    <p class="text-center"><b>Vos chaînes préférées</b></p>
+</div>
+<div class="row">
+    <div class="col-xs-3"><button class="btn btn-default btn-block genre-btn" id="News">News</button></div>
+    <div class="col-xs-3"><button class="btn btn-default btn-block genre-btn" id="Comedy">Fun</button></div>
+    <div class="col-xs-3"><button class="btn btn-default btn-block genre-btn" id="Culture">Culture</button></div>
+    <div class="col-xs-3"><button class="btn btn-default btn-block genre-btn" id="Sports">Sport</button></div>
+</div>
+
+{% endblock %}

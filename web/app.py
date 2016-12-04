@@ -67,7 +67,8 @@ def playlists_index():
         search=request.form['search']
     
     playlists=q.all()
-    return render_template('playlists/index.html', playlists=playlists, search=search)
+    tags=Tag.query.all()
+    return render_template('playlists/index.html', playlists=playlists, search=search, tags=tags)
 
 
 @app.route('/playlists/<int:id>')
@@ -84,6 +85,16 @@ def playlists_add():
     db.session.add(p)
     db.session.commit()
     return redirect(url_for('playlists_index'))
+
+@app.route('/playlists/add_tag', methods=['POST'])
+@login_required
+def playlists_add_tag():
+    p=db.session.query(Playlist).get(request.form['tag_playlist_id'])
+    p.tag_id = request.form['tag_id']
+    db.session.add(p)
+    db.session.commit()
+    return redirect(url_for('playlists_index'))
+
 
 
 @app.route('/items/move/<way>/<int:playlist_id>/<int:item_id>')
@@ -149,6 +160,20 @@ def add_item_to_playlist():
 
     return redirect(url_for('playlists_index'))
 
+@app.route('/tags/')
+@login_required
+def tags_index():
+    tags = Tag.query.all()
+    return render_template('tags/index.html', tags=tags)
+
+@app.route('/tags/add', methods=['POST'])
+@login_required
+def tags_add():
+    t = Tag(request.form['name'], request.form['description'])
+    db.session.add(t)
+    db.session.commit()
+    return redirect(url_for('tags_index'))
+
 @app.route('/mob/home/', methods=['GET'])
 @login_required
 def mob_home():
@@ -208,12 +233,8 @@ def mob_playlist_ajax():
 @app.route('/mob/search/')
 @login_required
 def mob_search():
-    return render_template('mobile/home.html')
+    return render_template('mobile/recherche.html')
 
-@app.route('/mob/saved/')
-@login_required
-def mob_saved():
-    return render_template('mobile/home.html')
 
 @app.route('/mob/library/')
 @login_required
