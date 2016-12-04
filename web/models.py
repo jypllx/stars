@@ -85,6 +85,17 @@ class Item(db.Model):
     def __repr__(self):
         return 'Item<id {}>'.format(self.id)
 
+class Tag(db.Model):
+    __tablename__ = 'tags'
+
+    id              = db.Column(db.Integer, primary_key=True)
+    name            = db.Column(db.String())
+    description     = db.Column(db.String())
+    playlists       = db.relationship('Playlist', backref='tag', lazy='joined')
+
+    def __init__(self, name, description):
+        self.name           = name
+        self.description    = description
 
 class Playlist(db.Model):
     __tablename__ = 'playlists'
@@ -93,7 +104,7 @@ class Playlist(db.Model):
     created         = db.Column(db.DateTime)
     name            = db.Column(db.String())
     description     = db.Column(db.String())
-    tag_id          = db.Column(db.Integer)
+    tag_id          = db.Column(db.Integer, db.ForeignKey('tags.id'))
     items           = db.relationship('RelPlaylistItem')
 
     def __init__(self, name, description):
@@ -129,10 +140,3 @@ class User(db.Model, UserMixin):
     confirmed_at    = db.Column(db.DateTime)
     roles           = db.relationship('Role', secondary=roles_users,
                             backref=db.backref('users', lazy='dynamic'))
-
-class Tag(db.Model):
-    __tablename__ = 'tags'
-
-    id              = db.Column(db.Integer, primary_key=True)
-    name            = db.Column(db.String())
-    description     = db.Column(db.String())
