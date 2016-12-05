@@ -1,7 +1,7 @@
 import scrapy
 
 class FranceInterSpider(scrapy.Spider):
-  name = 'France Inter'
+  name = 'franceinter'
   start_urls = ['https://www.franceinter.fr/emissions']
 
   def parse(self, response):

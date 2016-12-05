@@ -1,7 +1,7 @@
 import scrapy
 
 class RmcSpider(scrapy.Spider):
-  name = 'France Inter'
+  name = 'rmc'
   start_urls = ['http://rmc.bfmtv.com/mediaplayer/podcast/']
 
   def parse(self, response):
