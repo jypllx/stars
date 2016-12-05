@@ -60,15 +60,21 @@ def get_channel(id):
 @login_required
 def playlists_index():
     search=''
+    tag_id=''
     q=Playlist.query
     if request.method == 'POST':
-        playlists=[]
-        q.filter(Playlist.name.ilike('%'+request.form['search']+'%'))
-        search=request.form['search']
-    
+
+        if request.form['search'] is not None and request.form['search'] != '':
+            search=request.form['search']
+            q=q.filter(Playlist.name.ilike('%'+search+'%'))
+            
+        if request.form['tag_id'] is not None and request.form['tag_id'] != '':
+            tag_id=request.form['tag_id']
+            q=q.filter_by(tag_id=tag_id)
+
     playlists=q.all()
     tags=Tag.query.all()
-    return render_template('playlists/index.html', playlists=playlists, search=search, tags=tags)
+    return render_template('playlists/index.html', playlists=playlists, search=search, tag_id=tag_id, tags=tags)
 
 
 @app.route('/playlists/<int:id>')
