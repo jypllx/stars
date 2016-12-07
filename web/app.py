@@ -92,6 +92,18 @@ def playlists_add():
     db.session.commit()
     return redirect(url_for('playlists_index'))
 
+@app.route('/playlists/delete/<int:id>', methods=['GET'])
+@login_required
+def playlists_delete(id):
+    rels=RelPlaylistItem.query.filter_by(playlist_id==id).all()
+    for rel in rels:
+        db.session.delete(rel)
+    playlist=db.session.query(Playlist).get(id)
+    db.session.delete(playlist)
+    db.session.commit()
+
+    return redirect(url_for('playlists_index'))
+
 @app.route('/playlists/add_tag', methods=['POST'])
 @login_required
 def playlists_add_tag():
@@ -180,6 +192,19 @@ def tags_add():
     db.session.commit()
     return redirect(url_for('tags_index'))
 
+@app.route('/tags/delete/<int:id>')
+@login_required
+def tags_delete(id):
+    playlists = Playlist.query.filter_by(tag_id=id).all()
+    for playlist in playlists:
+        playlist.tag_id = None
+    db.session.commit()
+    
+    t = db.session.query(Tag).get(id)
+    db.session.delete(t)
+    db.session.commit()
+    return redirect(url_for('tags_index'))
+
 @app.route('/mob/home/', methods=['GET'])
 @login_required
 def mob_home():
@@ -236,10 +261,37 @@ def mob_playlist_ajax():
 
     return json.dumps(data)
 
-@app.route('/mob/search/')
+@app.route('/mob/search/', methods=['POST', 'GET'])
 @login_required
 def mob_search():
-    return render_template('mobile/recherche.html')
+    if request.method=='GET':
+        tags=Tag.query.limit(2).all()
+        channels=Channel.query.limit(4).all()
+        return render_template('mobile/recherche.html', tags=tags, channels=channels)
+    if request.method=='POST':
+        search=''
+        cat_time=''
+        
+        q = Item.query
+        if request.form['search'] :
+            app.logger.info('BOUYA')
+            q = q.filter(Item.name.ilike('%'+request.form['search']+'%'))
+        if request.form['cat-time']:
+            q = q.filter_by(cat_time=cat_time)
+
+        if request.form['playlist_id']:
+            rels=RelPlaylistItem.query.filter_by(playlist_id=request.form['playlist_id'])
+            item_ids=[]
+            for rel in rels:
+                item_ids.append(rel.item_id)
+            if item_ids:
+                q=q.filter(Item.id.in_(item_ids))
+        if request.form['channel_id']:
+            q=q.filter_by(channel_id=request.form['channel_id'])
+
+        items = q.limit(10).all()
+        app.logger.info(items)
+        return render_template('mobile/resultats.html', items=items, search=search, cat_time=cat_time)
 
 
 @app.route('/mob/library/')

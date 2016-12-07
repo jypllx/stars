@@ -26,37 +26,22 @@
                 <div class="col-xs-3"><a class="btn btn-block btn-default btn-type" value="3" id="type3"><p>Confé</p><p>rence</p></a></div>
                 <input id="cat-type" type="hidden" name="cat-type" value="">
             </div>
-            {% for tag in tags %}
-            <div class="row">
-                <p class="text-center"><b>{{tag.name}}</b></p>
-            </div>
-            <div class="row">
-                {% if tag.playlists %}
-                {% set i=0 %}
-                {% for p in tag.playlists %}
-                {% if i < 4 %}
-                <div class="col-xs-3"><a class="btn btn-default btn-block btn-playlist" id="{{p.id}}">{{p.name}}</a></div>
-                {% set i=i+1 %}
-                {% endif %}
-                {% endfor %}
-                {% endif %}
-            </div>
-            {% endfor %}
-
-            <input id="playlist" type="hidden" name="playlist_id" value="">
-            <div class="row">
-                <p class="text-center"><b>Vos chaînes préférées</b></p>
-            </div>
-
-            <div class="row">
-            {% for channel in channels %}
-                <div class="col-xs-3"><a class="btn btn-default btn-block btn-channel" id="{{channel.id}}">{{channel.name}}</a></div>
-            {% endfor %}
-            </div>
-            <input id="channel" type="hidden" name="channel_id" value="">
         </div>
     </form>
 </div>
+
+<br style="border: 1px solid #333"/>
+{% for item in items %}
+<div class="row item collapsed" style="border: 1px solid #555;margin-top:3px">
+    <div class="col-xs-3">
+        <!-- image -->
+    </div>
+    <div class="col-xs-9">
+        <p><b>{{item.name}}</b></p>
+        <p class="desc" style="display:none">{{item.description}}</p>
+    </div>
+</div>
+{% endfor %}
 {% endblock %}
 
 {% block js %}
@@ -64,7 +49,7 @@
     $(document).ready(function(){
         search = function() {
             $('form').submit()
-        }
+        };
         $(".btn-time").click(function(){
             $('#cat-time').attr('value', $(this).attr('value'))
             search()
@@ -73,9 +58,18 @@
             $('#cat-type').attr('value', $(this).attr('value')) 
             search()
         });
-        $(".btn-playlist").click(function(){
-            $('#playlist').attr('value', $(this).attr('id'))
-            search()
+
+         $('.item').click(function(){
+             console.log('ok')
+             if ($(this).hasClass("collapsed")) {
+                 console.log('expand')
+                 $(this).removeClass("collapsed")
+                 $(this).find(".desc").css('display','block')
+             } else {
+                 console.log('collapse')
+                 $(this).addClass("collapsed")
+                 $(this).find(".desc").css('display','none')
+             }
         });
     });
 </script>

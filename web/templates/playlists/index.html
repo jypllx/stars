@@ -19,7 +19,7 @@
 </div>
 <br/>
 <div>
-    <button type="button" class="btn" data-toggle="modal" data-target="#create_new"><i class="fa fa-plus fa-2x"></i>&nbsp;Create new</button>
+    <button type="button" class="btn" data-toggle="modal" data-target="#create_new_playlist"><i class="fa fa-plus fa-2x"></i>&nbsp;Create new</button>
 </div>
 <br/>
 <div>
@@ -31,7 +31,8 @@
            </h4>
            <p>{{playlist.description}}</p>
            <div>
-            <a href="{{url_for('playlists_index')}}{{playlist.id}}">Voir</a>
+            <a href="{{url_for('playlists_index')}}{{playlist.id}}">Voir</a>&nbsp;&nbsp;&nbsp;<a href="{{url_for('playlists_delete')}}{{playlist.id}}">Suppr</a>
+
         </div>
         <div>Tag:&nbsp;<button  class="btn btn-default add-tag"
             data-toggle="modal" data-target="#add_tag">
