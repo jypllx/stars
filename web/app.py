@@ -95,7 +95,7 @@ def playlists_add():
 @app.route('/playlists/delete/<int:id>', methods=['GET'])
 @login_required
 def playlists_delete(id):
-    rels=RelPlaylistItem.query.filter_by(playlist_id==id).all()
+    rels=RelPlaylistItem.query.filter_by(playlist_id=id).all()
     for rel in rels:
         db.session.delete(rel)
     playlist=db.session.query(Playlist).get(id)
