@@ -31,7 +31,7 @@
            </h4>
            <p>{{playlist.description}}</p>
            <div>
-            <a href="{{url_for('playlists_index')}}{{playlist.id}}">Voir</a>&nbsp;&nbsp;&nbsp;<a href="{{url_for('playlists_delete')}}{{playlist.id}}">Suppr</a>
+            <a href="{{url_for('playlists_index', id=playlist.id)}}">Voir</a>&nbsp;&nbsp;&nbsp;<a href="{{url_for('playlists_delete', id=playlist.id)}}">Suppr</a>
 
         </div>
         <div>Tag:&nbsp;<button  class="btn btn-default add-tag"
