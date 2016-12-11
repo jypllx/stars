@@ -45,11 +45,13 @@ def channels_index():
     if request.method == 'POST':
         # TODO : replace by WTForms
         if request.form['search_title']:
-            search_title=request.form['search_title']
-            q=q.filter(Channel.name.ilike('%'+search_title+'%'))
+            search_title = request.form['search_title']
+            for elt in search_title.split(' '):
+                q = q.filter(Channel.name.ilike('%'+elt+"%"))
         if request.form['search_desc']:
-            search_desc=request.form['search_desc']
-            q=q.filter(Channel.description.ilike('%'+search_desc+'%'))
+            search_desc = request.form['search_desc']
+            for elt in search_desc.split(' '):
+                q = q.filter(Channel.description.ilike('%'+elt+"%"))
         if request.form['search_genre']:
             search_genre=request.form['search_genre']
             q=q.filter_by(genre=search_genre)
@@ -175,13 +177,12 @@ def items_index():
             for elt in search_desc.split(' '):
                 q = q.filter(Item.description.ilike('%'+elt+"%"))
         if request.form['search_genre']:
-            search_genre=request.form['search_genre']
             q=q.filter_by(genre=search_genre)
         if request.form['search_length']:
             search_length=request.form['search_length']
             q=q.filter_by(cat_time=search_length)
     else:
-        q=q.order_by(Item.published.desc()).limit(25)
+        q=q.order_by(Item.created.desc()).limit(25)
     items = q.all()
     playlists = Playlist.query.all()
     
