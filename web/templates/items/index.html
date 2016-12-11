@@ -4,11 +4,35 @@
 
 <h1>Episodes</h1>
 <div>
-    <form class="form-inline" method="post">
+    <form method="post">
         <div class="form-group">
-            <input type="text" class="form-control" name="search" placeholder="Rechercher..." value="{{search}}">
-            <button type="submit" class="btn btn-default">Submit</button>
+            <label for="search_title">Titre</label>
+            <input type="text" class="form-control" name="search_title" placeholder="Rechercher..." value="{{search_title}}">
         </div>
+        <div class="form-group">
+            <label for="search_desc">Description</label>
+            <input type="text" class="form-control" name="search_desc" placeholder="Rechercher..." value="{{search_desc}}">
+        </div>
+        <div class="form-group">
+            <label for="search_genre">Genre</label>
+            <select class="form-control" name="search_genre">
+                <option value="">Genre</option>
+            {% for genre in genres %}
+                <option value="{{genre}}" {% if search_genre == genre %} selected="selected" {% endif %}>{{genre}}</option>
+            {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="search_length">Durée</label>
+            <select class="form-control" name="search_length">
+                <option value="" >Durée</option>
+                <option value="0" {% if search_length == 0 %} selected="selected" {% endif %}>0-5min</option>
+                <option value="1" {% if search_length == 1 %} selected="selected" {% endif %}>5-20min</option>
+                <option value="2" {% if search_length == 2 %} selected="selected" {% endif %}>20min-1h</option>
+                <option value="5" {% if search_length == 5 %} selected="selected" {% endif %}>+1h</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
     </form>
 </div>
 <br/>
@@ -17,6 +41,8 @@
         {% for item in items %}
         <div class="well" id="{{item.id}}">
             <h4>{{item.name}}</h4>
+            <p><i>{{item.genre}}</i></p>
+            <p>Publié:&nbsp;{{item.published}}</p>
             <div>
                 <i class="fa fa-clock-o fa-2x"></i>&nbsp;&nbsp;{{item.cat_name}}
             </div>

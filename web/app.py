@@ -27,6 +27,7 @@ security = Security(app, user_datastore)
 #     user_datastore.create_user(email='admin@stars.com', password='1234')
 #     db.session.commit()
 
+
 @app.route('/')
 @login_required
 def home():
@@ -158,30 +159,40 @@ def item_move(way, playlist_id, item_id):
 @app.route('/items/', methods=['POST', 'GET'])
 @login_required
 def items_index():
-    search=''
+    search_title=''
+    search_desc=''
+    search_genre=''
+    search_length=''
+
     q = Item.query
     if request.method == 'POST':
-        search = request.form['search']
-
-        elts = search.split(' ')
-        for elt in elts:
-
-            m = re.match('^(\d*)([mh])$', elt)
-            if m is not None:
-                # from min to secs
-                dur = int(m.groups()[0])*60
-                if m.groups()[1] == 'h':
-                    dur = dur*60
-
-                cat = PodTime().getCat(dur)
-
-                q = q.filter(Item.cat_time == cat)
-            else:
+        if request.form['search_title']:
+            search_title = request.form['search_title']
+            for elt in search_title.split(' '):
                 q = q.filter(Item.name.ilike('%'+elt+"%"))
-
-    items = q.limit(25).all()
+        if request.form['search_desc']:
+            search_desc = request.form['search_desc']
+            for elt in search_desc.split(' '):
+                q = q.filter(Item.description.ilike('%'+elt+"%"))
+        if request.form['search_genre']:
+            search_genre=request.form['search_genre']
+            q=q.filter_by(genre=search_genre)
+        if request.form['search_length']:
+            search_length=request.form['search_length']
+            q=q.filter_by(cat_time=search_length)
+    else:
+        q=q.order_by(Item.published.desc()).limit(25)
+    items = q.all()
     playlists = Playlist.query.all()
-    return render_template('items/index.html', items=items, search=search, playlists=playlists)
+    
+    results = db.engine.execute("Select DISTINCT genre FROM items ORDER BY genre")
+    genres=[]
+    for result in results:
+        genres.append(result[0])
+
+    return render_template('items/index.html', 
+        items=items, playlists=playlists, genres=genres,
+        search_title=search_title, search_desc=search_desc, search_genre=search_genre, search_length='')
 
 
 @app.route('/items/add_to_playlist', methods=['POST'])
