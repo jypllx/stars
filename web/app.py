@@ -27,7 +27,6 @@ security = Security(app, user_datastore)
 #     user_datastore.create_user(email='admin@stars.com', password='1234')
 #     db.session.commit()
 
-
 @app.route('/')
 @login_required
 def home():
@@ -38,14 +37,32 @@ def home():
 @app.route('/channels/', methods=['GET','POST'])
 @login_required
 def channels_index():
-    search=''
+    search_title=''
+    search_desc=''
+    search_genre=''
     q = Channel.query
     if request.method == 'POST':
-        search=request.form['search']
-        q=q.filter(Channel.name.ilike('%'+search+'%'))
+        # TODO : replace by WTForms
+        if request.form['search_title']:
+            search_title=request.form['search_title']
+            q=q.filter(Channel.name.ilike('%'+search_title+'%'))
+        if request.form['search_desc']:
+            search_desc=request.form['search_desc']
+            q=q.filter(Channel.description.ilike('%'+search_desc+'%'))
+        if request.form['search_genre']:
+            search_genre=request.form['search_genre']
+            q=q.filter_by(genre=search_genre)
+
     channels = q.all()
-    #limit(25).
-    return render_template('channels/index.html', channels=channels, search=search)
+    results = db.engine.execute("Select DISTINCT genre FROM channels ORDER BY genre")
+    genres=[]
+    for result in results:
+        genres.append(result[0])
+
+    return render_template('channels/index.html', 
+        channels=channels, 
+        genres=genres,
+        search_title=search_title, search_desc=search_desc, search_genre=search_genre)
     
 
 @app.route('/channels/<int:id>')

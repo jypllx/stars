@@ -4,11 +4,25 @@
 
 <h1>Podcasts</h1>
 <div>
-    <form class="form-inline" method="post">
+    <form method="post">
         <div class="form-group">
-            <input type="text" class="form-control" name="search" placeholder="Rechercher..." value="{{search}}">
-            <button type="submit" class="btn btn-default">Submit</button>
+            <label for="search_title">Titre</label>
+            <input type="text" class="form-control" name="search_title" placeholder="Rechercher..." value="{{search_title}}">
         </div>
+        <div class="form-group">
+            <label for="search_desc">Description</label>
+            <input type="text" class="form-control" name="search_desc" placeholder="Rechercher..." value="{{search_desc}}">
+        </div>
+        <div class="form-group">
+            <label for="search_genre">Genre</label>
+            <select class="form-control" name="search_genre">
+                <option value="" >Genre</option>
+            {% for genre in genres %}
+                <option value="{{genre}}" {% if search_genre == genre %} selected="selected" {% endif %}>{{genre}}</option>
+            {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
     </form>
 </div>
 <br/>
@@ -22,17 +36,17 @@
                 </div>
                 <div class="col-xs-8">
                    <h4>
-                        <strong>{{channel.name}}</strong> - <em>{{channel.genre}}</em>
-                    </h4>
-                    <p>{{channel.description}}</p>
-                    <div>
-                        <a href="{{url_for('get_channel', id=channel.id)}}">Voir</a>
-                    </div>    
-                </div>
+                    <strong>{{channel.name}}</strong> - <em>{{channel.genre}}</em>
+                </h4>
+                <p>{{channel.description}}</p>
+                <div>
+                    <a href="{{url_for('get_channel', id=channel.id)}}">Voir</a>
+                </div>    
             </div>
-        </div>            
-        {% endfor %}
-    </table>
+        </div>
+    </div>            
+    {% endfor %}
+</table>
 </div>
 
 {% endblock %}
