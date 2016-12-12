@@ -49,7 +49,7 @@
                 </button>
             </div>
             <div class="col-xs-3">
-                <button class="btn btn-default btn-block">
+                <button class="btn btn-default btn-block"  id="next" value="">
                     <p class="text-center"><i class="fa fa-forward fa-2x"></i></p>
                     <p class="text-center">Suivant</p>
                 </button>
@@ -101,10 +101,11 @@ $(document).ready(function(){
         var genre = $(".genre-btn.active").attr("id");
         return genre
     }
-    filter = function(cat_time, genre) {
+
+    filter = function(cat_time, genre, page) {
         $.post('{{ url_for('mob_home_ajax') }}',
         {
-            cat_time:cat_time, genre:genre
+            cat_time:cat_time, genre:genre, page:page
         },
         function(data) {
             $('#playlist').css('display', 'none')
@@ -118,6 +119,9 @@ $(document).ready(function(){
             if (obj.cat_time != '') {
                $('#time'+obj.cat_time).addClass('active')
            }
+           console.log(+obj.page+1)
+           $("#next").attr("value", +obj.page+1)
+           $("#next").removeClass('active')
        }
        );
     }
@@ -125,11 +129,15 @@ $(document).ready(function(){
 
     $(".time-btn").click(function(){
         cat_time = $(this).attr("value")
-        filter(cat_time, getGenre());
+        filter(cat_time, getGenre(), 0);
     });
     $(".genre-btn").click(function(){
         genre = $(this).attr("id")
-        filter(getCatTime(), genre);
+        filter(getCatTime(), genre, 0);
+    });
+    $("#next").click(function() {
+        page = $(this).attr("value")
+        filter(getCatTime(), getGenre(), page)
     });
 
     getPlaylist = function(playlistId) {
@@ -157,7 +165,7 @@ $(document).ready(function(){
         getPlaylist($(this).attr("id"))
     });
 
-    filter('', 'News')
+    filter('', 'News', 0)
 });
 </script>
 {% endblock %}

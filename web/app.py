@@ -248,6 +248,7 @@ def mob_home_ajax():
 
     cat_time = request.form['cat_time']
     genre = request.form['genre']
+    page = int(request.form['page'])
     if cat_time != '':
         q = q.filter(Item.cat_time == cat_time)
 
@@ -260,14 +261,19 @@ def mob_home_ajax():
     else:
         q = q.filter(Item.genre == 'News & Politics')
     
-    item = q.order_by(Item.published.desc()).first()
+    nb   = q.count()
+    app.logger.info(nb)
+    if page == nb and nb != 0:
+        page = nb-1
+    item = q.order_by(Item.published.desc()).offset(int(page)).first()
+
     data = {'item':
         {
-            'name':'' if item is None else item.name[:30]+'...', 
+            'name':'Aucun résultat' if item is None else item.name[:30]+'...', 
             'description': '' if item is None else item.description[:100]+'...',
             'duration':'' if item is None else item.duration_str
         }, 
-        'cat_time':cat_time, 'genre':genre}
+        'cat_time':cat_time, 'genre':genre, 'page':page}
 
 
     return json.dumps(data)
