@@ -34,19 +34,19 @@
 
 <br style="border: 1px solid #333"/>
 {% if items %}
-    <div>Pas de résultats</div>
-{% else %}
-{% for item in items %}
-<div class="row item collapsed" style="border: 1px solid #555;margin-top:3px">
-    <div class="col-xs-3">
+    {% for item in items %}
+    <div class="row item collapsed" style="border: 1px solid #555;margin-top:3px">
+        <div class="col-xs-3">
         <!-- image -->
+        </div>
+        <div class="col-xs-9">
+            <p><b>{{item.name}}</b></p>
+            <p class="desc" style="display:none">{{item.description}}</p>
+        </div>
     </div>
-    <div class="col-xs-9">
-        <p><b>{{item.name}}</b></p>
-        <p class="desc" style="display:none">{{item.description}}</p>
-    </div>
-</div>
-{% endfor %}
+    {% endfor %}
+{% else %}
+    <div>Pas de résultats</div>
 {% endif %}
 {% endblock %}
 
@@ -60,10 +60,6 @@
             $('#cat_time').attr('value', $(this).attr('value'))
             search()
         });
-        // $(".btn-type").click(function(){
-        //     $('#cat-type').attr('value', $(this).attr('value')) 
-        //     search()
-        // });
 
          $('.item').click(function(){
              console.log('ok')

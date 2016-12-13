@@ -77,6 +77,10 @@
             $('#playlist').attr('value', $(this).attr('id'))
             search()
         });
+        $(".btn-channel").click(function(){
+            $('#channel').attr('value', $(this).attr('id'))
+            search()
+        });
     });
 </script>
 {% endblock %}

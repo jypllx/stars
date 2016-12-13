@@ -328,9 +328,11 @@ def mob_search():
                 q=q.filter(Item.id.in_(item_ids))
         if request.form['channel_id']:
             channel_id=request.form['channel_id']
+            app.logger.info(channel_id)
             q=q.filter_by(channel_id=channel_id)
 
         items = q.limit(10).all()
+        app.logger.info(items)
         return render_template('mobile/resultats.html', 
             items=items, 
             search=search, cat_time=cat_time, playlist_id=playlist_id, channel_id=channel_id)
