@@ -302,31 +302,38 @@ def mob_search():
     if request.method=='GET':
         tags=Tag.query.limit(2).all()
         channels=Channel.query.limit(4).all()
-        return render_template('mobile/recherche.html', tags=tags, channels=channels)
+        return render_template('mobile/recherche.html',
+            tags=tags, channels=channels)
     if request.method=='POST':
         search=''
         cat_time=''
+        playlist_id=''
+        channel_id=''
         
         q = Item.query
         if request.form['search'] :
-            app.logger.info('BOUYA')
-            q = q.filter(Item.name.ilike('%'+request.form['search']+'%'))
-        if request.form['cat-time']:
+            search = request.form['search']
+            q = q.filter(Item.name.ilike('%'+search+'%'))
+        if request.form['cat_time']:
+            cat_time=request.form['cat_time']
             q = q.filter_by(cat_time=cat_time)
 
         if request.form['playlist_id']:
-            rels=RelPlaylistItem.query.filter_by(playlist_id=request.form['playlist_id'])
+            playlist_id=request.form['playlist_id']
+            rels=RelPlaylistItem.query.filter_by(playlist_id=playlist_id)
             item_ids=[]
             for rel in rels:
                 item_ids.append(rel.item_id)
             if item_ids:
                 q=q.filter(Item.id.in_(item_ids))
         if request.form['channel_id']:
-            q=q.filter_by(channel_id=request.form['channel_id'])
+            channel_id=request.form['channel_id']
+            q=q.filter_by(channel_id=channel_id)
 
         items = q.limit(10).all()
-        app.logger.info(items)
-        return render_template('mobile/resultats.html', items=items, search=search, cat_time=cat_time)
+        return render_template('mobile/resultats.html', 
+            items=items, 
+            search=search, cat_time=cat_time, playlist_id=playlist_id, channel_id=channel_id)
 
 
 @app.route('/mob/library/')

@@ -16,7 +16,7 @@
                 <div class="col-xs-3"><a class="btn btn-block btn-default btn-time" value="1" id="time1"><i class="fa fa-hourglass-end"></i>&nbsp;5-20m</a></div>
                 <div class="col-xs-3"><a class="btn btn-block btn-default btn-time" value="2" id="time2"><i class="fa fa-hourglass-half"></i>&nbsp;20m-1h</a></div>
                 <div class="col-xs-3"><a class="btn btn-block btn-default btn-time" value="3" id="time3"><i class="fa fa-hourglass-start"></i>&nbsp;+1h</a></div>
-                <input id="cat-time" type="hidden" name="cat-time" value="">
+                <input id="cat_time" type="hidden" name="cat_time" value="">
             </div>
             <br/>
             <div class="row type-filter">
@@ -24,13 +24,18 @@
                 <div class="col-xs-3"><a class="btn btn-block btn-default btn-type" value="1" id="type1"><p>Repor</p><p>tage</p></a></div>
                 <div class="col-xs-3"><a class="btn btn-block btn-default btn-type" value="2" id="type2"><p>Livre</p><p>&nbsp;</p></a></div>
                 <div class="col-xs-3"><a class="btn btn-block btn-default btn-type" value="3" id="type3"><p>Confé</p><p>rence</p></a></div>
-                <input id="cat-type" type="hidden" name="cat-type" value="">
+                <input id="cat_type" type="hidden" name="cat_type" value="">
             </div>
+            <input id="playlist" type="hidden" name="playlist_id" value="{{playlist_id}}">
+            <input id="channel" type="hidden" name="channel_id" value="{{channel_id}}">
         </div>
     </form>
 </div>
 
 <br style="border: 1px solid #333"/>
+{% if items %}
+    <div>Pas de résultats</div>
+{% else %}
 {% for item in items %}
 <div class="row item collapsed" style="border: 1px solid #555;margin-top:3px">
     <div class="col-xs-3">
@@ -42,6 +47,7 @@
     </div>
 </div>
 {% endfor %}
+{% endif %}
 {% endblock %}
 
 {% block js %}
@@ -51,13 +57,13 @@
             $('form').submit()
         };
         $(".btn-time").click(function(){
-            $('#cat-time').attr('value', $(this).attr('value'))
+            $('#cat_time').attr('value', $(this).attr('value'))
             search()
         });
-        $(".btn-type").click(function(){
-            $('#cat-type').attr('value', $(this).attr('value')) 
-            search()
-        });
+        // $(".btn-type").click(function(){
+        //     $('#cat-type').attr('value', $(this).attr('value')) 
+        //     search()
+        // });
 
          $('.item').click(function(){
              console.log('ok')

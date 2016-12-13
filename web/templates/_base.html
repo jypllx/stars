@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Stars</title>
+  <title>Tootak</title>
   <!-- meta -->
   <meta name="description" content="">
   <meta name="author" content="">
@@ -15,8 +15,17 @@
 </head>
 <body>
   <nav class="navbar navbar-default navbar-fixed-top">
-    <div class="container">
-      <div class="collapse navbar-collapse">
+    <div class="container-fluid">
+      <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-menu" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Tootak</a>
+    </div>
+      <div class="collapse navbar-collapse" id="nav-menu">
         <ul class="nav navbar-nav">
           <li {% if request.path == url_for('channels_index') %} class="active" {% endif %}><a href="{{url_for('channels_index')}}">Podcasts</a></li>
           <li {% if request.path == url_for('items_index') %} class="active" {% endif %}><a href="{{url_for('items_index')}}">Items</a></li>
