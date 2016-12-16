@@ -14,7 +14,8 @@
             </h4>
             <p>{{channel.description}}</p>
             <div>
-                <a href="channels/{{channel.id}}">Voir</a>
+                <p><a href="{{ url_for('channels_get', id=channel.id) }}">Voir</a></p>
+                <p><a href="{{ url_for('channels_edit', id=channel.id) }}">Editer</a></p>
             </div>    
         </div>
     </div>

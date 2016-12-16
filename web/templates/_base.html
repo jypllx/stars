@@ -28,9 +28,10 @@
       <div class="collapse navbar-collapse" id="nav-menu">
         <ul class="nav navbar-nav">
           <li {% if request.path == url_for('channels_index') %} class="active" {% endif %}><a href="{{url_for('channels_index')}}">Podcasts</a></li>
-          <li {% if request.path == url_for('items_index') %} class="active" {% endif %}><a href="{{url_for('items_index')}}">Items</a></li>
+          <li {% if request.path == url_for('items_index') %} class="active" {% endif %}><a href="{{url_for('items_index')}}">Episodes</a></li>
           <li {% if request.path == url_for('playlists_index') %} class="active" {% endif %}><a href="{{url_for('playlists_index')}}">Playlists</a></li>
           <li {% if request.path == url_for('tags_index') %} class="active" {% endif %}><a href="{{url_for('tags_index')}}">Tags</a></li>
+          <li {% if request.path == url_for('mob_home') %} class="active" {% endif %}><a href="{{url_for('mob_home')}}">Back to mobile</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
           <li><a href="{{ url_for('logout') }}"><i class='fa fa-power-off'></i></a></li>

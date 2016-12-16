@@ -28,14 +28,18 @@ security = Security(app, user_datastore)
 #     db.session.commit()
 
 
-@app.route('/')
+# @app.route('/')
+# @login_required
+# def home():
+#     # return redirect(url_for('channels_index'))
+#     return render_template('choice.html')
+
+@app.route('/bo/')
 @login_required
-def home():
-    # return redirect(url_for('channels_index'))
-    return render_template('choice.html')
+def home_bo():
+    return redirect(url_for('channels_index'))
 
-
-@app.route('/channels/', methods=['GET','POST'])
+@app.route('/bo/channels/', methods=['GET','POST'])
 @login_required
 def channels_index():
     search_title=''
@@ -68,15 +72,19 @@ def channels_index():
         search_title=search_title, search_desc=search_desc, search_genre=search_genre)
     
 
-@app.route('/channels/<int:id>')
+@app.route('/bo/channels/<int:id>')
 @login_required
-def get_channel(id):
+def channels_get(id):
     channel=db.session.query(Channel).get(id)
     items=Item.query.filter_by(channel_id=id).limit(25).all()
     return render_template('channels/view.html', channel=channel, items=items)
 
+@app.route('/bo/channels/edit/<int:id>', methods=['POST'])
+def channels_edit(id):
+    pass
 
-@app.route('/playlists/', methods=['POST', 'GET'])
+
+@app.route('/bo/playlists/', methods=['POST', 'GET'])
 @login_required
 def playlists_index():
     search=''
@@ -97,14 +105,14 @@ def playlists_index():
     return render_template('playlists/index.html', playlists=playlists, search=search, tag_id=tag_id, tags=tags)
 
 
-@app.route('/playlists/<int:id>')
+@app.route('/bo/playlists/<int:id>')
 @login_required
-def get_playlist(id):
+def playlists_get(id):
     playlist=db.session.query(Playlist).get(id)
     return render_template('playlists/view.html', playlist=playlist)
 
 
-@app.route('/playlists/add', methods=['POST'])
+@app.route('/bo/playlists/add', methods=['POST'])
 @login_required
 def playlists_add():
     p = Playlist(request.form['name'], request.form['description'])
@@ -112,7 +120,7 @@ def playlists_add():
     db.session.commit()
     return redirect(url_for('playlists_index'))
 
-@app.route('/playlists/delete/<int:id>', methods=['GET'])
+@app.route('/bo/playlists/delete/<int:id>', methods=['GET'])
 @login_required
 def playlists_delete(id):
     rels=RelPlaylistItem.query.filter_by(playlist_id=id).all()
@@ -124,7 +132,7 @@ def playlists_delete(id):
 
     return redirect(url_for('playlists_index'))
 
-@app.route('/playlists/add_tag', methods=['POST'])
+@app.route('/bo/playlists/add_tag', methods=['POST'])
 @login_required
 def playlists_add_tag():
     p=db.session.query(Playlist).get(request.form['tag_playlist_id'])
@@ -134,8 +142,7 @@ def playlists_add_tag():
     return redirect(url_for('playlists_index'))
 
 
-
-@app.route('/items/move/<way>/<int:playlist_id>/<int:item_id>')
+@app.route('/bo/items/move/<way>/<int:playlist_id>/<int:item_id>')
 @login_required
 def item_move(way, playlist_id, item_id):
     #app.logger.info(way +' '+str(playlist_id)+' '+str(item_id))
@@ -158,7 +165,7 @@ def item_move(way, playlist_id, item_id):
     return redirect(url_for('get_playlist', id=playlist_id))
 
 
-@app.route('/items/', methods=['POST', 'GET'])
+@app.route('/bo/items/', methods=['POST', 'GET'])
 @login_required
 def items_index():
     search_title=''
@@ -196,7 +203,7 @@ def items_index():
         search_title=search_title, search_desc=search_desc, search_genre=search_genre, search_length='')
 
 
-@app.route('/items/add_to_playlist', methods=['POST'])
+@app.route('/bo/items/add_to_playlist', methods=['POST'])
 @login_required
 def add_item_to_playlist():
     nb_items = RelPlaylistItem.query.filter(RelPlaylistItem.playlist_id == request.form['playlist_id']).count()
@@ -207,13 +214,13 @@ def add_item_to_playlist():
 
     return redirect(url_for('playlists_index'))
 
-@app.route('/tags/')
+@app.route('/bo/tags/')
 @login_required
 def tags_index():
     tags = Tag.query.all()
     return render_template('tags/index.html', tags=tags)
 
-@app.route('/tags/add', methods=['POST'])
+@app.route('/bo/tags/add', methods=['POST'])
 @login_required
 def tags_add():
     t = Tag(request.form['name'], request.form['description'])
@@ -221,7 +228,7 @@ def tags_add():
     db.session.commit()
     return redirect(url_for('tags_index'))
 
-@app.route('/tags/delete/<int:id>')
+@app.route('/bo/tags/delete/<int:id>')
 @login_required
 def tags_delete(id):
     playlists = Playlist.query.filter_by(tag_id=id).all()
@@ -234,13 +241,13 @@ def tags_delete(id):
     db.session.commit()
     return redirect(url_for('tags_index'))
 
-@app.route('/mob/home/', methods=['GET'])
+@app.route('/home', methods=['GET'])
 @login_required
 def mob_home():
     playlists = Playlist.query.order_by(Playlist.created.desc()).limit(4).all()
     return render_template('mobile/home.html', playlists=playlists)
 
-@app.route('/mob/home/ajax', methods=['POST'])
+@app.route('/ajax/items', methods=['POST'])
 @login_required
 def mob_home_ajax():
     q = Item.query
@@ -278,7 +285,7 @@ def mob_home_ajax():
 
     return json.dumps(data)
 
-@app.route('/mob/playlist/', methods=['POST'])
+@app.route('/ajax/playlist/', methods=['POST'])
 @login_required
 def mob_playlist_ajax():
     playlist=db.session.query(Playlist).get(request.form['playlistId'])
@@ -296,7 +303,7 @@ def mob_playlist_ajax():
 
     return json.dumps(data)
 
-@app.route('/mob/search/', methods=['POST', 'GET'])
+@app.route('/search/', methods=['POST', 'GET'])
 @login_required
 def mob_search():
     if request.method=='GET':
@@ -308,7 +315,7 @@ def mob_search():
         search=''
         cat_time=''
         playlist_id=''
-        channel_id=''
+        channel_id='-1'
         
         q = Item.query
         if request.form['search'] :
@@ -338,7 +345,7 @@ def mob_search():
             search=search, cat_time=cat_time, playlist_id=playlist_id, channel_id=channel_id)
 
 
-@app.route('/mob/library/')
+@app.route('/library/')
 @login_required
 def mob_library():
     return render_template('mobile/home.html')
