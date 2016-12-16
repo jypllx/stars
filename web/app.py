@@ -28,11 +28,10 @@ security = Security(app, user_datastore)
 #     db.session.commit()
 
 
-# @app.route('/')
-# @login_required
-# def home():
-#     # return redirect(url_for('channels_index'))
-#     return render_template('choice.html')
+@app.route('/')
+@login_required
+def home():
+    return redirect(url_for('mob_home'))
 
 @app.route('/bo/')
 @login_required
