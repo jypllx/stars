@@ -16,7 +16,7 @@
                 <div class="col-xs-3"><a class="btn btn-block btn-default btn-time {% if cat_time|int() == 1|int() %} active {% endif %}" value="1" id="time1"><i class="fa fa-hourglass-end"></i>&nbsp;5-20m</a></div>
                 <div class="col-xs-3"><a class="btn btn-block btn-default btn-time {% if cat_time|int() == 2|int() %} active {% endif %}" value="2" id="time2"><i class="fa fa-hourglass-half"></i>&nbsp;20m-1h</a></div>
                 <div class="col-xs-3"><a class="btn btn-block btn-default btn-time {% if cat_time|int() == 3|int() %} active {% endif %}" value="3" id="time3"><i class="fa fa-hourglass-start"></i>&nbsp;+1h</a></div>
-                <input id="cat_time" type="hidden" name="cat_time" value="">
+                <input id="cat_time" type="hidden" name="cat_time" value="{% if cat_time|int() != -1|int() %} {{cat_time}} {% endif %} ">
             </div>
             <br/>
             <div class="row type-filter">

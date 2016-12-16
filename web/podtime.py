@@ -5,7 +5,7 @@ class PodTime:
         {'id':0, 'name':'0-5min' , 'range':[0, 6*60]},
         {'id':1, 'name':'5-20min' , 'range':[6*60,23*60]},
         {'id':2, 'name':'20min-1h', 'range':[23*60, 65*60]},
-        {'id':5, 'name':'+1h'  , 'range':[60*60, 1000000000]}]
+        {'id':3, 'name':'+1h'  , 'range':[60*60, 1000000000]}]
 
     def getDurationCat(self, duration_str):
         try :

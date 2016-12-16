@@ -312,9 +312,9 @@ def mob_search():
             tags=tags, channels=channels)
     if request.method=='POST':
         search=''
-        cat_time=''
+        cat_time='-1'
         playlist_id=''
-        channel_id='-1'
+        channel_id=''
         
         q = Item.query
         if request.form['search'] :
