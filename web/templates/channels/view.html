@@ -6,7 +6,7 @@
     <div class="well">
         <div class="row">
             <div class="col-xs-4">
-                <img src="{{channel.img_url}}" class="img-thumbnail">
+                <img src="{{channel.img_url}}" class="img-thumbnail" height="100" width="100">
             </div>
             <div class="col-xs-8">
              <h4>
@@ -20,8 +20,29 @@
         </div>
     </div>
 </div>
-<table>
+<table class="table table-striped table-hover">
+    <tr>
+        <th>Titre</th>
+        <th>Description</th>
+        <th>Cat iTunes</th>
+        <th>Mood</th>
+        <th>Durée</th>
+        <th>Audio</th>
+        <th>Publié</th>
+        <th></th>
+    </tr>
     {% for item in items %}
+    <tr>
+        <td>{{item.name}}</td>
+        <td>{{item.description}}</td>
+        <td>{{item.genre}}</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>{{item.published}}</td>
+        <td></td>
+    </tr>
+<!-- 
     <div class="item">
         <h4>{{item.name}}</h4>
         <p>{{item.description}}</p>
@@ -29,7 +50,7 @@
             <source src="{{item.audio_url}}" type="audio/mpeg">
                 Your browser does not support the audio element.
         </audio>
-    </div>
+    </div> -->
     {% endfor %}
 </table>
 

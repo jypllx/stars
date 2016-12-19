@@ -1,5 +1,5 @@
 from app import db
-from podtime import PodTime
+from parser.podtime import PodTime
 from flask.ext.security import UserMixin, RoleMixin
 
 class Channel(db.Model):

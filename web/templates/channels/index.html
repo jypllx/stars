@@ -27,26 +27,28 @@
 </div>
 <br/>
 <div>
-    <table>
+    <table class="table table-striped table-hover">
+        <tr>
+            <th>#</th>
+            <th>Titre</th>
+            <th>Cat iTunes</th>
+            <th>Mood</th>
+            <th>Description</th>
+            <th>Producteur</th>
+            <th></th>
+        </tr>
         {% for channel in channels %}
-        <div class="well" id="{{channel.id}}">
-            <div class="row">
-                <div class="col-xs-4">
-                    <img src="{{channel.img_url}}" class="img-thumbnail">
-                </div>
-                <div class="col-xs-8">
-                   <h4>
-                    <strong>{{channel.name}}</strong> - <em>{{channel.genre}}</em>
-                </h4>
-                <p>{{channel.description}}</p>
-                <div>
-                    <a href="{{url_for('channels_get', id=channel.id)}}">Voir</a>
-                </div>    
-            </div>
-        </div>
-    </div>            
-    {% endfor %}
-</table>
+        <tr id="{{channel.id}}">
+            <td><img src="{{channel.img_url}}" class="img-thumbnail" height="80" width="80"></td>
+            <td>{{channel.name}}</td>
+            <td>{{channel.genre}}</td>
+            <td></td>
+            <td style="width: 30%;word-wrap: break-word;">{{channel.description}}</td>
+            <td></td>
+            <td><a class='btn btn-default' href="{{url_for('channels_get', id=channel.id)}}"><i class="fa fa-search"></i></a>&nbsp;<a class='btn btn-default' href="{{url_for('channels_get', id=channel.id)}}"><i class="fa fa-pencil"></i></a></td>
+        </tr>            
+        {% endfor %}
+    </table>
 </div>
 
 {% endblock %}
