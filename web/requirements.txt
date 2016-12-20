@@ -1,3 +1,4 @@
+pip==9.0.1
 Flask==0.10.1
 Flask-SQLAlchemy==2.0
 Flask-security==1.7.5
@@ -11,3 +12,4 @@ itsdangerous==0.24
 psycopg2==2.6
 scrapy==1.2
 xmltodict==0.10.2
+openpyxl==2.4.1
