@@ -6,29 +6,50 @@ from flask.ext.security import UserMixin, RoleMixin
 
 podmood=PodMood('./moods.xlsx')
 
+
+"""
+Channel and items are a proper refleciton of the RSS file of the podcast.
+Columns ending with an underscore are information pulled from the RSS file 
+and should not be modified. These information are eventually duplicated in
+fields with the same name but no underscore. These fields can be edited
+and are displayed on Tootak UI.
+"""
 class Channel(db.Model):
     __tablename__ = 'channels'
 
     id              = db.Column(db.Integer, primary_key=True)
-    created         = db.Column(db.DateTime)
-    name            = db.Column(db.String())
-    description     = db.Column(db.String())
-    itunes_category = db.Column(db.String())
-    mood            = db.Column(db.String())
-    language        = db.Column(db.String())
-    url             = db.Column(db.String())
-    link            = db.Column(db.String())
-    img_url         = db.Column(db.String())
+    
+    title_          = db.Column(db.String())
+    link_           = db.Column(db.String())
+    description_    = db.Column(db.String())
+    itunes_category_= db.Column(db.String())
+    language_       = db.Column(db.String())
+    author_         = db.Column(db.String())
+    image_          = db.Column(db.String())
+    last_build_date_= db.Column(db.DateTime)
 
-    def __init__(self, name, description, itunes_category, language, url, link, img_url):
-        self.name = name
-        self.description = description
-        self.itunes_category = itunes_category
-        self.mood = podmood.get_mood(itunes_category)
-        self.language = language
-        self.url = url
-        self.link = link
-        self.img_url = img_url
+    title           = db.Column(db.String())
+    description     = db.Column(db.String())    
+    mood            = db.Column(db.String())
+    image           = db.Column(db.String())
+    created         = db.Column(db.DateTime)
+
+
+    def __init__(self, title_, link_, description_, itunes_category_,
+                language_, author_, image_, last_build_date_):
+        self.title_ = title_.strip()
+        self.link_ = link_.strip()
+        self.description_ = description_.strip()
+        self.itunes_category_ = itunes_category_.strip()
+        self.language_ = language_.strip()
+        self.author_ = author_.strip()
+        self.image_ = image_.strip()
+        self.last_build_date_ = last_build_date_
+    
+        self.title  = self.title_
+        self.description  = self.description_
+        self.mood = podmood.get_mood(self.itunes_category_)
+        self.image = self.image_
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
@@ -57,27 +78,31 @@ class Item(db.Model):
     __tablename__ = 'items'
 
     id              = db.Column(db.Integer, primary_key=True)
-    created         = db.Column(db.DateTime)
     channel_id      = db.Column(db.Integer)
-    name            = db.Column(db.String())
+    
+    title_          = db.Column(db.String())
+    description_    = db.Column(db.String())
+    itunes_category_= db.Column(db.String()) # copied from the channel
+    pubdate_        = db.Column(db.DateTime)
+    duration_       = db.Column(db.Integer) # in seconds
+    audio_url_      = db.Column(db.String())
+
+    title           = db.Column(db.String())
     description     = db.Column(db.String())
-    duration        = db.Column(db.Integer)
+    mood            = db.Column(db.String())
     cat_time        = db.Column(db.Integer)
     cat_name        = db.Column(db.String())
-    audio_url       = db.Column(db.String())
-    published       = db.Column(db.DateTime)
-    itunes_category = db.Column(db.String())
-    mood            = db.Column(db.String())
+    created         = db.Column(db.DateTime)
 
-    def __init__(self, name, description, channel_id, duration_str, audio_url, published, itunes_category):
-        self.name           = name
-        self.description    = description
+    def __init__(self, title_, description_, channel_id, duration_str, audio_url_, pubdate_, itunes_category_):
+        self.title_         = title_.strip()
+        self.description_   = description_.strip()
         self.channel_id     = channel_id
-        self.audio_url      = audio_url
-        self.published      = published
-        self.duration, self.cat_time, self.cat_name = PodTime().getDurationCat(duration_str)
-        self.genre          = itunes_category
-        self.mood           = podmood.get_mood(itunes_category)
+        self.audio_url_     = audio_url.strip()
+        self.pubdate_       = pubdate_
+        self.duration_, self.cat_time, self.cat_name = PodTime().getDurationCat(duration_str)
+        self.itunes_category_= itunes_category_.strip()
+        self.mood           = podmood.get_mood(self.itunes_category_)
 
     @property
     def duration_str(self):

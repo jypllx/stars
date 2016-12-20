@@ -26,13 +26,19 @@ class PodMood:
         iCat=ws.cell(row=line, column=2).value
 
         while iCat is not None:
+            
             mood=ws.cell(row=line, column=1).value
-            # print ('R '+str(iCat)+' '+str(mood))
-            if mood is not None or mood != '':
+
+            iCat=iCat.strip()
+            mood=mood.strip()
+
+            if mood is not None:
                 self.moods.append(mood)
                 self.mapping[iCat]=mood
+            else:
+                raise Exeption()
             line+=1
-            iCat=ws.cell(row=line, column=1).value
+            iCat=ws.cell(row=line, column=2).value
 
         self.moods = list(set(self.moods))
 

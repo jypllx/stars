@@ -50,24 +50,24 @@ def channels_index():
         if request.form['search_title']:
             search_title = request.form['search_title']
             for elt in search_title.split(' '):
-                q = q.filter(Channel.name.ilike('%'+elt+"%"))
+                q = q.filter(Channel.title_.ilike('%'+elt+"%"))
         if request.form['search_desc']:
             search_desc = request.form['search_desc']
             for elt in search_desc.split(' '):
-                q = q.filter(Channel.description.ilike('%'+elt+"%"))
+                q = q.filter(Channel.description_.ilike('%'+elt+"%"))
         if request.form['search_genre']:
             search_genre=request.form['search_genre']
-            q=q.filter_by(genre=search_genre)
+            q=q.filter_by(itunes_category_=search_genre)
 
     channels = q.all()
-    results = db.engine.execute("Select DISTINCT genre FROM channels ORDER BY genre")
-    genres=[]
+    results = db.engine.execute("Select DISTINCT itunes_category_ FROM channels ORDER BY itunes_category_")
+    iTunes_categories=[]
     for result in results:
-        genres.append(result[0])
+        iTunes_categories.append(result[0])
 
     return render_template('bo/channels/index.html', 
         channels=channels, 
-        genres=genres,
+        iTunes_categories=iTunes_categories,
         search_title=search_title, search_desc=search_desc, search_genre=search_genre)
     
 
@@ -188,17 +188,17 @@ def items_index():
             search_length=request.form['search_length']
             q=q.filter_by(cat_time=search_length)
     else:
-        q=q.order_by(Item.published.desc()).limit(25)
+        q=q.order_by(Item.pubdate_.desc()).limit(25)
     items = q.all()
     playlists = Playlist.query.all()
     
-    results = db.engine.execute("Select DISTINCT genre FROM items ORDER BY genre")
-    genres=[]
+    results = db.engine.execute("Select DISTINCT itunes_category_ FROM items ORDER BY itunes_category_")
+    iTunes_categories=[]
     for result in results:
-        genres.append(result[0])
+        iTunes_categories.append(result[0])
 
     return render_template('bo/items/index.html', 
-        items=items, playlists=playlists, genres=genres,
+        items=items, playlists=playlists, iTunes_categories=iTunes_categories,
         search_title=search_title, search_desc=search_desc, search_genre=search_genre, search_length='')
 
 
