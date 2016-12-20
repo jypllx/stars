@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Stars</title>
+    <!-- meta -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!-- styles -->
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <br/>
+        <br/>
+        <div class="row">
+            <div class="col-xs-6">
+                <a href="{{ url_for('channels_index') }}" class="btn btn-default btn-block">Back Office</a>
+            </div>
+            <div class="col-xs-6">
+                <a href="{{ url_for('mob_home') }}" class="btn btn-default btn-block">Version mobile</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

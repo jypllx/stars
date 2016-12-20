@@ -65,7 +65,7 @@ def channels_index():
     for result in results:
         genres.append(result[0])
 
-    return render_template('channels/index.html', 
+    return render_template('bo/channels/index.html', 
         channels=channels, 
         genres=genres,
         search_title=search_title, search_desc=search_desc, search_genre=search_genre)
@@ -76,7 +76,7 @@ def channels_index():
 def channels_get(id):
     channel=db.session.query(Channel).get(id)
     items=Item.query.filter_by(channel_id=id).limit(25).all()
-    return render_template('channels/view.html', channel=channel, items=items)
+    return render_template('bo/channels/view.html', channel=channel, items=items)
 
 @app.route('/bo/channels/edit/<int:id>', methods=['POST'])
 def channels_edit(id):
@@ -101,14 +101,14 @@ def playlists_index():
 
     playlists=q.all()
     tags=Tag.query.all()
-    return render_template('playlists/index.html', playlists=playlists, search=search, tag_id=tag_id, tags=tags)
+    return render_template('bo/playlists/index.html', playlists=playlists, search=search, tag_id=tag_id, tags=tags)
 
 
 @app.route('/bo/playlists/<int:id>')
 @login_required
 def playlists_get(id):
     playlist=db.session.query(Playlist).get(id)
-    return render_template('playlists/view.html', playlist=playlist)
+    return render_template('bo/playlists/view.html', playlist=playlist)
 
 
 @app.route('/bo/playlists/add', methods=['POST'])
@@ -188,7 +188,7 @@ def items_index():
             search_length=request.form['search_length']
             q=q.filter_by(cat_time=search_length)
     else:
-        q=q.order_by(Item.created.desc()).limit(25)
+        q=q.order_by(Item.published.desc()).limit(25)
     items = q.all()
     playlists = Playlist.query.all()
     
@@ -197,7 +197,7 @@ def items_index():
     for result in results:
         genres.append(result[0])
 
-    return render_template('items/index.html', 
+    return render_template('bo/items/index.html', 
         items=items, playlists=playlists, genres=genres,
         search_title=search_title, search_desc=search_desc, search_genre=search_genre, search_length='')
 
@@ -217,7 +217,7 @@ def add_item_to_playlist():
 @login_required
 def tags_index():
     tags = Tag.query.all()
-    return render_template('tags/index.html', tags=tags)
+    return render_template('bo/tags/index.html', tags=tags)
 
 @app.route('/bo/tags/add', methods=['POST'])
 @login_required
