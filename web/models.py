@@ -1,6 +1,9 @@
 from app import db
 from parser.podtime import PodTime
+from parser.podmood import PodMood
 from flask.ext.security import UserMixin, RoleMixin
+
+podmood=PodMood('./moods.xlsx')
 
 class Channel(db.Model):
     __tablename__ = 'channels'
@@ -10,6 +13,7 @@ class Channel(db.Model):
     name            = db.Column(db.String())
     description     = db.Column(db.String())
     genre           = db.Column(db.String())
+    mood            = db.Column(db.String())
     language        = db.Column(db.String())
     url             = db.Column(db.String())
     link            = db.Column(db.String())
@@ -19,6 +23,7 @@ class Channel(db.Model):
         self.name = name
         self.description = description
         self.genre = genre
+        self.mood = podmood.get_mood(genre)
         self.language = language
         self.url = url
         self.link = link
@@ -61,6 +66,7 @@ class Item(db.Model):
     audio_url       = db.Column(db.String())
     published       = db.Column(db.DateTime)
     genre           = db.Column(db.String())
+    mood            = db.Column(db.String())
 
     def __init__(self, name, description, channel_id, duration_str, audio_url, published, genre):
         self.name           = name
@@ -70,6 +76,7 @@ class Item(db.Model):
         self.published      = published
         self.duration, self.cat_time, self.cat_name = PodTime().getDurationCat(duration_str)
         self.genre          = genre
+        self.mood           = podmood.get_mood(genre)
 
     @property
     def duration_str(self):

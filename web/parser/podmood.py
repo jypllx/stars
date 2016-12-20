@@ -12,8 +12,8 @@ Uses an 2 column xls file :
 class PodMood:
     
     def __init__(self, file):
-        if not os.path.exists(file_path) :
-            raise Exception('No file for %s'%file)
+        if not os.path.exists(file) :
+            raise Exception('No file for %s' % file)
 
         self.file = file
         wb=load_workbook(file)
@@ -35,11 +35,8 @@ class PodMood:
             iCat=ws.cell(row=line, column=1).value
 
         self.moods = list(set(self.moods))
-        print(self.moods)
-        print(len(self.moods))
-        print(self.mapping)
 
-    def getMood(self, itunes_category):
+    def get_mood(self, itunes_category):
         try :
             return self.mapping[itunes_category]
         except Exception as e:
