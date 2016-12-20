@@ -3,6 +3,7 @@ from parser.podtime import PodTime
 from parser.podmood import PodMood
 from flask.ext.security import UserMixin, RoleMixin
 
+
 podmood=PodMood('./moods.xlsx')
 
 class Channel(db.Model):
@@ -12,18 +13,18 @@ class Channel(db.Model):
     created         = db.Column(db.DateTime)
     name            = db.Column(db.String())
     description     = db.Column(db.String())
-    genre           = db.Column(db.String())
+    itunes_category = db.Column(db.String())
     mood            = db.Column(db.String())
     language        = db.Column(db.String())
     url             = db.Column(db.String())
     link            = db.Column(db.String())
     img_url         = db.Column(db.String())
 
-    def __init__(self, name, description, genre, language, url, link, img_url):
+    def __init__(self, name, description, itunes_category, language, url, link, img_url):
         self.name = name
         self.description = description
-        self.genre = genre
-        self.mood = podmood.get_mood(genre)
+        self.itunes_category = itunes_category
+        self.mood = podmood.get_mood(itunes_category)
         self.language = language
         self.url = url
         self.link = link
@@ -65,18 +66,18 @@ class Item(db.Model):
     cat_name        = db.Column(db.String())
     audio_url       = db.Column(db.String())
     published       = db.Column(db.DateTime)
-    genre           = db.Column(db.String())
+    itunes_category = db.Column(db.String())
     mood            = db.Column(db.String())
 
-    def __init__(self, name, description, channel_id, duration_str, audio_url, published, genre):
+    def __init__(self, name, description, channel_id, duration_str, audio_url, published, itunes_category):
         self.name           = name
         self.description    = description
         self.channel_id     = channel_id
         self.audio_url      = audio_url
         self.published      = published
         self.duration, self.cat_time, self.cat_name = PodTime().getDurationCat(duration_str)
-        self.genre          = genre
-        self.mood           = podmood.get_mood(genre)
+        self.genre          = itunes_category
+        self.mood           = podmood.get_mood(itunes_category)
 
     @property
     def duration_str(self):
