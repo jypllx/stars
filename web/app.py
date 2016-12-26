@@ -120,21 +120,33 @@ def playlists_index():
     tags=Tag.query.all()
     return render_template('bo/playlists/index.html', playlists=playlists, search=search, tag_id=tag_id, tags=tags)
 
-
-@app.route('/bo/playlists/<int:id>')
+@app.route('/bo/playlists/edit', methods=['POST', 'GET'])
+@app.route('/bo/playlists/edit/<int:id>', methods=['POST', 'GET'])
 @login_required
-def playlists_get(id):
-    playlist=db.session.query(Playlist).get(id)
-    return render_template('bo/playlists/view.html', playlist=playlist)
+def playlists_edit(id=None):
+    form=PlaylistForm(request.form)
+    playlist=None
+    if id is not None:
+        playlist=db.session.query(Playlist).get(id)
 
+    if request.method=='POST' and form.validate():
+        if id is not None:
+            playlist.name=form.name.data
+            playlist.description=form.description.data
+        else:
+            playlist=Playlist(form.name.data,
+                form.description.data)
+            db.session.add(playlist)
+        db.session.commit()
+        return redirect(url_for('playlists_edit', id=playlist.id))
 
-@app.route('/bo/playlists/add', methods=['POST'])
-@login_required
-def playlists_add():
-    p = Playlist(request.form['name'], request.form['description'])
-    db.session.add(p)
-    db.session.commit()
-    return redirect(url_for('playlists_index'))
+    items=[]
+    if id is not None:
+        form.populate(playlist)
+        items=playlist.ranked_items
+    return render_template('bo/playlists/edit.html', form=form,
+        items=items)
+
 
 @app.route('/bo/playlists/delete/<int:id>', methods=['GET'])
 @login_required
@@ -179,6 +191,19 @@ def item_move(way, playlist_id, item_id):
     db.session.commit()
 
     return redirect(url_for('get_playlist', id=playlist_id))
+
+@app.route('/bo/items/remove/<int:playlist_id>/<int:item_id>')
+@login_required
+def items_remove(playlist_id, item_id):
+    r=RelPlaylistItem.query.filter_by(playlist_id=playlist_id).filter_by(item_id=item_id).first()
+    rank=r.rank
+
+    others=RelPlaylistItem.query.filter_by(playlist_id=playlist_id).filter(RelPlaylistItem.rank>rank).all()
+    for other in others:
+        other.rank=other.rank-1
+    db.session.delete(r)
+    db.session.commit()
+    return redirect(url_for('playlists_edit', id=playlist_id))
 
 
 @app.route('/bo/items/', methods=['POST', 'GET'])
@@ -230,7 +255,7 @@ def items_index():
         search_title=search_title, search_desc=search_desc, 
         search_iCat=search_iCat, search_mood=search_mood, search_length=search_length)
 
-@app.route('/bo/items/<int:id>/edit', methods=['POST', 'GET'])
+@app.route('/bo/items/<int:id>', methods=['POST', 'GET'])
 @login_required
 def items_edit(id):
     form = ItemForm(request.form)
@@ -266,28 +291,27 @@ def tags_index():
     tags = Tag.query.all()
     return render_template('bo/tags/index.html', tags=tags)
 
-@app.route('/bo/tags/edit/<int:id>', methods=['POST', 'GET'])
+@app.route('/bo/tags/edit',  methods=['POST', 'GET'])
+@app.route('/bo/tags/edit/<id>', methods=['POST', 'GET'])
 @login_required
-def tags_edit(id):
+def tags_edit(id=None):
     form = TagForm(request.form)
+    tag=None
+    if id is not None:
+        tag = db.session.query(Tag).get(id)
     
     if request.method=='POST' and form.validate():
-        tag= db.session.query(Tag).get(form.id.data)
-        tag.name=form.name.data
-        tag.description=form.description.data
+        if id is not None:
+            tag.name=form.name.data
+            tag.description=form.description.data
+        else:
+            tag=Tag(form.name.data, form.description.data)
+            db.session.add(tag)
         db.session.commit()
         return redirect(url_for('tags_index'))
 
-    if id != -1:
-        tag = db.session.query(Tag).get(id)
-        app.logger.info(tag)
+    if id is not None:
         form.populate(tag)
-    else:
-        tag=Tag()
-        tag.name=form.name.data
-        tag.description=form.description.data
-        db.session.add(tag)
-        db.session.commit()
     return render_template('bo/tags/edit.html', form=form)
 
 @app.route('/bo/tags/delete/<int:id>')

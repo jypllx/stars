@@ -76,7 +76,7 @@ class ItemForm(Form):
 
 
 class TagForm(Form):
-    id          = IntegerField('Id*')
+    id          = StringField('Id*')
     name        = StringField('Nom')
     description = StringField('Description')
 
@@ -84,3 +84,13 @@ class TagForm(Form):
         self.id.process_data(tag.id)
         self.name.process_data(tag.name)
         self.description.process_data(tag.description)
+
+class PlaylistForm(Form):
+    id          = StringField('Id*')
+    name        = StringField('Nom')
+    description = StringField('Description')
+
+    def populate(self, playlist):
+        self.id.process_data(str(playlist.id))
+        self.name.process_data(playlist.name)
+        self.description.process_data(playlist.description)

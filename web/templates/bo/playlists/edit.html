@@ -1,0 +1,60 @@
+{% extends "bo/_base.html" %}
+
+{% block content %}
+
+<h1>Playlist</h1>
+<div>
+    <div class="well">
+        <form method="POST">
+            <div class="row">
+                <div class="form-group">
+                    {{ form.id.label }}
+                    {{ form.id(readonly=true, class_="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.name.label }}
+                    {{ form.name(class_="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.description.label }}
+                    {{ form.description(class_="form-control") }}
+                </div>
+                <p class="text-right">
+                    <a href="{{ url_for('playlists_index') }}" class="btn btn-default">Back</a>
+                    <input type="submit" value="Submit" class="btn btn-primary">
+                </p>
+            </div>
+        </form>
+    </div>
+</div>
+<br/>
+<table class="table table-hover table-striped">
+    <tr>
+        <th>Rang</th>
+        <th>Titre</th>
+        <th>Description</th>
+        <th>Mood</th>
+        <th>Durée</th>
+        <th>Audio</th>
+        <th></th>
+    </tr>
+    {% for it in items %}
+    <tr>
+        <td>{{it.rank}}</td>
+        <td>{{it.item.title}}</td>
+        <td>{{it.item.description}}</td>
+        <td>{{it.item.mood}}</td>
+        <td>{{it.item.duration_}}</td>
+        <td><audio controls>
+            <source src="{{it.item.audio_url}}" type="audio/mpeg">
+                Your browser does not support the audio element.
+        </audio></td>
+        <td>
+        <a href="{{ url_for('items_edit', id=it.item.id) }}" class="btn btn-default"><i class="fa fa-pencil"></i></a>
+        <a href="{{ url_for('items_remove', playlist_id=form.id.data, item_id=it.item.id) }}" class="btn btn-default"><i class="fa fa-close"></i></a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

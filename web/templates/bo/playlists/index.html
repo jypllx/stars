@@ -19,84 +19,32 @@
 </div>
 <br/>
 <div>
-    <button type="button" class="btn" data-toggle="modal" data-target="#create_new_playlist"><i class="fa fa-plus fa-2x"></i>&nbsp;Create new</button>
+    <a href="{{ url_for('playlists_edit') }}" class="btn btn-default">Create New</a>
 </div>
 <br/>
 <div>
-    <table>
+    <table class="table table-hover table-striped">
+        <tr>
+            <th>Id</th>
+            <th>Nom</th>
+            <th>Description</th>
+            <th>Nb episodes</th>
+            <th></th>
+        </tr>
         {% for playlist in playlists %}
-        <div class="well" id="{{playlist.id}}">
-            <h4>
-               <strong>{{playlist.name}}</strong>
-           </h4>
-           <p>{{playlist.description}}</p>
-           <div>
-            <p><a href="{{url_for('playlists_get', id=playlist.id)}}">Voir</a></p>
-            <p><a href="{{url_for('playlists_delete', id=playlist.id)}}">Suppr</a></p>
-        </div>
-        <div>Tag:&nbsp;<button  class="btn btn-default add-tag"
-            data-toggle="modal" data-target="#add_tag">
-            {% if playlist.tag is none %} add tag {% else %} {{playlist.tag.name}} {% endif %}
-        </button></div>
-    </div>
-    {% endfor %}
-</table>
+        <tr>
+            <td>{{playlist.id}}</td>
+            <td>{{playlist.name}}</td>
+            <td style="width: 30%;word-wrap: break-word;">{{playlist.description}}</td>
+            <td>{{ playlist.items|length }}</td>
+            <td>
+                <a href="{{ url_for('playlists_edit', id=playlist.id) }}" class="btn btn-default"><i class="fa fa-pencil"></i></a>
+                <a href="{{ url_for('playlists_delete', id=playlist.id) }}" class="btn btn-default"><i class="fa fa-close"></i></a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
 </div>
-
-<!-- Modal -->
-<div class="modal fade" id="create_new_playlist" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <form method="post" action="{{ url_for('playlists_add') }}">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Create New Playlist</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="name">Playlist name</label>
-                        <input type="text" name="name" class="form-control" id="name" placeholder="Name...">
-                    </div>
-                    <div class="form-group">
-                        <label for="Description">Description</label>
-                        <input type="text" name="description" class="form-control" id="description" placeholder="Description...">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="add_tag" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <form method="post" action="{{ url_for('playlists_add_tag') }}">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Add Tag</h4>
-                </div>
-                <div class="modal-body">
-                <input id="tag_playlist_id" type="hidden" name="tag_playlist_id" value="">
-                    <select name="tag_id">
-                        {% for tag in tags %}
-                        <option value="{{tag.id}}">{{tag.name}}</option>
-                        {% endfor %}
-                    </select>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
 {% endblock %}
 
 {% block js %}

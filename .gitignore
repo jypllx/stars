@@ -6,3 +6,4 @@ __pycache__
 blog_old.md
 **/*.pyc
 .env
+web/moods.xlsx
