@@ -227,8 +227,27 @@ def items_index():
     return render_template('bo/items/index.html',
         items=items, playlists=playlists,
         iTunes_categories=iTunes_categories, moods=moods,
-        search_title=search_title, search_desc=search_desc, search_iCat=search_iCat, search_length=search_length)
+        search_title=search_title, search_desc=search_desc, 
+        search_iCat=search_iCat, search_mood=search_mood, search_length=search_length)
 
+@app.route('/bo/items/<int:id>/edit', methods=['POST', 'GET'])
+@login_required
+def items_edit(id):
+    form = ItemForm(request.form)
+    item=db.session.query(Item).get(id)
+    if request.method == 'POST' and form.validate():
+        app.logger.info('ON EST DEDANS')
+        item.title      =form.title.data
+        item.description=form.description.data
+        item.mood       =form.mood.data if form.mood.data != '' else None
+        
+        db.session.commit()
+        return redirect(url_for('items_index'))
+
+    channel=db.session.query(Channel).get(item.channel_id)
+    form.populate(item, channel)
+    return render_template('bo/items/edit.html',
+        form=form)
 
 @app.route('/bo/items/add_to_playlist', methods=['POST'])
 @login_required

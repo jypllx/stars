@@ -38,6 +38,9 @@ class ChannelForm(Form):
 
 class ItemForm(Form):
     id              = StringField('Id*')
+
+    channel_        = StringField('Podcast*')
+    image_          = StringField('Image*')
     
     title_          = StringField('Titre*')
     description_    = TextAreaField('Description*')
@@ -49,11 +52,11 @@ class ItemForm(Form):
     title           = StringField('Titre Tootak')
     description     = TextAreaField('Description Tootak')    
     mood            = StringField('Mood')
-    cat_name        = StringField('Cat durée')
+    cat_name        = StringField('Cat durée*')
     created         = StringField('Créé le*')
     
 
-    def populate(self, item):
+    def populate(self, item, channel):
         self.id.process_data(item.id)
         self.title_.process_data(item.title_)
         self.description_.process_data(item.description_)
@@ -67,3 +70,6 @@ class ItemForm(Form):
         self.description.process_data(item.description)
         self.mood.process_data(item.mood)
         self.cat_name.process_data(item.cat_name)
+
+        self.channel_.process_data(channel.title)
+        self.image_.process_data(channel.image)
