@@ -1,4 +1,4 @@
-from wtforms import Form, StringField, TextAreaField
+from wtforms import Form, StringField, TextAreaField, IntegerField
 
 class ChannelForm(Form):
     id              = StringField('Id*')
@@ -73,3 +73,14 @@ class ItemForm(Form):
 
         self.channel_.process_data(channel.title)
         self.image_.process_data(channel.image)
+
+
+class TagForm(Form):
+    id          = IntegerField('Id*')
+    name        = StringField('Nom')
+    description = StringField('Description')
+
+    def populate(self, tag):
+        self.id.process_data(tag.id)
+        self.name.process_data(tag.name)
+        self.description.process_data(tag.description)

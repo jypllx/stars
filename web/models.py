@@ -130,6 +130,9 @@ class Tag(db.Model):
         self.name           = name
         self.description    = description
 
+    def __repr__(self):
+        return 'Tag<id {}, {}>'.format(self.id, self.name)
+
 class Playlist(db.Model):
     __tablename__ = 'playlists'
 

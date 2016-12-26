@@ -266,13 +266,29 @@ def tags_index():
     tags = Tag.query.all()
     return render_template('bo/tags/index.html', tags=tags)
 
-@app.route('/bo/tags/add', methods=['POST'])
+@app.route('/bo/tags/edit/<int:id>', methods=['POST', 'GET'])
 @login_required
-def tags_add():
-    t = Tag(request.form['name'], request.form['description'])
-    db.session.add(t)
-    db.session.commit()
-    return redirect(url_for('tags_index'))
+def tags_edit(id):
+    form = TagForm(request.form)
+    
+    if request.method=='POST' and form.validate():
+        tag= db.session.query(Tag).get(form.id.data)
+        tag.name=form.name.data
+        tag.description=form.description.data
+        db.session.commit()
+        return redirect(url_for('tags_index'))
+
+    if id != -1:
+        tag = db.session.query(Tag).get(id)
+        app.logger.info(tag)
+        form.populate(tag)
+    else:
+        tag=Tag()
+        tag.name=form.name.data
+        tag.description=form.description.data
+        db.session.add(tag)
+        db.session.commit()
+    return render_template('bo/tags/edit.html', form=form)
 
 @app.route('/bo/tags/delete/<int:id>')
 @login_required
