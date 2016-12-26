@@ -18,6 +18,7 @@ import sys
 import json
 
 from models import *
+from forms  import *
 
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 security = Security(app, user_datastore)
@@ -43,7 +44,8 @@ def home_bo():
 def channels_index():
     search_title=''
     search_desc=''
-    search_genre=''
+    search_iCat=''
+    search_mood=''
     q = Channel.query
     if request.method == 'POST':
         # TODO : replace by WTForms
@@ -55,9 +57,12 @@ def channels_index():
             search_desc = request.form['search_desc']
             for elt in search_desc.split(' '):
                 q = q.filter(Channel.description_.ilike('%'+elt+"%"))
-        if request.form['search_genre']:
-            search_genre=request.form['search_genre']
-            q=q.filter_by(itunes_category_=search_genre)
+        if request.form['search_iCat']:
+            search_iCat=request.form['search_iCat']
+            q=q.filter_by(itunes_category_=search_iCat)
+        if request.form['search_mood']:
+            search_mood=request.form['search_mood']
+            q=q.filter_by(mood=search_mood)
 
     channels = q.all()
     results = db.engine.execute("Select DISTINCT itunes_category_ FROM channels ORDER BY itunes_category_")
@@ -65,11 +70,16 @@ def channels_index():
     for result in results:
         iTunes_categories.append(result[0])
 
-    return render_template('bo/channels/index.html', 
-        channels=channels, 
-        iTunes_categories=iTunes_categories,
-        search_title=search_title, search_desc=search_desc, search_genre=search_genre)
-    
+    results = db.engine.execute("Select DISTINCT mood FROM channels ORDER BY mood")
+    moods=[]
+    for result in results:
+        moods.append(result[0])
+
+    return render_template('bo/channels/index.html',
+        channels=channels,
+        iTunes_categories=iTunes_categories, moods= moods,
+        search_title=search_title, search_desc=search_desc, search_iCat=search_iCat, search_mood=search_mood)
+
 
 @app.route('/bo/channels/<int:id>')
 @login_required
@@ -78,9 +88,20 @@ def channels_get(id):
     items=Item.query.filter_by(channel_id=id).limit(25).all()
     return render_template('bo/channels/view.html', channel=channel, items=items)
 
-@app.route('/bo/channels/edit/<int:id>', methods=['POST'])
+@app.route('/bo/channels/edit/<int:id>', methods=['POST', 'GET'])
 def channels_edit(id):
-    pass
+    form = ChannelForm(request.form)
+    channel=db.session.query(Channel).get(id)
+    if request.method == 'POST' and form.validate():
+        channel.title=form.title.data
+        channel.description=form.description.data
+        channel.mood=form.mood.data
+        channel.image=form.image.data
+        db.session.commit()
+        return redirect(url_for('channels_get', id=id))
+
+    form.populate(channel)
+    return render_template('bo/channels/edit.html', form=form)
 
 
 @app.route('/bo/playlists/', methods=['POST', 'GET'])

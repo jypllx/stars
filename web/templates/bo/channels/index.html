@@ -14,11 +14,20 @@
             <input type="text" class="form-control" name="search_desc" placeholder="Rechercher..." value="{{search_desc}}">
         </div>
         <div class="form-group">
-            <label for="search_genre">iTunes Category</label>
-            <select class="form-control" name="search_genre">
-                <option value="" >iTunes Category</option>
+            <label for="search_iCat">iTunes Category</label>
+            <select class="form-control" name="search_iCat">
+                <option value="" >Choose iTunes Category</option>
             {% for iCat in iTunes_categories %}
                 <option value="{{iCat}}" {% if search_genre == iCat %} selected="selected" {% endif %}>{{iCat}}</option>
+            {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="search_mood">Mood</label>
+            <select class="form-control" name="search_mood">
+                <option value="" >Choose Mood</option>
+            {% for mood in moods %}
+                <option value="{{mood}}" {% if search_mood == mood %} selected="selected" {% endif %}>{{mood}}</option>
             {% endfor %}
             </select>
         </div>
@@ -45,7 +54,7 @@
             <td>{{channel.mood}}</td>
             <td style="width: 30%;word-wrap: break-word;">{{channel.description_}}</td>
             <td>{{channel.author_}}</td>
-            <td><a class='btn btn-default' href="{{url_for('channels_get', id=channel.id)}}"><i class="fa fa-search"></i></a>&nbsp;<a class='btn btn-default' href="{{url_for('channels_get', id=channel.id)}}"><i class="fa fa-pencil"></i></a></td>
+            <td><a class='btn btn-default' href="{{url_for('channels_get', id=channel.id)}}"><i class="fa fa-search"></i></a>&nbsp;<a class='btn btn-default' href="{{url_for('channels_edit', id=channel.id)}}"><i class="fa fa-pencil"></i></a></td>
         </tr>            
         {% endfor %}
     </table>
