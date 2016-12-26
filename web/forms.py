@@ -6,7 +6,7 @@ class ChannelForm(Form):
     title_          = StringField('Titre*')
     link_           = StringField('URL*')
     description_    = TextAreaField('Description*')
-    itunes_category_= StringField('iTunes cat*')
+    itunes_category_= StringField('iTunes Cat*')
     language_       = StringField('Langue*')
     author_         = StringField('Auteur*')
     image_          = StringField('Image*')

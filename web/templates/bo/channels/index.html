@@ -39,22 +39,22 @@
     <table class="table table-striped table-hover">
         <tr>
             <th>#</th>
-            <th>Titre*</th>
-            <th>Cat iTunes*</th>
-            <th>Mood</th>
-            <th>Description*</th>
+            <th>Titre Tootak</th>
+            <th>Mood Tootak</th>
             <th>Producteur*</th>
+            <th>Description Tootak</th>
+            <th>Cat iTunes*</th>
             <th></th>
         </tr>
         {% for channel in channels %}
         <tr id="{{channel.id}}">
             <td><img src="{{channel.image}}" class="img-thumbnail" height="80" width="80"></td>
-            <td>{{channel.title_}}</td>
-            <td>{{channel.itunes_category_}}</td>
+            <td>{{channel.title}}</td>
             <td>{{channel.mood}}</td>
-            <td style="width: 30%;word-wrap: break-word;">{{channel.description_}}</td>
             <td>{{channel.author_}}</td>
-            <td><a class='btn btn-default' href="{{url_for('channels_get', id=channel.id)}}"><i class="fa fa-search"></i></a>&nbsp;<a class='btn btn-default' href="{{url_for('channels_edit', id=channel.id)}}"><i class="fa fa-pencil"></i></a></td>
+            <td style="width: 30%;word-wrap: break-word;">{{channel.description}}</td>
+            <td>{{channel.itunes_category_}}</td>
+            <td><a class='btn btn-default' href="{{url_for('channels_get', id=channel.id)}}"><i class="fa fa-search"></i></a></td>
         </tr>            
         {% endfor %}
     </table>

@@ -81,15 +81,9 @@ def channels_index():
         search_title=search_title, search_desc=search_desc, search_iCat=search_iCat, search_mood=search_mood)
 
 
-@app.route('/bo/channels/<int:id>')
+@app.route('/bo/channels/<int:id>', methods=['POST', 'GET'])
 @login_required
 def channels_get(id):
-    channel=db.session.query(Channel).get(id)
-    items=Item.query.filter_by(channel_id=id).limit(25).all()
-    return render_template('bo/channels/view.html', channel=channel, items=items)
-
-@app.route('/bo/channels/edit/<int:id>', methods=['POST', 'GET'])
-def channels_edit(id):
     form = ChannelForm(request.form)
     channel=db.session.query(Channel).get(id)
     if request.method == 'POST' and form.validate():
@@ -100,8 +94,10 @@ def channels_edit(id):
         db.session.commit()
         return redirect(url_for('channels_get', id=id))
 
+    channel=db.session.query(Channel).get(id)
     form.populate(channel)
-    return render_template('bo/channels/edit.html', form=form)
+    items=Item.query.filter_by(channel_id=id).limit(25).all()
+    return render_template('bo/channels/view.html', form=form, items=items)
 
 
 @app.route('/bo/playlists/', methods=['POST', 'GET'])
