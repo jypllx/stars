@@ -186,21 +186,26 @@ def item_move(way, playlist_id, item_id):
 def items_index():
     search_title=''
     search_desc=''
-    search_genre=''
-    search_length=''
+    search_iCat=''
+    search_mood=''
+    search_length='-1'
 
     q = Item.query
     if request.method == 'POST':
         if request.form['search_title']:
             search_title = request.form['search_title']
             for elt in search_title.split(' '):
-                q = q.filter(Item.name.ilike('%'+elt+"%"))
+                q = q.filter(Item.title.ilike('%'+elt+"%"))
         if request.form['search_desc']:
             search_desc = request.form['search_desc']
             for elt in search_desc.split(' '):
                 q = q.filter(Item.description.ilike('%'+elt+"%"))
-        if request.form['search_genre']:
-            q=q.filter_by(genre=search_genre)
+        if request.form['search_iCat']:
+            search_iCat=request.form['search_iCat']
+            q=q.filter_by(itunes_category_=search_iCat)
+        if request.form['search_mood']:
+            search_mood=request.form['search_mood']
+            q=q.filter_by(mood=search_mood)
         if request.form['search_length']:
             search_length=request.form['search_length']
             q=q.filter_by(cat_time=search_length)
@@ -214,9 +219,15 @@ def items_index():
     for result in results:
         iTunes_categories.append(result[0])
 
-    return render_template('bo/items/index.html', 
-        items=items, playlists=playlists, iTunes_categories=iTunes_categories,
-        search_title=search_title, search_desc=search_desc, search_genre=search_genre, search_length='')
+    results = db.engine.execute("Select DISTINCT mood FROM items ORDER BY mood")
+    moods=[]
+    for result in results:
+        moods.append(result[0])
+
+    return render_template('bo/items/index.html',
+        items=items, playlists=playlists,
+        iTunes_categories=iTunes_categories, moods=moods,
+        search_title=search_title, search_desc=search_desc, search_iCat=search_iCat, search_length=search_length)
 
 
 @app.route('/bo/items/add_to_playlist', methods=['POST'])
