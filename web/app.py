@@ -172,7 +172,7 @@ def playlists_add_tag():
 
 @app.route('/bo/items/move/<way>/<int:playlist_id>/<int:item_id>')
 @login_required
-def item_move(way, playlist_id, item_id):
+def items_move(way, playlist_id, item_id):
     #app.logger.info(way +' '+str(playlist_id)+' '+str(item_id))
 
     r = RelPlaylistItem.query.filter(RelPlaylistItem.playlist_id==playlist_id,
@@ -190,7 +190,7 @@ def item_move(way, playlist_id, item_id):
     r.rank=new_rank
     db.session.commit()
 
-    return redirect(url_for('get_playlist', id=playlist_id))
+    return redirect(url_for('playlists_edit', id=playlist_id))
 
 @app.route('/bo/items/remove/<int:playlist_id>/<int:item_id>')
 @login_required
