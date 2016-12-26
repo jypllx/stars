@@ -18,19 +18,22 @@
 </div>
 <br/>
 <div>
-    <table>
+    <table class="table table-hover table-striped">
+        <tr>
+            <th>Id</th>
+            <th>Nom</th>
+            <th>Description</th>
+            <th></th>
+        </tr>
         {% for tag in tags %}
-        <div class="well" id="{{tag.id}}">
-            <h4>
-             <strong>{{tag.name}}</strong>
-         </h4>
-         <p>{{tag.description}}</p>
-         <div>
-            <a href="{{url_for('tags_delete', id=tag.id)}}">Supprimer</a>
-        </div>
-    </div>
-    {% endfor %}
-</table>
+        <tr>
+            <td>{{tag.id}}</td>
+            <td>{{tag.name}}</td>
+            <td style="width: 30%;word-wrap: break-word;">{{tag.description}}</td>
+            <td></td>
+        </tr>
+        {% endfor %}
+    </table>
 </div>
 
 <!-- Modal -->
