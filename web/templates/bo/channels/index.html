@@ -18,7 +18,7 @@
             <select class="form-control" name="search_iCat">
                 <option value="" >Choose iTunes Category</option>
             {% for iCat in iTunes_categories %}
-                <option value="{{iCat}}" {% if search_genre == iCat %} selected="selected" {% endif %}>{{iCat}}</option>
+                <option value="{{iCat}}" {% if search_iCat == iCat %} selected="selected" {% endif %}>{{iCat}}</option>
             {% endfor %}
             </select>
         </div>

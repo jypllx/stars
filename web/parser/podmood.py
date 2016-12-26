@@ -10,7 +10,7 @@ Uses an 2 column xls file :
 """
 
 class PodMood:
-    
+
     def __init__(self, file):
         if not os.path.exists(file) :
             raise Exception('No file for %s' % file)
@@ -26,7 +26,6 @@ class PodMood:
         iCat=ws.cell(row=line, column=2).value
 
         while iCat is not None:
-            
             mood=ws.cell(row=line, column=1).value
 
             iCat=iCat.strip()
