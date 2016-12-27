@@ -85,11 +85,11 @@ $(document).ready(function(){
         },
         function(data) {
             $('#playlist').css('display', 'none')
-            $('#filter').removeAttr('style')
+            $('#item').removeAttr('style')
             obj = JSON.parse(data)
-            $('#filter .item_name').text(obj.item.name)
-            $('#filter .item_description').text(obj.item.description)
-            $('#filter .item_duration').text(obj.item.duration)
+            $('#item .item_name').text(obj.item.name)
+            $('#item .item_description').text(obj.item.description)
+            $('#item .item_duration').text(obj.item.duration)
             $(".btn-itunes-cat.active, .btn-time.active").removeClass('active')
             $('#'+obj.itunes_category_).addClass('active')
             if (obj.cat_time != '') {
@@ -98,8 +98,7 @@ $(document).ready(function(){
             $("#next").attr("value", +obj.page+1)
             $("#next").removeClass('active')
             $("#next").blur()
-            }
-        );
+        });
     }
 
 
@@ -131,10 +130,9 @@ $(document).ready(function(){
             $(".btn-itunes-cat.active, .btn-time.active").removeClass('active')
             $('#'+obj.genre).addClass('active')
             if (obj.playlistId != '') {
-             $('#'+obj.cat_time).addClass('active')
-         }
-     }
-     );
+                $('#'+obj.cat_time).addClass('active')
+            }
+        });
     }
 
     $(".topic-btn").click(function() {
