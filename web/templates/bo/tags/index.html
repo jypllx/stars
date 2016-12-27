@@ -31,8 +31,8 @@
             <td>{{tag.name}}</td>
             <td style="width: 30%;word-wrap: break-word;">{{tag.description}}</td>
             <td>
-            <a href="{{ url_for('tags_edit', id=tag.id) }}" class="btn btn-default"><i class="fa fa-pencil"></i></a>
-            <a href="{{ url_for('tags_delete', id=tag.id) }}" class="btn btn-default"><i class="fa fa-close"></i></a>
+            <a href="{{ url_for('tags_edit', id=tag.id) }}" class="btn btn-default"><i class="fa fa-pencil" title="Editer"></i></a>
+            <a href="{{ url_for('tags_delete', id=tag.id) }}" class="btn btn-default"><i class="fa fa-close" title="Supprimer"></i></a>
             </td>
         </tr>
         {% endfor %}

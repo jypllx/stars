@@ -35,10 +35,9 @@
             <label for="search_length">Durée</label>
             <select class="form-control" name="search_length">
                 <option value="" >Durée</option>
-                <option value="0" {% if search_length|int() == 0|int() %} selected="selected" {% endif %}>0-5min</option>
-                <option value="1" {% if search_length|int() == 1|int() %} selected="selected" {% endif %}>5-20min</option>
-                <option value="2" {% if search_length|int() == 2|int() %} selected="selected" {% endif %}>20min-1h</option>
-                <option value="5" {% if search_length|int() == 3|int() %} selected="selected" {% endif %}>+1h</option>
+                {% for category in time_categories %}
+                <option value="{{category['id']}}" {% if search_length|int() == category['id']|int() %} selected="selected" {% endif %}>{{category.name}}</option>
+                {% endfor %}
             </select>
         </div>
         <button type="submit" class="btn btn-default">Submit</button>

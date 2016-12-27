@@ -8,10 +8,9 @@
     <p class="text-center"><b>Durée</b></p>
 </div>
 <div class="row time-filter">
-    <div class="col-xs-3"><button class="btn btn-block btn-default btn-time" value="0" id="time0"><i class="fa fa-hourglass-o"></i>&nbsp;5m</button></div>
-    <div class="col-xs-3"><button class="btn btn-block btn-default btn-time" value="1" id="time1"><i class="fa fa-hourglass-end"></i>&nbsp;20m</button></div>
-    <div class="col-xs-3"><button class="btn btn-block btn-default btn-time" value="2" id="time2"><i class="fa fa-hourglass-half"></i>&nbsp;1h</button></div>
-    <div class="col-xs-3"><button class="btn btn-block btn-default btn-time" value="3" id="time3"><i class="fa fa-hourglass-start"></i>&nbsp;+1h</button></div>
+    {% for category in time_categories %}
+    <div class="col-xs-3"><button class="btn btn-block btn-default btn-time" value="{{category.id}}" id="time{{category.id}}"><i class="fa {{category.icon}}"></i>&nbsp;{{category.name}}</button></div>
+    {% endfor %}
 </div>
 <br/>
 <div class="row">

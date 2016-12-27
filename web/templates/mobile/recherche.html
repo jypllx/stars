@@ -12,10 +12,9 @@
             </div>
             <br/>
             <div class="row time-filter">
-                <div class="col-xs-3"><a class="btn btn-block btn-default btn-time" value="0" id="time0"><i class="fa fa-hourglass-o"></i>&nbsp;0-5m</a></div>
-                <div class="col-xs-3"><a class="btn btn-block btn-default btn-time" value="1" id="time1"><i class="fa fa-hourglass-end"></i>&nbsp;5-20m</a></div>
-                <div class="col-xs-3"><a class="btn btn-block btn-default btn-time" value="2" id="time2"><i class="fa fa-hourglass-half"></i>&nbsp;20m-1h</a></div>
-                <div class="col-xs-3"><a class="btn btn-block btn-default btn-time" value="3" id="time3"><i class="fa fa-hourglass-start"></i>&nbsp;+1h</a></div>
+                {% for category in time_categories %}
+                <div class="col-xs-3"><a class="btn btn-block btn-default btn-time" value="{{category.id}}" id="time{{category.id}}"><i class="fa {{category.icon}}"></i>&nbsp;{{category.name}}</a></div>
+                {% endfor %}
                 <input id="cat_time" type="hidden" name="cat_time" value="">
             </div>
             <br/>
@@ -55,6 +54,7 @@
             </div>
             <input id="channel" type="hidden" name="channel_id" value="">
         </div>
+        <input id="itunes_category" type="hidden" name="itunes_category" value="">
     </form>
 </div>
 {% endblock %}

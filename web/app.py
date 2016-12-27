@@ -249,7 +249,7 @@ def items_index():
 
     return render_template('bo/items/index.html',
         items=items, playlists=playlists,
-        iTunes_categories=iTunes_categories, moods=moods,
+        iTunes_categories=iTunes_categories, moods=moods, time_categories=PodTime().CATEGORIES,
         search_title=search_title, search_desc=search_desc, 
         search_iCat=search_iCat, search_mood=search_mood, search_length=search_length)
 
@@ -328,7 +328,7 @@ def tags_delete(id):
 @login_required
 def mob_home():
     playlists = Playlist.query.order_by(Playlist.created.desc()).limit(4).all()
-    return render_template('mobile/home.html', playlists=playlists)
+    return render_template('mobile/home.html', playlists=playlists, time_categories=PodTime().CATEGORIES)
 
 @app.route('/ajax/items', methods=['POST'])
 @login_required
@@ -391,6 +391,7 @@ def mob_search():
         tags=Tag.query.limit(2).all()
         channels=Channel.query.limit(4).all()
         return render_template('mobile/recherche.html',
+            time_categories=PodTime().CATEGORIES,
             tags=tags, channels=channels)
     if request.method=='POST':
         search=''
@@ -421,7 +422,7 @@ def mob_search():
 
         items = q.limit(10).all()
         return render_template('mobile/resultats.html', 
-            items=items, 
+            items=items, time_categories=PodTime().CATEGORIES,
             search=search, cat_time=cat_time, playlist_id=playlist_id, channel_id=channel_id)
 
 
