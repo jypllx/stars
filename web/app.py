@@ -405,7 +405,6 @@ def mob_search():
         if request.form['cat_time']:
             cat_time=request.form['cat_time']
             q = q.filter_by(cat_time=cat_time)
-
         if request.form['playlist_id']:
             playlist_id=request.form['playlist_id']
             rels=RelPlaylistItem.query.filter_by(playlist_id=playlist_id)
@@ -417,6 +416,8 @@ def mob_search():
         if request.form['channel_id']:
             channel_id=request.form['channel_id']
             q=q.filter_by(channel_id=channel_id)
+        if request.form['itunes_category']:
+            q=q.filter_by(itunes_category_=request.form['itunes_category'])
 
         items = q.limit(10).all()
         return render_template('mobile/resultats.html', 

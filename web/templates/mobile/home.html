@@ -27,7 +27,7 @@
     <div class="col-xs-2">
         <button class="genre btn btn-default btn-block"><i class="fa fa-play fa-2x"></i></button>
     </div>
-    <div class="col-xs-8">
+    <div class="col-xs-6">
         <p class="item_name"></p>
         <p class="item_description"></p>
         <p><i class="item_duration"></i></p>
@@ -36,6 +36,12 @@
         <button class="btn btn-default btn-block"  id="next" value="">
             <p class="text-center"><i class="fa fa-forward fa-2x"></i></p>
             <p class="text-center">Suivant</p>
+        </button>
+    </div>
+    <div class="col-xs-2">
+        <button class="btn btn-default btn-block" id="see_all">
+            <p class="text-center"><i class="fa fa-search fa-2x"></i></p>
+            <p class="text-center">Voir tout</p>
         </button>
     </div>
 </div>
@@ -59,6 +65,18 @@
     </div>
 </div>
 </div>
+
+<div style="display:none">
+    <form method="post" action="{{url_for('mob_search')}}" id="search_form">
+        <input id="cat_time" type="hidden" name="cat_time" value="">
+        <input id="itunes_category" type="hidden" name="itunes_category" value="">
+        <input id="playlist" type="hidden" name="playlist_id" value="">
+        <input id="channel" type="hidden" name="channel_id" value="">
+        <input id="search" type="hidden" name="search" value="">
+    </form>
+</div>
+
+
 {% endblock %}
 {% block js %}
 <script type="text/javascript">
@@ -66,14 +84,14 @@
     'Comedy':'Comedy',
 }
 $(document).ready(function(){
-    getCatTime = function() {
+    get_cat_time = function() {
         var cat_time = $(".btn-time.active").attr("value");
         if (cat_time == undefined) {
             cat_time = '';
         }
         return cat_time;
     }
-    get_iTunes_Cat = function() {
+    get_itunes_category = function() {
         var genre = $(".btn-itunes-cat.active").attr("id");
         return genre
     }
@@ -104,15 +122,21 @@ $(document).ready(function(){
 
     $(".btn-time").click(function(){
         cat_time = $(this).attr("value")
-        filter(cat_time, get_iTunes_Cat(), 0);
+        filter(cat_time, get_itunes_category(), 0);
     });
     $(".btn-itunes-cat").click(function(){
         genre = $(this).attr("id")
-        filter(getCatTime(), genre, 0);
+        filter(get_cat_time(), genre, 0);
     });
     $("#next").click(function() {
         page = $(this).attr("value")
-        filter(getCatTime(), get_iTunes_Cat(), page)
+        filter(get_cat_time(), get_itunes_category(), page)
+    });
+
+    $("#see_all").click(function() {
+        $('#cat_time').attr('value', get_cat_time())
+        $('#itunes_category_').attr('value', get_itunes_category())
+        $('#search_form').submit();
     });
 
     getPlaylist = function(playlistId) {
