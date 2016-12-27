@@ -173,8 +173,6 @@ def playlists_add_tag():
 @app.route('/bo/items/move/<way>/<int:playlist_id>/<int:item_id>')
 @login_required
 def items_move(way, playlist_id, item_id):
-    #app.logger.info(way +' '+str(playlist_id)+' '+str(item_id))
-
     r = RelPlaylistItem.query.filter(RelPlaylistItem.playlist_id==playlist_id,
             RelPlaylistItem.item_id==item_id).first()
     rank = r.rank
@@ -261,7 +259,6 @@ def items_edit(id):
     form = ItemForm(request.form)
     item=db.session.query(Item).get(id)
     if request.method == 'POST' and form.validate():
-        app.logger.info('ON EST DEDANS')
         item.title      =form.title.data
         item.description=form.description.data
         item.mood       =form.mood.data if form.mood.data != '' else None
@@ -337,36 +334,34 @@ def mob_home():
 @login_required
 def mob_home_ajax():
     q = Item.query
-    #app.logger.info("%s , %s" % (request.form['cat_time'], request.form['genre']))    
 
     cat_time = request.form['cat_time']
-    genre = request.form['genre']
+    itunes_category_ = request.form['itunes_cat']
     page = int(request.form['page'])
     if cat_time != '':
         q = q.filter(Item.cat_time == cat_time)
 
-    if genre == 'Comedy':
-        q = q.filter(Item.genre == 'Comedy')
-    elif genre == 'Culture':
-        q = q.filter(Item.genre == 'Society & Culture')
-    elif genre == 'Sports':
-        q = q.filter(Item.genre == 'Sports & Recreation')
+    if itunes_category_ == 'Comedy':
+        q = q.filter_by(itunes_category_ = 'Comedy')
+    elif itunes_category_ == 'Culture':
+        q = q.filter_by(itunes_category_ = 'Society & Culture')
+    elif itunes_category_ == 'Sports':
+        q = q.filter_by(itunes_category_ = 'Sports & Recreation')
     else:
-        q = q.filter(Item.genre == 'News & Politics')
+        q = q.filter_by(itunes_category_ = 'News & Politics')
     
     nb   = q.count()
-    app.logger.info(nb)
     if page == nb and nb != 0:
         page = nb-1
-    item = q.order_by(Item.published.desc()).offset(int(page)).first()
+    item = q.order_by(Item.pubdate_.desc()).offset(int(page)).first()
 
     data = {'item':
         {
-            'name':'Aucun résultat' if item is None else item.name[:30]+'...', 
+            'name':'Aucun résultat' if item is None else item.title[:30]+'...', 
             'description': '' if item is None else item.description[:100]+'...',
-            'duration':'' if item is None else item.duration_str
+            'duration':'' if item is None else item.duration_
         }, 
-        'cat_time':cat_time, 'genre':genre, 'page':page}
+        'cat_time':cat_time, 'itunes_category_':itunes_category_, 'page':page}
 
 
     return json.dumps(data)
@@ -421,11 +416,9 @@ def mob_search():
                 q=q.filter(Item.id.in_(item_ids))
         if request.form['channel_id']:
             channel_id=request.form['channel_id']
-            app.logger.info(channel_id)
             q=q.filter_by(channel_id=channel_id)
 
         items = q.limit(10).all()
-        app.logger.info(items)
         return render_template('mobile/resultats.html', 
             items=items, 
             search=search, cat_time=cat_time, playlist_id=playlist_id, channel_id=channel_id)

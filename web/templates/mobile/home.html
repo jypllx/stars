@@ -8,20 +8,20 @@
     <p class="text-center"><b>Durée</b></p>
 </div>
 <div class="row time-filter">
-    <div class="col-xs-3"><button class="btn btn-block btn-default time-btn" value="0" id="time0"><i class="fa fa-hourglass-o"></i>&nbsp;5m</button></div>
-    <div class="col-xs-3"><button class="btn btn-block btn-default time-btn" value="1" id="time1"><i class="fa fa-hourglass-end"></i>&nbsp;20m</button></div>
-    <div class="col-xs-3"><button class="btn btn-block btn-default time-btn" value="2" id="time2"><i class="fa fa-hourglass-half"></i>&nbsp;1h</button></div>
-    <div class="col-xs-3"><button class="btn btn-block btn-default time-btn" value="3" id="time3"><i class="fa fa-hourglass-start"></i>&nbsp;+1h</button></div>
+    <div class="col-xs-3"><button class="btn btn-block btn-default btn-time" value="0" id="time0"><i class="fa fa-hourglass-o"></i>&nbsp;5m</button></div>
+    <div class="col-xs-3"><button class="btn btn-block btn-default btn-time" value="1" id="time1"><i class="fa fa-hourglass-end"></i>&nbsp;20m</button></div>
+    <div class="col-xs-3"><button class="btn btn-block btn-default btn-time" value="2" id="time2"><i class="fa fa-hourglass-half"></i>&nbsp;1h</button></div>
+    <div class="col-xs-3"><button class="btn btn-block btn-default btn-time" value="3" id="time3"><i class="fa fa-hourglass-start"></i>&nbsp;+1h</button></div>
 </div>
 <br/>
 <div class="row">
     <p class="text-center"><b>Mood</b></p>
 </div>
 <div class="row">
-    <div class="col-xs-3"><button class="btn btn-default btn-block genre-btn" id="News">News</button></div>
-    <div class="col-xs-3"><button class="btn btn-default btn-block genre-btn" id="Comedy">Fun</button></div>
-    <div class="col-xs-3"><button class="btn btn-default btn-block genre-btn" id="Culture">Culture</button></div>
-    <div class="col-xs-3"><button class="btn btn-default btn-block genre-btn" id="Sports">Sport</button></div>
+    <div class="col-xs-3"><button class="btn btn-default btn-block btn-itunes-cat" id="News">News</button></div>
+    <div class="col-xs-3"><button class="btn btn-default btn-block btn-itunes-cat" id="Comedy">Fun</button></div>
+    <div class="col-xs-3"><button class="btn btn-default btn-block btn-itunes-cat" id="Culture">Culture</button></div>
+    <div class="col-xs-3"><button class="btn btn-default btn-block btn-itunes-cat" id="Sports">Sport</button></div>
 </div>
 <div class="row" id="filter">
     <div class="col-xs-12">
@@ -91,21 +91,21 @@
 }
 $(document).ready(function(){
     getCatTime = function() {
-        var cat_time = $(".time-btn.active").attr("value");
+        var cat_time = $(".btn-time.active").attr("value");
         if (cat_time == undefined) {
             cat_time = '';
         }
         return cat_time;
     }
-    getGenre = function() {
-        var genre = $(".genre-btn.active").attr("id");
+    get_iTunes_Cat = function() {
+        var genre = $(".btn-itunes-cat.active").attr("id");
         return genre
     }
 
-    filter = function(cat_time, genre, page) {
+    filter = function(cat_time, itunes_cat, page) {
         $.post('{{ url_for('mob_home_ajax') }}',
         {
-            cat_time:cat_time, genre:genre, page:page
+            cat_time:cat_time, itunes_cat:itunes_cat, page:page
         },
         function(data) {
             $('#playlist').css('display', 'none')
@@ -114,8 +114,8 @@ $(document).ready(function(){
             $('#filter .item_name').text(obj.item.name)
             $('#filter .item_description').text(obj.item.description)
             $('#filter .item_duration').text(obj.item.duration)
-            $(".genre-btn.active, .time-btn.active").removeClass('active')
-            $('#'+obj.genre).addClass('active')
+            $(".btn-itunes-cat.active, .btn-time.active").removeClass('active')
+            $('#'+obj.itunes_category_).addClass('active')
             if (obj.cat_time != '') {
                $('#time'+obj.cat_time).addClass('active')
            }
@@ -127,17 +127,17 @@ $(document).ready(function(){
     }
 
 
-    $(".time-btn").click(function(){
+    $(".btn-time").click(function(){
         cat_time = $(this).attr("value")
-        filter(cat_time, getGenre(), 0);
+        filter(cat_time, get_iTunes_Cat(), 0);
     });
-    $(".genre-btn").click(function(){
+    $(".btn-itunes-cat").click(function(){
         genre = $(this).attr("id")
         filter(getCatTime(), genre, 0);
     });
     $("#next").click(function() {
         page = $(this).attr("value")
-        filter(getCatTime(), getGenre(), page)
+        filter(getCatTime(), get_iTunes_Cat(), page)
     });
 
     getPlaylist = function(playlistId) {
@@ -152,7 +152,7 @@ $(document).ready(function(){
             $('#playlist .item_name').text(obj.item.name)
             $('#playlist .item_description').text(obj.item.description)
             $('#playlist .item_duration').text(obj.item.duration)
-            $(".genre-btn.active, .time-btn.active").removeClass('active')
+            $(".btn-itunes-cat.active, .btn-time.active").removeClass('active')
             $('#'+obj.genre).addClass('active')
             if (obj.playlistId != '') {
                $('#'+obj.cat_time).addClass('active')
