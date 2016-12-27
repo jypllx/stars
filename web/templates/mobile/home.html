@@ -119,9 +119,9 @@ $(document).ready(function(){
             if (obj.cat_time != '') {
                $('#time'+obj.cat_time).addClass('active')
            }
-           console.log(+obj.page+1)
            $("#next").attr("value", +obj.page+1)
            $("#next").removeClass('active')
+           $("#next").blur()
        }
        );
     }
