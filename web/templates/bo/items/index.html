@@ -53,6 +53,7 @@
             <th>Durée*</th>
             <th>Cat durée*</th>
             <th>Cat iTunes*</th>
+            <th>Publié le*</th>
             <th></th>
         </tr>
         {% for item in items %}
@@ -63,6 +64,7 @@
             <td>{{item.duration_}}</td>
             <td>{{item.cat_name}}</td>
             <td>{{item.itunes_category_}}</td>
+            <td>{{item.pubdate_}}</td>
             <td><div class="dropdown">
                 <button class="btn" data-toggle="dropdown"><i class="fa fa-plus"></i>&nbsp;Add to playlist</span></button>
                 <ul class="dropdown-menu">
