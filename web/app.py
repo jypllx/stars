@@ -237,9 +237,8 @@ def items_index():
             search_date=request.form['search_date']
             q=q.filter(Item.pubdate_ >= search_date)
 
-    else:
-        q=q.order_by(Item.pubdate_.desc()).limit(25)
-    items = q.all()
+    items = q.order_by(Item.pubdate_.desc()).limit(25).all()
+
     playlists = Playlist.query.all()
     
     results = db.engine.execute("Select DISTINCT itunes_category_ FROM items ORDER BY itunes_category_")
@@ -407,7 +406,7 @@ def mob_search():
         q = Item.query
         if request.form['search'] :
             search = request.form['search']
-            q = q.filter(Item.name.ilike('%'+search+'%'))
+            q = q.filter(Item.title.ilike('%'+search+'%'))
         if request.form['cat_time']:
             cat_time=request.form['cat_time']
             q = q.filter_by(cat_time=cat_time)
@@ -417,15 +416,14 @@ def mob_search():
             item_ids=[]
             for rel in rels:
                 item_ids.append(rel.item_id)
-            if item_ids:
-                q=q.filter(Item.id.in_(item_ids))
+            q=q.filter(Item.id.in_(item_ids))
         if request.form['channel_id']:
             channel_id=request.form['channel_id']
             q=q.filter_by(channel_id=channel_id)
         if request.form['itunes_category']:
             q=q.filter_by(itunes_category_=request.form['itunes_category'])
 
-        items = q.limit(10).all()
+        items = q.order_by(Item.pubdate_.desc()).limit(10).all()
         return render_template('mobile/resultats.html', 
             items=items, time_categories=PodTime().CATEGORIES,
             search=search, cat_time=cat_time, playlist_id=playlist_id, channel_id=channel_id)

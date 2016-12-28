@@ -50,7 +50,7 @@
 </div>
 <div class="row">
     {% for playlist in playlists %}
-    <div class="col-xs-3"><button class="btn btn-default btn-block topic-btn" id="{{ playlist.id }}">{{ playlist.name }}</button></div>
+    <div class="col-xs-3"><button class="btn btn-default btn-block btn-playlist" id="{{ playlist.id }}">{{ playlist.name }}</button></div>
     {% endfor %}
 </div>
 <div class="row" id="playlist" style="display:none">
@@ -69,8 +69,8 @@
     <form method="post" action="{{url_for('mob_search')}}" id="search_form">
         <input id="cat_time" type="hidden" name="cat_time" value="">
         <input id="itunes_category" type="hidden" name="itunes_category" value="">
-        <input id="playlist" type="hidden" name="playlist_id" value="">
-        <input id="channel" type="hidden" name="channel_id" value="">
+        <input id="playlist_id" type="hidden" name="playlist_id" value="">
+        <input id="channel_id" type="hidden" name="channel_id" value="">
         <input id="search" type="hidden" name="search" value="">
     </form>
 </div>
@@ -158,8 +158,9 @@ $(document).ready(function(){
         });
     }
 
-    $(".topic-btn").click(function() {
-        getPlaylist($(this).attr("id"))
+    $(".btn-playlist").click(function() {
+        $('#playlist_id').attr("value", $(this).attr("id"));
+        $('#search_form').submit();
     });
 
     filter('', 'News', 0)
