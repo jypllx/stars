@@ -212,6 +212,7 @@ def items_index():
     search_iCat=''
     search_mood=''
     search_length='-1'
+    search_date=''
 
     q = Item.query
     if request.method == 'POST':
@@ -232,6 +233,10 @@ def items_index():
         if request.form['search_length']:
             search_length=request.form['search_length']
             q=q.filter_by(cat_time=search_length)
+        if request.form['search_date']:
+            search_date=request.form['search_date']
+            q=q.filter(Item.pubdate_ >= search_date)
+
     else:
         q=q.order_by(Item.pubdate_.desc()).limit(25)
     items = q.all()
@@ -250,7 +255,7 @@ def items_index():
     return render_template('bo/items/index.html',
         items=items, playlists=playlists,
         iTunes_categories=iTunes_categories, moods=moods, time_categories=PodTime().CATEGORIES,
-        search_title=search_title, search_desc=search_desc, 
+        search_title=search_title, search_desc=search_desc, search_date=search_date,
         search_iCat=search_iCat, search_mood=search_mood, search_length=search_length)
 
 @app.route('/bo/items/<int:id>', methods=['POST', 'GET'])

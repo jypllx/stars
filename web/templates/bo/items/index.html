@@ -40,6 +40,11 @@
                 {% endfor %}
             </select>
         </div>
+        <div>
+            <label for="search_date">Publié après le</label>
+            <input id='search_date' type='text' name="search_date" class="form-control" value="{{search_date}}" placeholder='YYYY-MM-DD'/>
+        </div>
+        <br/>
         <button type="submit" class="btn btn-default">Submit</button>
     </form>
 </div>
@@ -68,54 +73,28 @@
             <td><div class="dropdown">
                 <button class="btn" data-toggle="dropdown"><i class="fa fa-plus"></i>&nbsp;Add to playlist</span></button>
                 <ul class="dropdown-menu">
-                {% for playlist in playlists %}
+                    {% for playlist in playlists %}
                     <li><a class="add_to_playlist" id="{{playlist.id}}.{{item.id}}" href="#">{{playlist.name}}</a></li>
-                {% endfor %}
+                    {% endfor %}
                 </ul>
-                </div>
-                <a href='{{ url_for('items_edit', id=item.id) }}' class='btn btn-default'><i class='fa fa-pencil'></i></a>
-            </td>
-        </tr>            
-        {% endfor %}
-    </table>
+            </div>
+            <a href='{{ url_for('items_edit', id=item.id) }}' class='btn btn-default'><i class='fa fa-pencil'></i></a>
+        </td>
+    </tr>            
+    {% endfor %}
+</table>
 </div>
-<!-- 
-
-
-
-<div>
-    <table>
-        {% for item in items %}
-        <div class="well" id="{{item.id}}">
-            <h4>{{item.title_}}</h4>
-            <p><i>{{item.itunes_category_}}</i></p>
-            <p>Publié:&nbsp;{{item.pubdate_}}</p>
-            <div>
-                <i class="fa fa-clock-o fa-2x"></i>&nbsp;&nbsp;{{item.cat_name}}
-            </div>
-            <p>{{item.description_}}</p>
-            <audio controls>
-                <source src="{{item.audio_url_}}" type="audio/mpeg">
-                    Your browser does not support the audio element.
-                </audio>
-
-                
-            </div>
-            {% endfor %}
-        </table>
-    </div> -->
-    {% endblock %}
-    {% block js %}
-    <script type="text/javascript">
-        $(document).ready(function(){
-            $(".add_to_playlist").click(function(){
-                var ids = $(this).attr('id').split(".")
-                $.post('{{ url_for('add_item_to_playlist') }}',
-                {
-                    playlist_id:ids[0], item_id:ids[1]
-                }
-                );
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".add_to_playlist").click(function(){
+            var ids = $(this).attr('id').split(".")
+            $.post('{{ url_for('add_item_to_playlist') }}',
+            {
+                playlist_id:ids[0], item_id:ids[1]
             });
         });
-    </script>
-    {% endblock %}
+    });
+</script>
+{% endblock %}
