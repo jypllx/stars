@@ -29,6 +29,15 @@ security = Security(app, user_datastore)
 #     db.session.commit()
 
 
+# JINJA2 formatter
+@app.template_filter('duration')
+def format_duration(value):
+    duration=int(value)
+    seconds = duration % 60
+    hours = int(duration/3600)
+    minutes = int(duration / 60) - hours*60
+    return '%02d:%02d:%02d' % (hours, minutes, seconds)
+
 @app.route('/')
 @login_required
 def home():
@@ -346,13 +355,15 @@ def mob_home():
 def mob_home_ajax():
     q = Item.query
 
-    cat_time = request.form['cat_time']
-    mood = request.form['mood']
+    cat_time = ''
+    mood = ''
     page = int(request.form['page'])
-    if cat_time != '':
-        q = q.filter(Item.cat_time == cat_time)
-
-    q = q.filter_by(mood=mood)
+    if request.form['cat_time']:
+        cat_time = request.form['cat_time']
+        q = q.filter_by(cat_time=cat_time)
+    if request.form['mood']:
+        mood=request.form['mood']
+        q = q.filter_by(mood=mood)
     
     nb   = q.count()
     if page == nb and nb != 0:
@@ -361,30 +372,12 @@ def mob_home_ajax():
 
     data = {'item':
         {
-            'name':'Aucun résultat' if item is None else item.title[:30]+'...', 
-            'description': '' if item is None else item.description[:100]+'...',
-            'duration':'' if item is None else item.duration_
+            'name':item.title,
+            'description':item.description,
+            'duration':format_duration(item.duration_)
         }, 
         'cat_time':cat_time, 'mood':mood, 'page':page}
 
-
-    return json.dumps(data)
-
-@app.route('/ajax/playlist/', methods=['POST'])
-@login_required
-def mob_playlist_ajax():
-    playlist=db.session.query(Playlist).get(request.form['playlistId'])
-    item = None
-    if len(playlist.ranked_items) != 0:
-        item = playlist.ranked_items[0].item
-
-    data = {'item':
-        {
-            'name':'No podcast found!!!' if item is None else item.name[:30]+'...', 
-            'description': '' if item is None else item.description[:100]+'...',
-            'duration':'' if item is None else item.duration_str
-        }, 
-        'playlistId':request.form['playlistId']}
 
     return json.dumps(data)
 
@@ -397,6 +390,7 @@ def mob_search():
         return render_template('mobile/recherche.html',
             time_categories=PodTime().CATEGORIES,
             tags=tags, channels=channels)
+
     if request.method=='POST':
         search=''
         cat_time='-1'
@@ -424,9 +418,11 @@ def mob_search():
             q=q.filter_by(mood=request.form['mood'])
 
         items = q.order_by(Item.pubdate_.desc()).limit(10).all()
+
         return render_template('mobile/resultats.html', 
             items=items, time_categories=PodTime().CATEGORIES,
-            search=search, cat_time=cat_time, playlist_id=playlist_id, channel_id=channel_id)
+            search=search, cat_time=cat_time, 
+            playlist_id=playlist_id, channel_id=channel_id)
 
 
 @app.route('/library/')

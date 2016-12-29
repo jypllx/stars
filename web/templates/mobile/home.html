@@ -38,7 +38,7 @@
         <p><i class="item_duration"></i></p>
     </div>
     <div class="col-xs-2">
-        <button class="btn btn-default btn-block"  id="next" value="" title="Suivant">
+        <button class="btn btn-default btn-block" id="next" value="" title="Suivant">
             <p class="text-center"><i class="fa fa-forward fa-2x"></i></p>
         </button>
     </div>
@@ -84,8 +84,11 @@ $(document).ready(function(){
         return cat_time;
     }
     get_mood = function() {
-        var genre = $(".btn-mood.active").attr("id");
-        return genre
+        var mood = $(".btn-mood.active").attr("id");
+        if (mood == undefined) {
+            mood='';
+        }
+        return mood
     }
 
     filter = function(cat_time, mood, page) {
@@ -130,26 +133,6 @@ $(document).ready(function(){
         $('#mood').attr('value', get_mood())
         $('#search_form').submit();
     });
-
-    getPlaylist = function(playlistId) {
-        $.post('{{ url_for('mob_playlist_ajax')}}',
-        {
-            playlistId:playlistId
-        },
-        function(data) {
-            obj = JSON.parse(data)
-            $('#filter').css('display', 'none')
-            $('#playlist').removeAttr('style')
-            $('#playlist .item_name').text(obj.item.name)
-            $('#playlist .item_description').text(obj.item.description)
-            $('#playlist .item_duration').text(obj.item.duration)
-            $(".btn-mood.active, .btn-time.active").removeClass('active')
-            $('#'+obj.genre).addClass('active')
-            if (obj.playlistId != '') {
-                $('#'+obj.cat_time).addClass('active')
-            }
-        });
-    }
 
     $(".btn-playlist").click(function() {
         $('#playlist_id').attr("value", $(this).attr("id"));
