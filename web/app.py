@@ -332,7 +332,14 @@ def tags_delete(id):
 @login_required
 def mob_home():
     playlists = Playlist.query.order_by(Playlist.created.desc()).limit(4).all()
-    return render_template('mobile/home.html', playlists=playlists, time_categories=PodTime().CATEGORIES)
+
+    results = db.engine.execute("Select DISTINCT mood FROM items ORDER BY mood")
+    moods=[]
+    for result in results:
+        moods.append(result[0])
+    return render_template('mobile/home.html', playlists=playlists, 
+        time_categories=PodTime().CATEGORIES, moods=moods)
+
 
 @app.route('/ajax/items', methods=['POST'])
 @login_required
@@ -340,19 +347,12 @@ def mob_home_ajax():
     q = Item.query
 
     cat_time = request.form['cat_time']
-    itunes_category_ = request.form['itunes_cat']
+    mood = request.form['mood']
     page = int(request.form['page'])
     if cat_time != '':
         q = q.filter(Item.cat_time == cat_time)
 
-    if itunes_category_ == 'Comedy':
-        q = q.filter_by(itunes_category_ = 'Comedy')
-    elif itunes_category_ == 'Culture':
-        q = q.filter_by(itunes_category_ = 'Society & Culture')
-    elif itunes_category_ == 'Sports':
-        q = q.filter_by(itunes_category_ = 'Sports & Recreation')
-    else:
-        q = q.filter_by(itunes_category_ = 'News & Politics')
+    q = q.filter_by(mood=mood)
     
     nb   = q.count()
     if page == nb and nb != 0:
@@ -365,7 +365,7 @@ def mob_home_ajax():
             'description': '' if item is None else item.description[:100]+'...',
             'duration':'' if item is None else item.duration_
         }, 
-        'cat_time':cat_time, 'itunes_category_':itunes_category_, 'page':page}
+        'cat_time':cat_time, 'mood':mood, 'page':page}
 
 
     return json.dumps(data)
@@ -420,8 +420,8 @@ def mob_search():
         if request.form['channel_id']:
             channel_id=request.form['channel_id']
             q=q.filter_by(channel_id=channel_id)
-        if request.form['itunes_category']:
-            q=q.filter_by(itunes_category_=request.form['itunes_category'])
+        if request.form['mood']:
+            q=q.filter_by(mood=request.form['mood'])
 
         items = q.order_by(Item.pubdate_.desc()).limit(10).all()
         return render_template('mobile/resultats.html', 
