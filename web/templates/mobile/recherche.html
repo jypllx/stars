@@ -19,25 +19,25 @@
             </div>
             <br/>
             <div class="row type-filter">
-                <div class="col-xs-3"><a class="btn btn-block btn-default btn-type" value="0" id="type0"><p>News</p><p>&nbsp;</p></a></div>
-                <div class="col-xs-3"><a class="btn btn-block btn-default btn-type" value="1" id="type1"><p>Repor</p><p>tage</p></a></div>
-                <div class="col-xs-3"><a class="btn btn-block btn-default btn-type" value="2" id="type2"><p>Livre</p><p>&nbsp;</p></a></div>
-                <div class="col-xs-3"><a class="btn btn-block btn-default btn-type" value="3" id="type3"><p>Confé</p><p>rence</p></a></div>
+                <div class="col-xs-3"><a class="btn btn-block btn-default btn-type box" value="0" id="type0">News</a></div>
+                <div class="col-xs-3"><a class="btn btn-block btn-default btn-type box" value="1" id="type1">Reportage</a></div>
+                <div class="col-xs-3"><a class="btn btn-block btn-default btn-type box" value="2" id="type2">Livre</a></div>
+                <div class="col-xs-3"><a class="btn btn-block btn-default btn-type box" value="3" id="type3">Conférence</a></div>
                 <input id="cat_type" type="hidden" name="cat_type" value="">
             </div>
             {% for tag in tags %}
-            <div class="row">
-                <p class="text-center"><b>{{tag.name}}</b></p>
-            </div>
-            <div class="row">
+                <div class="row">
+                    <p class="text-center"><b>{{tag.name}}</b></p>
+                </div>
+                <div class="row">
                 {% if tag.playlists %}
-                {% set i=0 %}
-                {% for p in tag.playlists %}
-                {% if i < 4 %}
-                <div class="col-xs-3"><a class="btn btn-default btn-block btn-playlist" id="{{p.id}}">{{p.name|truncate(9)}}</a></div>
-                {% set i=i+1 %}
-                {% endif %}
-                {% endfor %}
+                    {% set i=0 %}
+                    {% for p in tag.playlists %}
+                        {% if i < 4 %}
+                            <div class="col-xs-3"><a class="btn btn-default btn-block btn-playlist box" id="{{p.id}}">{{p.name}}</a></div>
+                        {% set i=i+1 %}
+                    {% endif %}
+                    {% endfor %}
                 {% endif %}
             </div>
             {% endfor %}
@@ -49,7 +49,7 @@
 
             <div class="row">
             {% for channel in channels %}
-                <div class="col-xs-3"><a class="btn btn-default btn-block btn-channel" id="{{channel.id}}">{{channel.name|truncate(9)}}</a></div>
+                <div class="col-xs-3"><a class="btn btn-default btn-block btn-channel box" id="{{channel.id}}">{{channel.name}}</a></div>
             {% endfor %}
             </div>
             <input id="channel" type="hidden" name="channel_id" value="">

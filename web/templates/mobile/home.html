@@ -32,15 +32,13 @@
         <p><i class="item_duration"></i></p>
     </div>
     <div class="col-xs-2">
-        <button class="btn btn-default btn-block"  id="next" value="">
+        <button class="btn btn-default btn-block"  id="next" value="" title="Suivant">
             <p class="text-center"><i class="fa fa-forward fa-2x"></i></p>
-            <p class="text-center">Suivant</p>
         </button>
     </div>
     <div class="col-xs-2">
-        <button class="btn btn-default btn-block" id="see_all">
+        <button class="btn btn-default btn-block" id="see_all" title="Voir tout">
             <p class="text-center"><i class="fa fa-search fa-2x"></i></p>
-            <p class="text-center">Voir tout</p>
         </button>
     </div>
 </div>
@@ -50,7 +48,7 @@
 </div>
 <div class="row">
     {% for playlist in playlists %}
-    <div class="col-xs-3"><button class="btn btn-default btn-block btn-playlist" id="{{ playlist.id }}">{{ playlist.name }}</button></div>
+    <div class="col-xs-3"><button class="btn btn-default btn-block btn-playlist box" id="{{ playlist.id }}">{{ playlist.name }}</button></div>
     {% endfor %}
 </div>
 <div class="row" id="playlist" style="display:none">

@@ -31,3 +31,11 @@
 a.category {
     height: 48px;
 }
+
+.box {
+  /*display: block;*/
+  /*width: 100%;*/
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
