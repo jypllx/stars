@@ -1,4 +1,4 @@
-from wtforms import Form, StringField, TextAreaField, IntegerField
+from wtforms import Form, StringField, TextAreaField, IntegerField, SelectField
 
 class ChannelForm(Form):
     id              = StringField('Id*')
@@ -89,8 +89,15 @@ class PlaylistForm(Form):
     id          = StringField('Id*')
     name        = StringField('Nom')
     description = StringField('Description')
+    mood        = SelectField('Mood', coerce=str)
+
+    def set_moods(self, moods):
+        self.mood.choices=[]
+        for mood in moods:
+            self.mood.choices.append((mood,mood))
 
     def populate(self, playlist):
         self.id.process_data(str(playlist.id))
         self.name.process_data(playlist.name)
         self.description.process_data(playlist.description)
+        self.mood.process_data(playlist.mood)

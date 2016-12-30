@@ -28,6 +28,7 @@
             <th>Id</th>
             <th>Nom</th>
             <th>Description</th>
+            <th>Mood</th>
             <th>Nb episodes</th>
             <th></th>
         </tr>
@@ -36,6 +37,7 @@
             <td>{{playlist.id}}</td>
             <td>{{playlist.name}}</td>
             <td style="width: 30%;word-wrap: break-word;">{{playlist.description}}</td>
+            <td>{{playlist.mood}}</td>
             <td>{{ playlist.items|length }}</td>
             <td>
                 <a href="{{ url_for('playlists_edit', id=playlist.id) }}" class="btn btn-default"><i class="fa fa-pencil"></i></a>

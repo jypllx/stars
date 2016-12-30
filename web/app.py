@@ -133,7 +133,14 @@ def playlists_index():
 @app.route('/bo/playlists/edit/<int:id>', methods=['POST', 'GET'])
 @login_required
 def playlists_edit(id=None):
+    results = db.engine.execute("Select DISTINCT mood FROM channels ORDER BY mood")
+    moods=[]
+    for result in results:
+        moods.append(result[0])
+
     form=PlaylistForm(request.form)
+    form.set_moods(moods)
+
     playlist=None
     if id is not None:
         playlist=db.session.query(Playlist).get(id)
@@ -142,9 +149,10 @@ def playlists_edit(id=None):
         if id is not None:
             playlist.name=form.name.data
             playlist.description=form.description.data
+            playlist.mood=form.mood.data
         else:
             playlist=Playlist(form.name.data,
-                form.description.data)
+                form.description.data, form.mood.data)
             db.session.add(playlist)
         db.session.commit()
         return redirect(url_for('playlists_edit', id=playlist.id))
