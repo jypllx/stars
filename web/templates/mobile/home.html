@@ -52,10 +52,7 @@
 <div class="row">
     <p class="text-center"><b>Autres&nbsp;sujets</b></p>
 </div>
-<div class="row">
-    {% for playlist in playlists %}
-    <div class="col-xs-3"><button class="btn btn-default btn-block btn-playlist box" id="{{ playlist.id }}">{{ playlist.name }}</button></div>
-    {% endfor %}
+<div class="row" id="playlists">
 </div>
 
 <div style="display:none">
@@ -67,7 +64,6 @@
         <input id="search" type="hidden" name="search" value="">
     </form>
 </div>
-
 
 {% endblock %}
 {% block js %}
@@ -97,7 +93,6 @@ $(document).ready(function(){
             cat_time:cat_time, mood:mood, page:page
         },
         function(data) {
-            $('#playlist').css('display', 'none')
             $('#item').removeAttr('style')
             obj = JSON.parse(data)
             $('#item .item_name').text(obj.item.name)
@@ -111,6 +106,16 @@ $(document).ready(function(){
             $("#next").attr("value", +obj.page+1)
             $("#next").removeClass('active')
             $("#next").blur()
+            console.log(obj.playlists.length)
+            if (obj.playlists.length == 0) {
+                $('#playlists').empty()
+                $('#playlists').append('Pas de playlists de mood '+obj.mood);
+            } else {
+                $('#playlists').empty()
+                $.each( obj.playlists, function( index, value ){
+                    $('#playlists').append('<div class="col-xs-3"><button class="btn btn-default btn-block btn-playlist box" id="'+value.id+'">'+value.name+'</button></div>')
+                });
+            }
         });
     }
 

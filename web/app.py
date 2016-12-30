@@ -350,7 +350,7 @@ def tags_delete(id):
 def mob_home():
     playlists = Playlist.query.order_by(Playlist.created.desc()).limit(4).all()
 
-    results = db.engine.execute("Select DISTINCT mood FROM items ORDER BY mood")
+    results = db.engine.execute("Select DISTINCT mood FROM channels ORDER BY mood")
     moods=[]
     for result in results:
         moods.append(result[0])
@@ -362,6 +362,7 @@ def mob_home():
 @login_required
 def mob_home_ajax():
     q = Item.query
+    qP = Playlist.query
 
     cat_time = ''
     mood = ''
@@ -372,11 +373,17 @@ def mob_home_ajax():
     if request.form['mood']:
         mood=request.form['mood']
         q = q.filter_by(mood=mood)
+        qP = qP.filter_by(mood=mood)
     
     nb   = q.count()
     if page == nb and nb != 0:
         page = nb-1
     item = q.order_by(Item.pubdate_.desc()).offset(int(page)).first()
+
+    pp = []
+    playlists=qP.limit(4).all()
+    for playlist in playlists:
+        pp.append({'id':playlist.id,'name':playlist.name})
 
     data = {'item':
         {
@@ -384,7 +391,8 @@ def mob_home_ajax():
             'description':item.description,
             'duration':format_duration(item.duration_)
         }, 
-        'cat_time':cat_time, 'mood':mood, 'page':page}
+        'cat_time':cat_time, 'mood':mood, 'page':page,
+        'playlists':pp}
 
 
     return json.dumps(data)
