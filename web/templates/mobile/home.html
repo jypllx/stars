@@ -79,6 +79,7 @@
     'Comedy':'Comedy',
 }
 $(document).ready(function(){
+    var playing = false;
     get_cat_time = function() {
         var cat_time = $(".btn-time.active").attr("value");
         if (cat_time == undefined) {
@@ -108,6 +109,7 @@ $(document).ready(function(){
             $('#item img').attr('src', obj.item.image)
             $('#audio-src').attr("src", obj.item.audio_url)
             $('#audio-ctrl').load()
+            playing=false;
 
             $(".btn-mood.active, .btn-time.active").removeClass('active')
             $('#'+obj.mood).addClass('active')
@@ -154,7 +156,6 @@ $(document).ready(function(){
         $('#search_form').submit();
     });
 
-    var playing = false;
     $("#btn-audio").click(function(){
         if (!playing) {
             console.log('OUI')
