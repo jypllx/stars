@@ -84,6 +84,7 @@ class Item(db.Model):
     pubdate_        = db.Column(db.DateTime)
     duration_       = db.Column(db.Integer) # in seconds
     audio_url_      = db.Column(db.String())
+    image           = db.Column(db.String())
 
     title           = db.Column(db.String())
     description     = db.Column(db.String())

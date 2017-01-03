@@ -389,7 +389,8 @@ def mob_home_ajax():
         {
             'name':item.title,
             'description':item.description,
-            'duration':format_duration(item.duration_)
+            'duration':format_duration(item.duration_),
+            'image':item.image
         }, 
         'cat_time':cat_time, 'mood':mood, 'page':page,
         'playlists':pp}
@@ -481,12 +482,9 @@ def moods_index():
 
         if update:
             mood = "'"+mood+"'" if mood is not None else "NULL"
-            app.logger.info("DONE "+str(iCat)+" "+str(mood))
             db.engine.execute("UPDATE channels SET mood="+mood+" WHERE itunes_category_='"+iCat+"'")
             db.engine.execute("UPDATE items    SET mood="+mood+" WHERE itunes_category_='"+iCat+"'")
-            db.session.commit()
-
-        
+            db.session.commit()        
 
     return render_template('bo/moods/index.html',
         mappings=mappings,
