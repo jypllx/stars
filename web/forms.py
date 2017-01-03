@@ -1,6 +1,9 @@
-from wtforms import Form, StringField, TextAreaField, IntegerField, SelectField
+from flask_wtf import FlaskForm
+from flask_wtf.file import FileField
+from wtforms import StringField, TextAreaField, IntegerField, SelectField
 
-class ChannelForm(Form):
+
+class ChannelForm(FlaskForm):
     id              = StringField('Id*')
     
     title_          = StringField('Titre*')
@@ -36,7 +39,7 @@ class ChannelForm(Form):
         self.mood.process_data(channel.mood)
         self.image.process_data(channel.image)
 
-class ItemForm(Form):
+class ItemForm(FlaskForm):
     id              = StringField('Id*')
 
     channel_        = StringField('Podcast*')
@@ -75,7 +78,7 @@ class ItemForm(Form):
         self.image_.process_data(channel.image)
 
 
-class TagForm(Form):
+class TagForm(FlaskForm):
     id          = StringField('Id*')
     name        = StringField('Nom')
     description = StringField('Description')
@@ -85,7 +88,7 @@ class TagForm(Form):
         self.name.process_data(tag.name)
         self.description.process_data(tag.description)
 
-class PlaylistForm(Form):
+class PlaylistForm(FlaskForm):
     id          = StringField('Id*')
     name        = StringField('Nom')
     description = StringField('Description')
@@ -101,3 +104,6 @@ class PlaylistForm(Form):
         self.name.process_data(playlist.name)
         self.description.process_data(playlist.description)
         self.mood.process_data(playlist.mood)
+
+class MoodForm(FlaskForm):
+    mood_file = FileField('Upload moods.xlsx')

@@ -7,19 +7,19 @@ from logging.handlers import RotatingFileHandler
 from flask.ext.security import Security, SQLAlchemyUserDatastore, \
     login_required
 from flask.ext.login import logout_user
-
-app = Flask(__name__)
-app.config.from_object(BaseConfig)
-db = SQLAlchemy(app)
-
+from werkzeug import secure_filename
 import os
 import re
 import sys
 import json
 
+
+app = Flask(__name__)
+app.config.from_object(BaseConfig)
+db = SQLAlchemy(app)
+
 from models import *
 from forms  import *
-
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 security = Security(app, user_datastore)
 
@@ -453,9 +453,49 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
+@app.route('/moods/', methods=['POST', 'GET'])
+@login_required
+def moods_index():
+    podmood=PodMood()
+    form=MoodForm()
+    update=False
+
+    if form.validate_on_submit():
+        filename = secure_filename(form.mood_file.data.filename)
+        form.mood_file.data.save(filename)
+
+        app.logger.info
+        # saved file with original title. Need to rename to moods.xlsx
+        os.remove(podmood.file)
+        os.rename(filename, podmood.file)
+
+        podmood=PodMood()
+        update=True
+  
+    results = db.engine.execute("Select DISTINCT itunes_category_ FROM channels ORDER BY itunes_category_")
+    mappings=[]
+    for result in results:
+        iCat = result[0]
+        mood = podmood.get_mood(iCat)
+        mappings.append({'itunes_category':iCat, 'mood':mood})
+
+        if update:
+            mood = "'"+mood+"'" if mood is not None else "NULL"
+            app.logger.info("DONE "+str(iCat)+" "+str(mood))
+            db.engine.execute("UPDATE channels SET mood="+mood+" WHERE itunes_category_='"+iCat+"'")
+            db.engine.execute("UPDATE items    SET mood="+mood+" WHERE itunes_category_='"+iCat+"'")
+            db.session.commit()
+
+        
+
+    return render_template('bo/moods/index.html',
+        mappings=mappings,
+        form=form, 
+        mood_file=podmood.file)
+
 
 if __name__ == '__main__':
     handler = RotatingFileHandler('./logs.log', maxBytes=10000, backupCount=1)
     handler.setLevel(logging.INFO)
     app.logger.addHandler(handler)
-    app.run()
+    app.run(debug=True)

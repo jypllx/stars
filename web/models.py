@@ -4,9 +4,6 @@ from parser.podmood import PodMood
 from flask.ext.security import UserMixin, RoleMixin
 
 
-podmood=PodMood('./moods.xlsx')
-
-
 """
 Channel and items are a proper refleciton of the RSS file of the podcast.
 Columns ending with an underscore are information pulled from the RSS file 
@@ -48,6 +45,7 @@ class Channel(db.Model):
     
         self.title  = self.title_
         self.description  = self.description_
+        podmood=PodMood()
         self.mood = podmood.get_mood(self.itunes_category_)
         self.image = self.image_
 
@@ -102,6 +100,7 @@ class Item(db.Model):
         self.pubdate_       = pubdate_
         self.duration_, self.cat_time, self.cat_name = PodTime().getDurationCat(duration_str)
         self.itunes_category_= itunes_category_.strip()
+        podmood=PodMood()
         self.mood           = podmood.get_mood(self.itunes_category_)
 
     @property

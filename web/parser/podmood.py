@@ -11,12 +11,13 @@ Uses an 2 column xls file :
 
 class PodMood:
 
-    def __init__(self, file):
-        if not os.path.exists(file) :
+    def __init__(self):
+        self.file = './static/files/moods.xlsx'
+
+        if not os.path.exists(self.file) :
             raise Exception('No file for %s' % file)
 
-        self.file = file
-        wb=load_workbook(file)
+        wb=load_workbook(self.file)
         ws=wb.active
 
         self.moods=[]
@@ -39,7 +40,7 @@ class PodMood:
             line+=1
             iCat=ws.cell(row=line, column=2).value
 
-        self.moods = list(set(self.moods))
+        self.moods = list(set(self.moods))        
 
     def get_mood(self, itunes_category):
         try :
