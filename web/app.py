@@ -390,7 +390,8 @@ def mob_home_ajax():
             'name':item.title,
             'description':item.description,
             'duration':format_duration(item.duration_),
-            'image':item.image
+            'image':item.image,
+            'audio_url':item.audio_url_
         }, 
         'cat_time':cat_time, 'mood':mood, 'page':page,
         'playlists':pp}

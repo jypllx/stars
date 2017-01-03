@@ -59,6 +59,7 @@
             <th>Cat durée*</th>
             <th>Cat iTunes*</th>
             <th>Publié le*</th>
+            <th>Audio</th>
             <th></th>
         </tr>
         {% for item in items %}
@@ -70,6 +71,11 @@
             <td>{{item.cat_name}}</td>
             <td>{{item.itunes_category_}}</td>
             <td>{{item.pubdate_}}</td>
+            <td><audio controls>
+                <source src="{{item.audio_url_}}" type="audio/mpeg">
+                Your browser does not support the audio element.
+                </audio>
+            </td>
             <td><div class="dropdown">
                 <button class="btn" data-toggle="dropdown"><i class="fa fa-plus"></i>&nbsp;Add to playlist</span></button>
                 <ul class="dropdown-menu">

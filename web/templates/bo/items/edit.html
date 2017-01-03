@@ -58,6 +58,12 @@
                         {{ form.mood.label }}
                         {{ form.mood(class_="form-control") }}
                     </div>
+                    <div>
+                        <audio controls>
+                        <source src="{{form.audio_url_.data}}" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                        </audio>
+                    </div>
                 </div>
             </div>
             <p class="text-right">

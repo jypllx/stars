@@ -30,8 +30,14 @@
 
 <div class="row" id="item">
     <div class="col-xs-3">
-        <button class="genre btn btn-default btn-block">
+        <button class="genre btn btn-default btn-block" id="btn-audio">
         <img src="" style="max-width:60px; max-height:60px"><i class="fa fa-play fa-2x"></i></button>
+        <div style="display:none">
+        <audio controls="controls" id="audio-ctrl">
+                <source id="audio-src" type="audio/mpeg">
+                Your browser does not support the audio element.
+        </audio>
+        </div>
     </div>
     <div class="col-xs-5">
         <p class="item_name box"></p>
@@ -100,6 +106,8 @@ $(document).ready(function(){
             $('#item .item_description').text(obj.item.description)
             $('#item .item_duration').text(obj.item.duration)
             $('#item img').attr('src', obj.item.image)
+            $('#audio-src').attr("src", obj.item.audio_url)
+            $('#audio-ctrl').load()
 
             $(".btn-mood.active, .btn-time.active").removeClass('active')
             $('#'+obj.mood).addClass('active')
@@ -109,7 +117,6 @@ $(document).ready(function(){
             $("#next").attr("value", +obj.page+1)
             $("#next").removeClass('active')
             $("#next").blur()
-            console.log(obj.playlists.length)
             if (obj.playlists.length == 0) {
                 $('#playlists').empty()
                 $('#playlists').append('Pas de playlists de mood '+obj.mood);
@@ -145,6 +152,19 @@ $(document).ready(function(){
     $(".btn-playlist").click(function() {
         $('#playlist_id').attr("value", $(this).attr("id"));
         $('#search_form').submit();
+    });
+
+    var playing = false;
+    $("#btn-audio").click(function(){
+        if (!playing) {
+            console.log('OUI')
+            $('#audio-ctrl').trigger('play');
+            playing=true;
+        } else {
+            console.log('NON')
+            $('#audio-ctrl').trigger('pause');
+            playing=false
+        }
     });
 
     filter('', '{{moods[0]}}', 0)
