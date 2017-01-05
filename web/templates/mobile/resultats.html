@@ -37,11 +37,20 @@
     {% for item in items %}
     <div class="row item collapsed" style="border: 1px solid #555;margin-top:3px">
         <div class="col-xs-3">
-           <img src="{{item.image}}" style="max-width:60px; max-height:60px">
+            <button class="btn btn-block btn-default btn-audio" value="{{item.id}}">
+                <img src="{{item.image}}" style="max-width:60px; max-height:60px">
+                <i class="fa fa-play"></i>
+            </button>
         </div>
         <div class="col-xs-9">
             <p><b>{{item.title}}</b></p>
             <p class="desc" style="display:none">{{item.description}}</p>
+        </div>
+        <div style="display:none">
+            <audio controls="controls" id="audio-ctrl-{{item.id}}">
+                <source type="audio/mpeg" src="{{item.audio_url_}}">
+                Your browser does not support the audio element.
+        </audio>
         </div>
     </div>
     {% endfor %}
@@ -52,6 +61,7 @@
 
 {% block js %}
 <script type="text/javascript">
+    playing_audio_id=undefined
     $(document).ready(function(){
         search = function() {
             $('form').submit()
@@ -68,16 +78,31 @@
         });
 
          $('.item').click(function(){
-             console.log('ok')
              if ($(this).hasClass("collapsed")) {
-                 console.log('expand')
                  $(this).removeClass("collapsed")
                  $(this).find(".desc").css('display','block')
              } else {
-                 console.log('collapse')
                  $(this).addClass("collapsed")
                  $(this).find(".desc").css('display','none')
              }
+        });
+        $('.btn-audio').click(function(){
+            id=$(this).attr('value')
+            audio_id = '#audio-ctrl-'+id
+            if (playing_audio_id == undefined) {
+                $(audio_id).trigger('play')
+                playing_audio_id = audio_id
+            } else {
+                $(playing_audio_id).trigger('pause')
+                $(playing_audio_id).currentTime = 0.0
+
+                if (playing_audio_id != audio_id) {
+                    $(audio_id).trigger('play')
+                    playing_audio_id = audio_id
+                } else {
+                    playing_audio_id = undefined
+                }
+            }
         });
     });
 </script>
