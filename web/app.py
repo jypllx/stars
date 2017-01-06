@@ -114,11 +114,15 @@ def channels_index():
 def channels_get(id):
     form = ChannelForm(request.form)
     channel=db.session.query(Channel).get(id)
-    if request.method == 'POST' and form.validate():
+
+    if form.validate_on_submit():
         channel.title=form.title.data
         channel.description=form.description.data
         channel.mood=form.mood.data
         channel.image=form.image.data
+        channel.source=form.source.data
+        channel.country=form.country.data
+        app.logger.info("UPDATED !!! "+channel.country)
         db.session.commit()
         return redirect(url_for('channels_get', id=id))
 
@@ -249,6 +253,8 @@ def items_index():
     search_mood=''
     search_length='-1'
     search_date=''
+    search_source=''
+    search_country=''
 
     q = Item.query
     if request.method == 'POST':
@@ -269,6 +275,12 @@ def items_index():
         if request.form['search_length']:
             search_length=request.form['search_length']
             q=q.filter_by(cat_time=search_length)
+        if request.form['search_source']:
+            search_source=request.form['search_source']
+            q=q.filter_by(source=search_source)
+        if request.form['search_country']:
+            search_country=request.form['search_country']
+            q=q.filter_by(country=search_country)
         if request.form['search_date']:
             search_date=request.form['search_date']
             q=q.filter(Item.pubdate_ >= search_date)
@@ -287,11 +299,23 @@ def items_index():
     for result in results:
         moods.append(result[0])
 
+    results = db.engine.execute("Select DISTINCT source FROM items ORDER BY source")
+    sources=[]
+    for result in results:
+        sources.append(result[0])
+
+    results = db.engine.execute("Select DISTINCT country FROM items ORDER BY country")
+    countries=[]
+    for result in results:
+        countries.append(result[0])
+
     return render_template('bo/items/index.html',
         items=items, playlists=playlists,
         iTunes_categories=iTunes_categories, moods=moods, time_categories=PodTime().CATEGORIES,
+        sources=sources, countries=countries,
         search_title=search_title, search_desc=search_desc, search_date=search_date,
-        search_iCat=search_iCat, search_mood=search_mood, search_length=search_length)
+        search_iCat=search_iCat, search_mood=search_mood, search_length=search_length,
+        search_source=search_source,search_country=search_country)
 
 @app.route('/bo/items/<int:id>', methods=['POST', 'GET'])
 @login_required

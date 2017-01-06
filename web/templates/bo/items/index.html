@@ -44,6 +44,24 @@
             <label for="search_date">Publié après le</label>
             <input id='search_date' type='text' name="search_date" class="form-control" value="{{search_date}}" placeholder='YYYY-MM-DD'/>
         </div>
+        <div class="form-group">
+            <label for="search_source">Source</label>
+            <select class="form-control" name="search_source">
+                <option value="" >Source</option>
+                {% for source in sources %}
+                <option value="{{source}}" {% if source == search_source %} selected="selected" {% endif %}>{{source}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="search_country">Country</label>
+            <select class="form-control" name="search_country">
+                <option value="" >Country</option>
+                {% for country in countries %}
+                <option value="{{country}}" {% if country == search_country %} selected="selected" {% endif %}>{{country}}</option>
+                {% endfor %}
+            </select>
+        </div>
         <br/>
         <button type="submit" class="btn btn-default">Submit</button>
     </form>
