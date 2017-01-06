@@ -60,6 +60,8 @@
             <th>Cat iTunes*</th>
             <th>Publié le*</th>
             <th>Audio</th>
+            <th>Source</th>
+            <th>Country</th>
             <th></th>
         </tr>
         {% for item in items %}
@@ -76,6 +78,8 @@
                 Your browser does not support the audio element.
                 </audio>
             </td>
+            <td>{{item.source}}</td>
+            <td>{{item.country}}</td>
             <td><div class="dropdown">
                 <button class="btn" data-toggle="dropdown"><i class="fa fa-plus"></i>&nbsp;Add to playlist</span></button>
                 <ul class="dropdown-menu">

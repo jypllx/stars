@@ -20,6 +20,8 @@ class ChannelForm(FlaskForm):
     description     = TextAreaField('Description Tootak')    
     mood            = StringField('Mood')
     image           = StringField('Image Tootak')
+    source          = StringField('Source')
+    country         = StringField('Pays')
     
 
     def populate(self, channel):
@@ -38,6 +40,8 @@ class ChannelForm(FlaskForm):
         self.description.process_data(channel.description)
         self.mood.process_data(channel.mood)
         self.image.process_data(channel.image)
+        self.source.process_data(channel.source)
+        self.country.process_data(channel.country)
 
 class ItemForm(FlaskForm):
     id              = StringField('Id*')
@@ -57,6 +61,8 @@ class ItemForm(FlaskForm):
     mood            = StringField('Mood')
     cat_name        = StringField('Cat durée*')
     created         = StringField('Créé le*')
+    source          = StringField('Source')
+    country         = StringField('Pays')
     
 
     def populate(self, item, channel):
@@ -76,6 +82,8 @@ class ItemForm(FlaskForm):
 
         self.channel_.process_data(channel.title)
         self.image_.process_data(channel.image)
+        self.source.process_data(channel.source)
+        self.country.process_data(channel.country)
 
 
 class TagForm(FlaskForm):

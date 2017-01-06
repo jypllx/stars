@@ -492,7 +492,6 @@ def moods_index():
         form=form, 
         mood_file=podmood.file)
 
-
 if __name__ == '__main__':
     handler = RotatingFileHandler('./logs.log', maxBytes=10000, backupCount=1)
     handler.setLevel(logging.INFO)

@@ -44,6 +44,8 @@
             <th>Producteur*</th>
             <th>Description Tootak</th>
             <th>Cat iTunes*</th>
+            <th>Source</th>
+            <th>Country</th>
             <th></th>
         </tr>
         {% for channel in channels %}
@@ -54,6 +56,8 @@
             <td>{{channel.author_}}</td>
             <td style="width: 30%;word-wrap: break-word;">{{channel.description}}</td>
             <td>{{channel.itunes_category_}}</td>
+            <td>{{channel.source}}</td>
+            <td>{{channel.country}}</td>
             <td><a class='btn btn-default' href="{{url_for('channels_get', id=channel.id)}}"><i class="fa fa-search"></i></a></td>
         </tr>            
         {% endfor %}

@@ -1,4 +1,5 @@
 import sys
+from config import BaseConfig
 import os.path
 from openpyxl import Workbook, load_workbook
 
@@ -12,10 +13,10 @@ Uses an 2 column xls file :
 class PodMood:
 
     def __init__(self):
-        self.file = './static/files/moods.xlsx'
+        self.file = BaseConfig.MOOD_FILE
 
-        if not os.path.exists(self.file) :
-            raise Exception('No file for %s' % file)
+        # if not os.path.exists(self.file) :
+        #     raise Exception('No file for %s' % self.file)
 
         wb=load_workbook(self.file)
         ws=wb.active

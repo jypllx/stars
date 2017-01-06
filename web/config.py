@@ -17,4 +17,4 @@ class BaseConfig(object):
     )
     #SQLALCHEMY_ECHO=True
     SECRET_KEY = os.environ['SECRET_KEY']
-    
+    MOOD_FILE = os.environ['MOOD_FILE']

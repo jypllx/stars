@@ -2,6 +2,8 @@ from app import db
 from parser.podtime import PodTime
 from parser.podmood import PodMood
 from flask.ext.security import UserMixin, RoleMixin
+from sqlalchemy import text
+from datetime import datetime
 
 
 """
@@ -30,10 +32,13 @@ class Channel(db.Model):
     mood            = db.Column(db.String())
     image           = db.Column(db.String())
     created         = db.Column(db.DateTime)
+    source          = db.Column(db.String())
+    country         = db.Column(db.String())
 
 
     def __init__(self, title_, link_, description_, itunes_category_,
-                language_, author_, image_, last_build_date_):
+                language_, author_, image_, last_build_date_, source,
+                country):
         self.title_ = title_.strip()
         self.link_ = link_.strip()
         self.description_ = description_.strip()
@@ -48,6 +53,9 @@ class Channel(db.Model):
         podmood=PodMood()
         self.mood = podmood.get_mood(self.itunes_category_)
         self.image = self.image_
+        self.created = datetime.now()
+        self.source = source
+        self.country = country
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
@@ -92,17 +100,24 @@ class Item(db.Model):
     cat_time        = db.Column(db.Integer)
     cat_name        = db.Column(db.String())
     created         = db.Column(db.DateTime)
+    source          = db.Column(db.String())
+    country         = db.Column(db.String())
 
-    def __init__(self, title_, description_, channel_id, duration_str, audio_url_, pubdate_, itunes_category_):
+    def __init__(self, title_, description_, channel_id, duration_str, 
+        audio_url_, pubdate_, itunes_category_, source, country):
         self.title_         = title_.strip()
         self.description_   = description_.strip()
         self.channel_id     = channel_id
-        self.audio_url_     = audio_url.strip()
+        self.audio_url_     = audio_url_.strip()
         self.pubdate_       = pubdate_
         self.duration_, self.cat_time, self.cat_name = PodTime().getDurationCat(duration_str)
         self.itunes_category_= itunes_category_.strip()
         podmood=PodMood()
         self.mood           = podmood.get_mood(self.itunes_category_)
+        self.created = datetime.now()
+        self.source = source
+        self.country = country
+
 
     @property
     def duration_str(self):
@@ -148,6 +163,7 @@ class Playlist(db.Model):
         self.name = name
         self.description = description
         self.mood = mood
+        self.created = datetime.now()
 
     def __repr__(self):
         return 'Playlist<id {}>'.format(self.id)
@@ -178,3 +194,4 @@ class User(db.Model, UserMixin):
     confirmed_at    = db.Column(db.DateTime)
     roles           = db.relationship('Role', secondary=roles_users,
                             backref=db.backref('users', lazy='dynamic'))
+
