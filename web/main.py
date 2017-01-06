@@ -10,7 +10,10 @@ def parse_json(pp, feed):
 
   for el in data:
     if el['rss'] is not None:
-        pp.parse(el['rss'])  
+        try:
+          pp.parse(el['rss'])
+        except:
+          pass
 
 if __name__ == "__main__":
 
