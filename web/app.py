@@ -55,6 +55,8 @@ def channels_index():
     search_desc=''
     search_iCat=''
     search_mood=''
+    search_source=''
+    search_country=''
     q = Channel.query
     if request.method == 'POST':
         # TODO : replace by WTForms
@@ -72,6 +74,12 @@ def channels_index():
         if request.form['search_mood']:
             search_mood=request.form['search_mood']
             q=q.filter_by(mood=search_mood)
+        if request.form['search_source']:
+            search_source=request.form['search_source']
+            q=q.filter_by(source=search_source)
+        if request.form['search_country']:
+            search_country=request.form['search_country']
+            q=q.filter_by(country=search_country)
 
     channels = q.all()
     results = db.engine.execute("Select DISTINCT itunes_category_ FROM channels ORDER BY itunes_category_")
@@ -84,10 +92,21 @@ def channels_index():
     for result in results:
         moods.append(result[0])
 
+    results = db.engine.execute("Select DISTINCT source FROM channels ORDER BY source")
+    sources=[]
+    for result in results:
+        sources.append(result[0])
+
+    results = db.engine.execute("Select DISTINCT country FROM channels ORDER BY country")
+    countries=[]
+    for result in results:
+        countries.append(result[0])
+
     return render_template('bo/channels/index.html',
         channels=channels,
-        iTunes_categories=iTunes_categories, moods= moods,
-        search_title=search_title, search_desc=search_desc, search_iCat=search_iCat, search_mood=search_mood)
+        iTunes_categories=iTunes_categories, moods= moods, sources=sources, countries=countries,
+        search_title=search_title, search_desc=search_desc, search_iCat=search_iCat, search_mood=search_mood,
+        search_source=search_source,search_country=search_country)
 
 
 @app.route('/bo/channels/<int:id>', methods=['POST', 'GET'])

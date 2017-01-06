@@ -31,6 +31,24 @@
             {% endfor %}
             </select>
         </div>
+        <div class="form-group">
+            <label for="search_source">Source</label>
+            <select class="form-control" name="search_source">
+                <option value="" >Choose Source</option>
+            {% for source in sources %}
+                <option value="{{source}}" {% if search_source == source %} selected="selected" {% endif %}>{{source}}</option>
+            {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="search_country">Country</label>
+            <select class="form-control" name="search_country">
+                <option value="" >Choose country</option>
+            {% for country in countries %}
+                <option value="{{country}}" {% if search_country == country %} selected="selected" {% endif %}>{{country}}</option>
+            {% endfor %}
+            </select>
+        </div>
         <button type="submit" class="btn btn-default">Submit</button>
     </form>
 </div>
