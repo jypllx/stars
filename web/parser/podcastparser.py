@@ -39,8 +39,8 @@ class PodcastParser:
 
 
   def getChannel(self, channel, url):
-    ch = Channel.query.filter(Channel.name.like(channel['title']), 
-      Channel.url.like(url)).first()
+    ch = Channel.query.filter(Channel.title_.like(channel['title']), 
+      Channel.link_.like(url)).first()
     return ch
 
 
@@ -66,7 +66,7 @@ class PodcastParser:
 
 
   def existsItem(self, channel_id, item):
-    it = Item.query.filter(Item.channel_id==channel_id, Item.audio_url.like(item['enclosure']['@url'])).first()
+    it = Item.query.filter(Item.channel_id==channel_id, Item.audio_url_.like(item['enclosure']['@url'])).first()
     if it is not None:
       return True
     else:
