@@ -106,7 +106,7 @@ class Item(db.Model):
     def __init__(self, title_, description_, channel_id, duration_str, 
         audio_url_, pubdate_, itunes_category_, source, country):
         self.title_         = title_.strip()
-        self.description_   = description_.strip()
+        self.description_   = '' if description_ is None else description_.strip()
         self.channel_id     = channel_id
         self.audio_url_     = audio_url_.strip()
         self.pubdate_       = pubdate_
