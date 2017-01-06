@@ -18,13 +18,6 @@
                 <input id="cat_time" type="hidden" name="cat_time" value="">
             </div>
             <br/>
-            <div class="row type-filter">
-                <div class="col-xs-3"><a class="btn btn-block btn-default btn-type box" value="0" id="type0">News</a></div>
-                <div class="col-xs-3"><a class="btn btn-block btn-default btn-type box" value="1" id="type1">Reportage</a></div>
-                <div class="col-xs-3"><a class="btn btn-block btn-default btn-type box" value="2" id="type2">Livre</a></div>
-                <div class="col-xs-3"><a class="btn btn-block btn-default btn-type box" value="3" id="type3">Conférence</a></div>
-                <input id="cat_type" type="hidden" name="cat_type" value="">
-            </div>
             {% for tag in tags %}
                 <div class="row">
                     <p class="text-center"><b>{{tag.name}}</b></p>
