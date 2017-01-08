@@ -90,6 +90,7 @@ class PodcastParser:
       item['pubDate'], 
       channel.itunes_category_,
       channel.source,
-      channel.country)
+      channel.country,
+      channel.image)
     db.session.add(it)
     db.session.commit()

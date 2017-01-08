@@ -531,7 +531,6 @@ def moods_index():
             db.session.commit()
 
     mood_url = url_for('static', filename='files/'+os.path.basename(podmood.file))
-    app.logger.info(mood_url)
 
     return render_template('bo/moods/index.html',
         mappings=mappings,

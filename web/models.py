@@ -36,9 +36,18 @@ class Channel(db.Model):
     country         = db.Column(db.String())
 
 
-    def __init__(self, title_, link_, description_, itunes_category_,
-                language_, author_, image_, last_build_date_, source,
-                country):
+    def __init__(self, 
+        title_, 
+        link_, 
+        description_, 
+        itunes_category_,
+        language_,
+        author_,
+        image_,
+        last_build_date_, 
+        source,
+        country):
+
         self.title_ = title_.strip()
         self.link_ = link_.strip()
         self.description_ = description_.strip()
@@ -103,8 +112,9 @@ class Item(db.Model):
     source          = db.Column(db.String())
     country         = db.Column(db.String())
 
-    def __init__(self, title_, description_, channel_id, duration_str, 
-        audio_url_, pubdate_, itunes_category_, source, country):
+    def __init__(self, title_, description_, channel_id, 
+        duration_str, audio_url_, pubdate_, itunes_category_, 
+        source, country, image):
         self.title_         = title_.strip()
         self.description_   = '' if description_ is None else description_.strip()
         self.channel_id     = channel_id
@@ -115,9 +125,11 @@ class Item(db.Model):
         podmood=PodMood()
         self.mood           = podmood.get_mood(self.itunes_category_)
         self.created = datetime.now()
+        self.title=self.title_
+        self.description = self.description_
         self.source = source
         self.country = country
-
+        self.image = image
 
     @property
     def duration_str(self):
