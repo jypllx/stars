@@ -528,12 +528,15 @@ def moods_index():
             mood = "'"+mood+"'" if mood is not None else "NULL"
             db.engine.execute("UPDATE channels SET mood="+mood+" WHERE itunes_category_='"+iCat+"'")
             db.engine.execute("UPDATE items    SET mood="+mood+" WHERE itunes_category_='"+iCat+"'")
-            db.session.commit()        
+            db.session.commit()
+
+    mood_url = url_for('static', filename='files/'+os.path.basename(podmood.file))
+    app.logger.info(mood_url)
 
     return render_template('bo/moods/index.html',
         mappings=mappings,
         form=form, 
-        mood_file=podmood.file)
+        mood_file=mood_url)
 
 if __name__ == '__main__':
     handler = RotatingFileHandler('./logs.log', maxBytes=10000, backupCount=1)

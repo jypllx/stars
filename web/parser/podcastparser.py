@@ -38,7 +38,6 @@ class PodcastParser:
 
       os.remove(tmp_file)
     except Exception as e:
-      print('MERDE')
       traceback.print_exc()
 
 
@@ -59,11 +58,11 @@ class PodcastParser:
     last_build_date = channel['lastBuildDate'] if 'lastBuildDate' in channel.keys() else None
 
     ch=Channel(channel['title'],
+      channel['link'],
       channel['description'],
       channel['itunes:category']['@text'],
       channel['language'],
-      url,
-      channel['link'],
+      channel['itunes:author'],
       channel['itunes:image']['@href'],
       last_build_date,
       source,
