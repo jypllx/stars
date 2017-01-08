@@ -326,6 +326,8 @@ def items_edit(id):
         item.title      =form.title.data
         item.description=form.description.data
         item.mood       =form.mood.data if form.mood.data != '' else None
+        item.source     =form.source.data
+        item.country    =form.country.data
         
         db.session.commit()
         return redirect(url_for('items_index'))
