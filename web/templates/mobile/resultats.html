@@ -48,7 +48,7 @@
             <p class="desc" style="display:none">{{item.description}}</p>
         </div>
         <div style="display:none">
-            <audio controls="controls" id="audio-ctrl-{{item.id}}">
+            <audio controls="controls" id="audio-ctrl-{{item.id}}" preload='none'>
                 <source type="audio/mpeg" src="{{item.audio_url_}}">
                 Your browser does not support the audio element.
         </audio>
@@ -91,6 +91,7 @@
             id=$(this).attr('value')
             audio_id = '#audio-ctrl-'+id
             if (playing_audio_id == undefined) {
+                $(audio_id).trigger('load')
                 $(audio_id).trigger('play')
                 playing_audio_id = audio_id
             } else {
