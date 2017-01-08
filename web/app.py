@@ -334,7 +334,7 @@ def items_edit(id):
 
     channel=db.session.query(Channel).get(item.channel_id)
     form.populate(item, channel)
-    return render_template('bo/items/edit.html',
+    return render_template('bo/items/view.html',
         form=form)
 
 @app.route('/bo/items/add_to_playlist', methods=['POST'])
