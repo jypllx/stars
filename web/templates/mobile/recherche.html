@@ -36,16 +36,22 @@
             {% endfor %}
 
             <input id="playlist" type="hidden" name="playlist_id" value="">
+            
             <div class="row">
-                <p class="text-center"><b>Vos chaînes préférées</b></p>
+                <p class="text-center"><b>Sources</b></p>
             </div>
-
-            <div class="row">
-            {% for channel in channels %}
-                <div class="col-xs-3"><a class="btn btn-default btn-block btn-channel box" id="{{channel.id}}">{{channel.name}}</a></div>
+            {% set i=0 %}
+            {% for source in sources %}
+            {% if i % 4 == 0 %}
+                <div class="row">
+            {% endif %}
+                <div class="col-xs-3"><a class="btn btn-default btn-block btn-source box" id="{{source}}">{{source}}</a></div>
+            {% if i % 4 == 3 or i == sources|length() -1 %}
+                </div>
+            {% endif %}
+            {% set i=i+1 %}
             {% endfor %}
-            </div>
-            <input id="channel" type="hidden" name="channel_id" value="">
+            <input id="source" type="hidden" name="source" value="">
         </div>
         <input id="mood" type="hidden" name="mood" value="">
     </form>
@@ -70,8 +76,8 @@
             $('#playlist').attr('value', $(this).attr('id'))
             search()
         });
-        $(".btn-channel").click(function(){
-            $('#channel').attr('value', $(this).attr('id'))
+        $(".btn-source").click(function(){
+            $('#source').attr('value', $(this).attr('id'))
             search()
         });
     });

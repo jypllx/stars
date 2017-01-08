@@ -449,16 +449,21 @@ def mob_home_ajax():
 def mob_search():
     if request.method=='GET':
         tags=Tag.query.limit(2).all()
-        channels=Channel.query.limit(4).all()
+        
+        results = db.engine.execute("Select DISTINCT source FROM channels ORDER BY source")
+        sources=[]
+        for result in results:
+            sources.append(result[0])
+
         return render_template('mobile/recherche.html',
             time_categories=PodTime().CATEGORIES,
-            tags=tags, channels=channels)
+            tags=tags, sources=sources)
 
     if request.method=='POST':
         search=''
         cat_time='-1'
         playlist_id=''
-        channel_id=''
+        source=''
         
         q = Item.query
         if request.form['search'] :
@@ -474,18 +479,18 @@ def mob_search():
             for rel in rels:
                 item_ids.append(rel.item_id)
             q=q.filter(Item.id.in_(item_ids))
-        if request.form['channel_id']:
-            channel_id=request.form['channel_id']
-            q=q.filter_by(channel_id=channel_id)
         if request.form['mood']:
             q=q.filter_by(mood=request.form['mood'])
+        if request.form['source']:
+            source=request.form['source']
+            q=q.filter_by(source=source)
 
         items = q.order_by(Item.pubdate_.desc()).limit(10).all()
 
         return render_template('mobile/resultats.html', 
             items=items, time_categories=PodTime().CATEGORIES,
             search=search, cat_time=cat_time, 
-            playlist_id=playlist_id, channel_id=channel_id)
+            playlist_id=playlist_id, source=source)
 
 
 @app.route('/library/')
