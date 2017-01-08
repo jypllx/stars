@@ -50,8 +50,8 @@ class Channel(db.Model):
 
         self.title_ = title_.strip()
         self.link_ = link_.strip()
-        self.description_ = description_.strip()
-        self.itunes_category_ = itunes_category_.strip()
+        self.description_ = None if description_ is None else description_.strip()
+        self.itunes_category_= None if itunes_category_ is None else itunes_category_.strip()
         self.language_ = language_.strip()
         self.author_ = author_.strip()
         self.image_ = image_.strip()
@@ -116,12 +116,12 @@ class Item(db.Model):
         duration_str, audio_url_, pubdate_, itunes_category_, 
         source, country, image):
         self.title_         = title_.strip()
-        self.description_   = '' if description_ is None else description_.strip()
+        self.description_   = None if description_ is None else description_.strip()
         self.channel_id     = channel_id
         self.audio_url_     = audio_url_.strip()
         self.pubdate_       = pubdate_
         self.duration_, self.cat_time, self.cat_name = PodTime().getDurationCat(duration_str)
-        self.itunes_category_= itunes_category_.strip()
+        self.itunes_category_= None if itunes_category_ is None else itunes_category_.strip()
         podmood=PodMood()
         self.mood           = podmood.get_mood(self.itunes_category_)
         self.created = datetime.now()
@@ -131,16 +131,16 @@ class Item(db.Model):
         self.country = country
         self.image = image
 
-    @property
-    def duration_str(self):
-        if self.duration is None:
-            return ''
-        m, s = divmod(int(self.duration), 60)
-        h, m = divmod(m, 60)
-        if h == 0:
-            return "%s:%s" % (m, s)
-        else:
-            return "%s:%s:%s" % (h, m, s)
+    # @property
+    # def duration_str(self):
+    #     if self.duration is None:
+    #         return ''
+    #     m, s = divmod(int(self.duration), 60)
+    #     h, m = divmod(m, 60)
+    #     if h == 0:
+    #         return "%s:%s" % (m, s)
+    #     else:
+    #         return "%s:%s:%s" % (h, m, s)
 
     def __repr__(self):
         return 'Item<id {}>'.format(self.id)

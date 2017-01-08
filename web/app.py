@@ -32,6 +32,8 @@ security = Security(app, user_datastore)
 # JINJA2 formatter
 @app.template_filter('duration')
 def format_duration(value):
+    if value is None:
+        return 'Durée inconnue'
     duration=int(value)
     seconds = duration % 60
     hours = int(duration/3600)

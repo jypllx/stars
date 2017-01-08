@@ -6,9 +6,6 @@ class FranceInterSpider(scrapy.Spider):
 
   def parse(self, response):
     for art in response.css('article'):
-      yield {'title': art.css('div header > a::text').extract_first().strip(),
-             'rss': art.css('div.podcast-container.rss > a::attr(href)').extract_first()}
-
-      #next_page = response.css('div.prev-post > a ::attr(href)').extract_first()
-      #if next_page:
-      #  yield scrapy.Request(response.urljoin(next_page), callback=self.parse)
+        rss = art.css('div.podcast-container.rss > a::attr(href)').extract_first()
+        if rss:
+            yield {'rss': rss}

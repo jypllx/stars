@@ -48,9 +48,12 @@ class PodcastParser:
 
 
   def saveChannel(self, channel, url, source, country):
-    if 'itunes:category' not in channel and 'category' in channel:
+    if 'itunes:category' not in channel:
       channel['itunes:category'] = {}
-      channel['itunes:category']['@text'] = channel['category']
+      if 'category' in channel:
+        channel['itunes:category']['@text'] = channel['category']
+      else:
+        channel['itunes:category']['@text'] = None
 
     if isinstance(channel['itunes:category'], (list, tuple)):
       channel['itunes:category'] = channel['itunes:category'][0]
@@ -58,8 +61,8 @@ class PodcastParser:
     last_build_date = channel['lastBuildDate'] if 'lastBuildDate' in channel.keys() else None
 
     ch=Channel(channel['title'],
-      channel['link'],
-      channel['description'],
+      url,
+      None if 'description' not in channel else channel['description'],
       channel['itunes:category']['@text'],
       channel['language'],
       channel['itunes:author'],
@@ -83,9 +86,9 @@ class PodcastParser:
     
   def saveItem(self, channel, item):
     it = Item(item['title'], 
-      item['description'], 
+      None if 'description' not in item else item['description'],
       channel.id, 
-      item['itunes:duration'], 
+      None if 'itunes:duration' not in item else item['itunes:duration'],
       item['enclosure']['@url'], 
       item['pubDate'], 
       channel.itunes_category_,
