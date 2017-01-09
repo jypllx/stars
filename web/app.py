@@ -104,11 +104,15 @@ def channels_index():
     for result in results:
         countries.append(result[0])
 
+    results = db.engine.execute("Select created FROM channels ORDER BY created DESC LIMIT 1")
+    for result in results:
+        last_add = result[0]
+
     return render_template('bo/channels/index.html',
         channels=channels,
         iTunes_categories=iTunes_categories, moods= moods, sources=sources, countries=countries,
         search_title=search_title, search_desc=search_desc, search_iCat=search_iCat, search_mood=search_mood,
-        search_source=search_source,search_country=search_country)
+        search_source=search_source,search_country=search_country, last_add=last_add)
 
 
 @app.route('/bo/channels/<int:id>', methods=['POST', 'GET'])
@@ -311,13 +315,17 @@ def items_index():
     for result in results:
         countries.append(result[0])
 
+    results = db.engine.execute("Select created FROM channels ORDER BY created DESC LIMIT 1")
+    for result in results:
+        last_add = result[0]
+
     return render_template('bo/items/index.html',
         items=items, playlists=playlists,
         iTunes_categories=iTunes_categories, moods=moods, time_categories=PodTime().CATEGORIES,
         sources=sources, countries=countries,
         search_title=search_title, search_desc=search_desc, search_date=search_date,
         search_iCat=search_iCat, search_mood=search_mood, search_length=search_length,
-        search_source=search_source,search_country=search_country)
+        search_source=search_source,search_country=search_country, last_add=last_add)
 
 @app.route('/bo/items/<int:id>', methods=['POST', 'GET'])
 @login_required
