@@ -83,7 +83,7 @@ def channels_index():
             search_country=request.form['search_country']
             q=q.filter_by(country=search_country)
 
-    channels = q.all()
+    channels = q.limit(25).all()
     results = db.engine.execute("Select DISTINCT itunes_category_ FROM channels ORDER BY itunes_category_")
     iTunes_categories=[]
     for result in results:

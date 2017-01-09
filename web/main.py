@@ -22,6 +22,7 @@ if __name__ == "__main__":
   parse_json(pp, './spiders/france_inter.feeds.json', 'France Inter', 'France')
   parse_json(pp, './spiders/rmc.feeds.json', 'RMC', 'France')
   parse_json(pp, './spiders/europe1.feeds.json', 'Europe1', 'France')
+  parse_json(pp, './spiders/france_culture.feeds.json', 'France Culture', 'France')
   
   pp.parse('http://feeds.serialpodcast.org/serialpodcast', 'This American Life', 'USA')
   pp.parse('http://arteradio.com/podcast', 'Arte', 'France')
