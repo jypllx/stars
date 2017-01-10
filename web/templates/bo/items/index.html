@@ -3,69 +3,82 @@
 {% block content %}
 
 <h1>Episodes</h1>
-<div>
-    <form method="post">
-        <div class="form-group">
-            <label for="search_title">Titre</label>
-            <input type="text" class="form-control" name="search_title" placeholder="Rechercher..." value="{{search_title}}">
+
+<form method="post">
+    <div class="row">
+        <div class="col-xs-3">
+            <div class="form-group">
+                <label for="search_title">Titre</label>
+                <input type="text" class="form-control" name="search_title" placeholder="Rechercher..." value="{{search_title}}">
+            </div>
+            <div class="form-group">
+                <label for="search_desc">Description</label>
+                <input type="text" class="form-control" name="search_desc" placeholder="Rechercher..." value="{{search_desc}}">
+            </div>
         </div>
-        <div class="form-group">
-            <label for="search_desc">Description</label>
-            <input type="text" class="form-control" name="search_desc" placeholder="Rechercher..." value="{{search_desc}}">
+        <div class="col-xs-3">
+            <div class="form-group">
+                <label for="search_iCat">Genre</label>
+                <select class="form-control" name="search_iCat">
+                    <option value="">iTunes Category</option>
+                    {% for iCat in iTunes_categories %}
+                    <option value="{{iCat}}" {% if search_iCat == iCat %} selected="selected" {% endif %}>{{iCat}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="search_mood">Mood</label>
+                <select class="form-control" name="search_mood">
+                    <option value="" >Choose Mood</option>
+                    {% for mood in moods %}
+                    <option value="{{mood}}" {% if search_mood == mood %} selected="selected" {% endif %}>{{mood}}</option>
+                    {% endfor %}
+                </select>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="search_iCat">Genre</label>
-            <select class="form-control" name="search_iCat">
-                <option value="">iTunes Category</option>
-                {% for iCat in iTunes_categories %}
-                <option value="{{iCat}}" {% if search_iCat == iCat %} selected="selected" {% endif %}>{{iCat}}</option>
-                {% endfor %}
-            </select>
+        <div class="col-xs-3">
+            <div class="form-group">
+                <label for="search_length">Durée</label>
+                <select class="form-control" name="search_length">
+                    <option value="" >Durée</option>
+                    {% for category in time_categories %}
+                    <option value="{{category['id']}}" {% if search_length|int() == category['id']|int() %} selected="selected" {% endif %}>{{category.name}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="search_date">Publié après le</label>
+                <input id='search_date' type='text' name="search_date" class="form-control" value="{{search_date}}" placeholder='YYYY-MM-DD'/>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="search_mood">Mood</label>
-            <select class="form-control" name="search_mood">
-                <option value="" >Choose Mood</option>
-                {% for mood in moods %}
-                <option value="{{mood}}" {% if search_mood == mood %} selected="selected" {% endif %}>{{mood}}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="search_length">Durée</label>
-            <select class="form-control" name="search_length">
-                <option value="" >Durée</option>
-                {% for category in time_categories %}
-                <option value="{{category['id']}}" {% if search_length|int() == category['id']|int() %} selected="selected" {% endif %}>{{category.name}}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div>
-            <label for="search_date">Publié après le</label>
-            <input id='search_date' type='text' name="search_date" class="form-control" value="{{search_date}}" placeholder='YYYY-MM-DD'/>
-        </div>
-        <div class="form-group">
-            <label for="search_source">Source</label>
-            <select class="form-control" name="search_source">
-                <option value="" >Source</option>
-                {% for source in sources %}
-                <option value="{{source}}" {% if source == search_source %} selected="selected" {% endif %}>{{source}}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="search_country">Country</label>
-            <select class="form-control" name="search_country">
-                <option value="" >Country</option>
-                {% for country in countries %}
-                <option value="{{country}}" {% if country == search_country %} selected="selected" {% endif %}>{{country}}</option>
-                {% endfor %}
-            </select>
+        <div class="col-xs-3">
+            <div class="form-group">
+                <label for="search_source">Source</label>
+                <select class="form-control" name="search_source">
+                    <option value="" >Source</option>
+                    {% for source in sources %}
+                    <option value="{{source}}" {% if source == search_source %} selected="selected" {% endif %}>{{source}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="search_country">Country</label>
+                <select class="form-control" name="search_country">
+                    <option value="" >Country</option>
+                    {% for country in countries %}
+                    <option value="{{country}}" {% if country == search_country %} selected="selected" {% endif %}>{{country}}</option>
+                    {% endfor %}
+                </select>
+            </div>
         </div>
         <br/>
-        <button type="submit" class="btn btn-default">Submit</button>
-    </form>
-</div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <button type="submit" class="btn btn-default">Submit</button>
+        </div>
+    </div>
+</form>
 <br/>
 <div>
     <div><h3>Dernier ajout : {{last_add}}</h3></div>
@@ -94,7 +107,7 @@
             <td>{{item.pubdate_}}</td>
             <td><audio controls>
                 <source src="{{item.audio_url_}}" type="audio/mpeg">
-                Your browser does not support the audio element.
+                    Your browser does not support the audio element.
                 </audio>
             </td>
             <td>{{item.source}}</td>

@@ -17,14 +17,6 @@
                 {% endfor %}
                 <input id="cat_time" type="hidden" name="cat_time" value="{% if cat_time|int() != -1|int() %} {{cat_time}} {% endif %} ">
             </div>
-            <br/>
-            <div class="row type-filter">
-                <div class="col-xs-3"><a class="btn btn-block btn-default btn-type" value="0" id="type0"><p>News</p><p>&nbsp;</p></a></div>
-                <div class="col-xs-3"><a class="btn btn-block btn-default btn-type" value="1" id="type1"><p>Repor</p><p>tage</p></a></div>
-                <div class="col-xs-3"><a class="btn btn-block btn-default btn-type" value="2" id="type2"><p>Livre</p><p>&nbsp;</p></a></div>
-                <div class="col-xs-3"><a class="btn btn-block btn-default btn-type" value="3" id="type3"><p>Confé</p><p>rence</p></a></div>
-                <input id="cat_type" type="hidden" name="cat_type" value="">
-            </div>
             <input id="playlist" type="hidden" name="playlist_id" value="{{playlist_id}}">
             <input id="channel" type="hidden" name="channel_id" value="{{channel_id}}">
             <input id="source" type="hidden" name="source" value="{{source}}">

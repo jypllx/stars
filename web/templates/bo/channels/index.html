@@ -3,57 +3,68 @@
 {% block content %}
 
 <h1>Podcasts</h1>
-<div>
-    <form method="post">
-        <div class="form-group">
-            <label for="search_title">Titre</label>
-            <input type="text" class="form-control" name="search_title" placeholder="Rechercher..." value="{{search_title}}">
+<form method="post">
+    <div class="row">
+        <div class="col-xs-4">
+            <div class="form-group">
+                <label for="search_title">Titre</label>
+                <input type="text" class="form-control" name="search_title" placeholder="Rechercher..." value="{{search_title}}">
+            </div>
+            <div class="form-group">
+                <label for="search_desc">Description</label>
+                <input type="text" class="form-control" name="search_desc" placeholder="Rechercher..." value="{{search_desc}}">
+            </div>
         </div>
-        <div class="form-group">
-            <label for="search_desc">Description</label>
-            <input type="text" class="form-control" name="search_desc" placeholder="Rechercher..." value="{{search_desc}}">
+        <div class="col-xs-4">
+            <div class="form-group">
+                <label for="search_iCat">iTunes Category</label>
+                <select class="form-control" name="search_iCat">
+                    <option value="" >Choose iTunes Category</option>
+                    {% for iCat in iTunes_categories %}
+                    <option value="{{iCat}}" {% if search_iCat == iCat %} selected="selected" {% endif %}>{{iCat}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="search_mood">Mood</label>
+                <select class="form-control" name="search_mood">
+                    <option value="" >Choose Mood</option>
+                    {% for mood in moods %}
+                    <option value="{{mood}}" {% if search_mood == mood %} selected="selected" {% endif %}>{{mood}}</option>
+                    {% endfor %}
+                </select>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="search_iCat">iTunes Category</label>
-            <select class="form-control" name="search_iCat">
-                <option value="" >Choose iTunes Category</option>
-            {% for iCat in iTunes_categories %}
-                <option value="{{iCat}}" {% if search_iCat == iCat %} selected="selected" {% endif %}>{{iCat}}</option>
-            {% endfor %}
-            </select>
+        <div class="col-xs-4">
+            <div class="form-group">
+                <label for="search_source">Source</label>
+                <select class="form-control" name="search_source">
+                    <option value="" >Choose Source</option>
+                    {% for source in sources %}
+                    <option value="{{source}}" {% if search_source == source %} selected="selected" {% endif %}>{{source}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="search_country">Country</label>
+                <select class="form-control" name="search_country">
+                    <option value="" >Choose country</option>
+                    {% for country in countries %}
+                    <option value="{{country}}" {% if search_country == country %} selected="selected" {% endif %}>{{country}}</option>
+                    {% endfor %}
+                </select>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="search_mood">Mood</label>
-            <select class="form-control" name="search_mood">
-                <option value="" >Choose Mood</option>
-            {% for mood in moods %}
-                <option value="{{mood}}" {% if search_mood == mood %} selected="selected" {% endif %}>{{mood}}</option>
-            {% endfor %}
-            </select>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <button type="submit" class="btn btn-default">Submit</button>
         </div>
-        <div class="form-group">
-            <label for="search_source">Source</label>
-            <select class="form-control" name="search_source">
-                <option value="" >Choose Source</option>
-            {% for source in sources %}
-                <option value="{{source}}" {% if search_source == source %} selected="selected" {% endif %}>{{source}}</option>
-            {% endfor %}
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="search_country">Country</label>
-            <select class="form-control" name="search_country">
-                <option value="" >Choose country</option>
-            {% for country in countries %}
-                <option value="{{country}}" {% if search_country == country %} selected="selected" {% endif %}>{{country}}</option>
-            {% endfor %}
-            </select>
-        </div>
-        <button type="submit" class="btn btn-default">Submit</button>
-    </form>
-</div>
+    </div>
+</form>
+
 <br/>
-<div>
+<div class="row">
     <div><h3>Dernier ajout : {{last_add}}</h3></div>
     <table class="table table-striped table-hover">
         <tr>
