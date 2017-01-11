@@ -15,7 +15,7 @@
                 {% for category in time_categories %}
                 <div class="col-xs-3"><a class="btn btn-block btn-default btn-time {% if cat_time|int() == category.id|int() %} active {% endif %}" value="{{category.id}}" id="time{{category.id}}"><i class="fa {{category.icon}}"></i>&nbsp;{{category.name}}</a></div>
                 {% endfor %}
-                <input id="cat_time" type="hidden" name="cat_time" value="{% if cat_time|int() != -1|int() %} {{cat_time}} {% endif %} ">
+                <input id="cat_time" type="hidden" name="cat_time" value="{% if cat_time|int() != -1|int() %}{{cat_time}}{% endif %}">
             </div>
             <input id="playlist" type="hidden" name="playlist_id" value="{{playlist_id}}">
             <input id="channel" type="hidden" name="channel_id" value="{{channel_id}}">
@@ -37,15 +37,17 @@
         </div>
         <div class="col-xs-9">
             <p><b>{{item.title}}</b></p>
-            <p class="desc" style="display:none">{{item.description}}</p>
-        </div>
-        <div style="display:none">
+            <div class="desc" style="display:none">
+            <p>{{item.description}}</p>
+            <div>
             <audio controls="controls" id="audio-ctrl-{{item.id}}" preload='none'>
                 <source type="audio/mpeg" src="{{item.audio_url_}}">
                 Your browser does not support the audio element.
-        </audio>
+            </audio>
+            </div>
+            </div>
         </div>
-    </div>
+        </div>
     {% endfor %}
 {% else %}
     <div>Pas de résultats</div>

@@ -18,10 +18,15 @@ class ChannelForm(FlaskForm):
 
     title           = StringField('Titre Tootak')
     description     = TextAreaField('Description Tootak')    
-    mood            = StringField('Mood')
     image           = StringField('Image Tootak')
     source          = StringField('Source')
     country         = StringField('Pays')
+    mood            = SelectField('Mood', coerce=str)
+
+    def set_moods(self, moods):
+        self.mood.choices=[]
+        for mood in moods:
+            self.mood.choices.append((mood,mood))
     
 
     def populate(self, channel):
@@ -58,11 +63,16 @@ class ItemForm(FlaskForm):
 
     title           = StringField('Titre Tootak')
     description     = TextAreaField('Description Tootak')    
-    mood            = StringField('Mood')
     cat_name        = StringField('Cat durée*')
     created         = StringField('Créé le*')
     source          = StringField('Source')
     country         = StringField('Pays')
+    mood            = SelectField('Mood', coerce=str)
+
+    def set_moods(self, moods):
+        self.mood.choices=[]
+        for mood in moods:
+            self.mood.choices.append((mood,mood))
     
 
     def populate(self, item, channel):

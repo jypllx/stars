@@ -118,7 +118,14 @@ def channels_index():
 @app.route('/bo/channels/<int:id>', methods=['POST', 'GET'])
 @login_required
 def channels_get(id):
+    results = db.engine.execute("Select DISTINCT mood FROM channels ORDER BY mood")
+    moods=[]
+    for result in results:
+        moods.append(result[0])
+    
     form = ChannelForm(request.form)
+    form.set_moods(moods)
+
     channel=db.session.query(Channel).get(id)
 
     if form.validate_on_submit():
@@ -134,6 +141,7 @@ def channels_get(id):
 
     channel=db.session.query(Channel).get(id)
     form.populate(channel)
+
     items=Item.query.filter_by(channel_id=id).limit(25).all()
     return render_template('bo/channels/view.html', form=form, items=items)
 
@@ -330,7 +338,13 @@ def items_index():
 @app.route('/bo/items/<int:id>', methods=['POST', 'GET'])
 @login_required
 def items_edit(id):
+    results = db.engine.execute("Select DISTINCT mood FROM items ORDER BY mood")
+    moods=[]
+    for result in results:
+        moods.append(result[0])
+
     form = ItemForm(request.form)
+    form.set_moods(moods)
     item=db.session.query(Item).get(id)
     if request.method == 'POST' and form.validate():
         item.title      =form.title.data
@@ -340,7 +354,7 @@ def items_edit(id):
         item.country    =form.country.data
         
         db.session.commit()
-        return redirect(url_for('items_index'))
+        return redirect(url_for('items_edit', id=id))
 
     channel=db.session.query(Channel).get(item.channel_id)
     form.populate(item, channel)
@@ -373,7 +387,8 @@ def tags_edit(id=None):
     if id is not None:
         tag = db.session.query(Tag).get(id)
     
-    if request.method=='POST' and form.validate():
+    if form.validate_on_submit():
+        app.logger.info('VALIDATE')
         if id is not None:
             tag.name=form.name.data
             tag.description=form.description.data
