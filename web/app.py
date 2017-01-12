@@ -537,7 +537,6 @@ def moods_index():
     if request.method=='POST':
         for mood in moods:
             id=str(mood.id)
-            app.logger.info(id + " "+request.form['change-'+id])
             if request.form['change-'+id] == "1":
                 app.logger.info(request.form['mood-'+id])
                 mood.mood=request.form['mood-'+id]

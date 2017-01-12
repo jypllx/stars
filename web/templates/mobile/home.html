@@ -67,12 +67,11 @@
             <input id="cat_time" type="hidden" name="cat_time" value="">
             <input id="mood" type="hidden" name="mood" value="">
             <input id="playlist_id" type="hidden" name="playlist_id" value="">
-            <input id="channel_id" type="hidden" name="channel_id" value="">
+            <input id="source" type="hidden" name="source" value="">
             <input id="search" type="hidden" name="search" value="">
         </form>
     </div>
-
-    {% endblock %}
+{% endblock %}
     {% block js %}
     <script type="text/javascript">
         var genre = {'News & Politics': 'News',
@@ -151,11 +150,6 @@
             $('#search_form').submit();
         });
 
-        $(".btn-playlist").click(function() {
-            $('#playlist_id').attr("value", $(this).attr("id"));
-            $('#search_form').submit();
-        });
-
         $("#btn-audio").click(function(){
             if (!playing) {
                 console.log('OUI')
@@ -169,6 +163,10 @@
         });
 
         filter('', '{{moods[0]}}', 0)
+    });
+    $(document.body).on('click', '.btn-playlist' ,function(){
+        $('#playlist_id').attr("value", $(this).attr("id"));
+        $('#search_form').submit();
     });
 </script>
 {% endblock %}
