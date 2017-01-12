@@ -41,6 +41,7 @@ class Channel(db.Model):
         link_, 
         description_, 
         itunes_category_,
+        mood,
         language_,
         author_,
         image_,
@@ -59,8 +60,7 @@ class Channel(db.Model):
     
         self.title  = self.title_
         self.description  = self.description_
-        podmood=PodMood()
-        self.mood = podmood.get_mood(self.itunes_category_)
+        self.mood = mood
         self.image = self.image_
         self.created = datetime.now()
         self.source = source
@@ -113,7 +113,7 @@ class Item(db.Model):
     country         = db.Column(db.String())
 
     def __init__(self, title_, description_, channel_id, 
-        duration_str, audio_url_, pubdate_, itunes_category_, 
+        duration_str, audio_url_, pubdate_, itunes_category_, mood, 
         source, country, image):
         self.title_         = title_.strip()
         self.description_   = None if description_ is None else description_.strip()
@@ -122,8 +122,7 @@ class Item(db.Model):
         self.pubdate_       = pubdate_
         self.duration_, self.cat_time, self.cat_name = PodTime().getDurationCat(duration_str)
         self.itunes_category_= None if itunes_category_ is None else itunes_category_.strip()
-        podmood=PodMood()
-        self.mood           = podmood.get_mood(self.itunes_category_)
+        self.mood           = mood
         self.created = datetime.now()
         self.title=self.title_
         self.description = self.description_

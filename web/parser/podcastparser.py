@@ -48,22 +48,25 @@ class PodcastParser:
 
 
   def saveChannel(self, channel, url, source, country):
-    if 'itunes:category' not in channel:
-      channel['itunes:category'] = {}
-      if 'category' in channel:
-        channel['itunes:category']['@text'] = channel['category']
-      else:
-        channel['itunes:category']['@text'] = None
 
-    if isinstance(channel['itunes:category'], (list, tuple)):
-      channel['itunes:category'] = channel['itunes:category'][0]
+    if 'itunes:category' not in channel and 'category' in channel:
+      itunes_category = channel['category']
+    elif 'itunes:category' not in channel:
+      itunes_category = None
+    elif isinstance(channel['itunes:category'], (list, tuple)):
+      channel['itunes:category'][0]
+    else:
+      itunes_category = channel['itunes:category']['@text']
+
+    mood = Mood.query.filter_by(itunes_category_=itunes_category).first()
 
     last_build_date = channel['lastBuildDate'] if 'lastBuildDate' in channel.keys() else None
 
     ch=Channel(channel['title'],
       url,
       None if 'description' not in channel else channel['description'],
-      channel['itunes:category']['@text'],
+      itunes_category,
+      mood.mood,
       channel['language'],
       channel['itunes:author'],
       channel['itunes:image']['@href'],
@@ -92,6 +95,7 @@ class PodcastParser:
       item['enclosure']['@url'], 
       item['pubDate'], 
       channel.itunes_category_,
+      channel.mood,
       channel.source,
       channel.country,
       channel.image)

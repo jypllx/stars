@@ -3,32 +3,44 @@
 {% block content %}
 <h1>Moods</h1>
 
-<div class="row">
-    <div class="col-xs-2">
-        <a class="btn btn-default" href="{{mood_file}}">Download definition file</a>
-    </div>
-    <div class="col-xs-8">
-        <form method="POST" enctype="multipart/form-data" action="{{url_for('moods_index')}}">
-            Mettre à jour le mapping des moods. Uploader un fichier de définition des moods comme celui téléchargeable ci contre.
-            {{ form.mood_file()}}
-            {{ form.csrf_token }}
-            <button type="submit" class="btn btn-default">Submit</button>
-        </form>
-    </div>
-</div>
 <br/>
 <div class="row">
-    <table class="table table-striped table-hover">
-        <tr>
-            <th>iTunes Category (présentes dans Tootak)</th>
-            <th>Mood</th>
-        </tr>
-        {% for map in mappings %}
-        <tr>
-            <td>{{map.itunes_category}}</td>
-            <td>{{map.mood}}</td>
-        </tr>
-        {% endfor %}
-    </table>
+    <form method="POST">
+        <button type='submit' class="btn btn-default">Submit</button>
+        <br/>
+        <br/>
+        <table class="table table-striped table-hover">
+            <tr>
+                <th>iTunes Category (présentes dans Tootak)</th>
+                <th>Mood</th>
+                <th>Image</th>
+            </tr>
+            {% for mood in moods %}
+            <tr id="{{mood.id}}">
+                <input id="change-{{mood.id}}" type="hidden" name="change-{{mood.id}}" value="0"></td>
+                <td>{{mood.itunes_category_}}</td>
+                <td><input class="input" data="{{mood.id}}" type="text" name="mood-{{mood.id}}" value="{{mood.mood}}">
+                <td>
+                    <img src="{{mood.image}}" height="80" width="80">
+                    <input class="input" data="{{mood.id}}" type="file" name="img.{{mood.id}}" accept="image/*">
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <br/>
+        <br/>
+        <button type='submit' class="btn btn-default">Submit</button>
+    </form>
 </div>
+{% endblock %}
+
+{% block js %}
+ <script type="text/javascript">
+    $(document).ready(function(){
+        $(".input").click(function(){
+            var id = $(this).attr('data')
+            $('#change-'+id).val('1')
+        })
+    });
+</script>
 {% endblock %}

@@ -530,44 +530,25 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
-@app.route('/moods/', methods=['POST', 'GET'])
+@app.route('/moods/', methods=['GET', 'POST'])
 @login_required
 def moods_index():
-    podmood=PodMood()
-    form=MoodForm()
-    update=False
+    moods = Mood.query.order_by(Mood.itunes_category_).all()
+    if request.method=='POST':
+        for mood in moods:
+            id=str(mood.id)
+            app.logger.info(id + " "+request.form['change-'+id])
+            if request.form['change-'+id] == "1":
+                app.logger.info(request.form['mood-'+id])
+                mood.mood=request.form['mood-'+id]
+                db.session.execute("UPDATE channels SET mood='"+mood.mood+"' WHERE itunes_category_='"+mood.itunes_category_+"'")
+                db.session.execute("UPDATE items SET mood='"+mood.mood+"' WHERE itunes_category_='"+mood.itunes_category_+"'")
+                db.session.commit()
 
-    if form.validate_on_submit():
-        filename = secure_filename(form.mood_file.data.filename)
-        form.mood_file.data.save(filename)
-
-        app.logger.info
-        # saved file with original title. Need to rename to moods.xlsx
-        os.remove(podmood.file)
-        os.rename(filename, podmood.file)
-
-        podmood=PodMood()
-        update=True
-  
-    results = db.engine.execute("Select DISTINCT itunes_category_ FROM channels ORDER BY itunes_category_")
-    mappings=[]
-    for result in results:
-        iCat = result[0]
-        mood = podmood.get_mood(iCat)
-        mappings.append({'itunes_category':iCat, 'mood':mood})
-
-        if update:
-            mood = "'"+mood+"'" if mood is not None else "NULL"
-            db.engine.execute("UPDATE channels SET mood="+mood+" WHERE itunes_category_='"+iCat+"'")
-            db.engine.execute("UPDATE items    SET mood="+mood+" WHERE itunes_category_='"+iCat+"'")
-            db.session.commit()
-
-    mood_url = url_for('static', filename='files/'+os.path.basename(podmood.file))
+    moods = Mood.query.order_by(Mood.itunes_category_).all()
 
     return render_template('bo/moods/index.html',
-        mappings=mappings,
-        form=form, 
-        mood_file=mood_url)
+        moods=moods)
 
 if __name__ == '__main__':
     handler = RotatingFileHandler('./logs.log', maxBytes=10000, backupCount=1)
