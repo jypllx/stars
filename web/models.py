@@ -207,3 +207,10 @@ class User(db.Model, UserMixin):
     roles           = db.relationship('Role', secondary=roles_users,
                             backref=db.backref('users', lazy='dynamic'))
 
+class Mood(db.Model):
+    __tablename__  = 'moods'
+
+    id              = db.Column(db.Integer, primary_key=True)
+    itunes_category_= db.Column(db.String())
+    mood            = db.Column(db.String())
+    mood_image      = db.Column(db.String())
