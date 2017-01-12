@@ -59,6 +59,10 @@ class PodcastParser:
       itunes_category = channel['itunes:category']['@text']
 
     mood = Mood.query.filter_by(itunes_category_=itunes_category).first()
+    if mood is None:
+      mood = Mood(itunes_category)
+      db.session.add(mood)
+      db.session.commit()
 
     last_build_date = channel['lastBuildDate'] if 'lastBuildDate' in channel.keys() else None
 

@@ -213,3 +213,6 @@ class Mood(db.Model):
     itunes_category_= db.Column(db.String())
     mood            = db.Column(db.String())
     mood_image      = db.Column(db.String())
+
+    def __init__(itunes_category_):
+        self.itunes_category_=itunes_category_
