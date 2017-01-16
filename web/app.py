@@ -163,6 +163,7 @@ def playlists_index():
             q=q.filter_by(tag_id=tag_id)
 
     playlists=q.all()
+
     tags=Tag.query.all()
     return render_template('bo/playlists/index.html', playlists=playlists, search=search, tag_id=tag_id, tags=tags)
 

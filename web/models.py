@@ -150,7 +150,7 @@ class Tag(db.Model):
     id              = db.Column(db.Integer, primary_key=True)
     name            = db.Column(db.String())
     description     = db.Column(db.String())
-    playlists       = db.relationship('Playlist', backref='tag', lazy='joined')
+    playlists       = db.relationship('Playlist', back_populates="tag")
 
     def __init__(self, name, description):
         self.name           = name
@@ -167,6 +167,7 @@ class Playlist(db.Model):
     name            = db.Column(db.String())
     description     = db.Column(db.String())
     tag_id          = db.Column(db.Integer, db.ForeignKey('tags.id'))
+    tag             = db.relationship("Tag", back_populates="playlists")
     items           = db.relationship('RelPlaylistItem')
     mood            = db.Column(db.String())
 

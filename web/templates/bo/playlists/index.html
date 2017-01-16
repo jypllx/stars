@@ -30,6 +30,7 @@
             <th>Description</th>
             <th>Mood</th>
             <th>Nb episodes</th>
+            <th>Tag</th>
             <th></th>
         </tr>
         {% for playlist in playlists %}
@@ -39,6 +40,7 @@
             <td style="width: 30%;word-wrap: break-word;">{{playlist.description}}</td>
             <td>{{playlist.mood}}</td>
             <td>{{ playlist.items|length }}</td>
+            <td>{% if playlist.tag %}{{playlist.tag.name}}{% endif %}</td>
             <td>
                 <a href="{{ url_for('playlists_edit', id=playlist.id) }}" class="btn btn-default"><i class="fa fa-pencil"></i></a>
                 <a href="{{ url_for('playlists_delete', id=playlist.id) }}" class="btn btn-default"><i class="fa fa-close"></i></a>
