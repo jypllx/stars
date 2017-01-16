@@ -177,20 +177,22 @@ def playlists_edit(id=None):
         moods.append(result[0])
 
     form=PlaylistForm(request.form)
-    form.set_moods(moods)
+    form.set_choices(moods, Tag.query.all())
 
     playlist=None
     if id is not None:
         playlist=db.session.query(Playlist).get(id)
 
-    if request.method=='POST' and form.validate():
+    if form.validate_on_submit():
         if id is not None:
             playlist.name=form.name.data
             playlist.description=form.description.data
             playlist.mood=form.mood.data
+            if form.tag.data:
+                playlist.tag_id=form.tag.data
         else:
             playlist=Playlist(form.name.data,
-                form.description.data, form.mood.data)
+                form.description.data, form.mood.data, form.tag.data)
             db.session.add(playlist)
         db.session.commit()
         return redirect(url_for('playlists_edit', id=playlist.id))
@@ -199,6 +201,7 @@ def playlists_edit(id=None):
     if id is not None:
         form.populate(playlist)
         items=playlist.ranked_items
+
     return render_template('bo/playlists/edit.html', form=form,
         items=items)
 

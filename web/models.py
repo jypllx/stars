@@ -171,10 +171,11 @@ class Playlist(db.Model):
     items           = db.relationship('RelPlaylistItem')
     mood            = db.Column(db.String())
 
-    def __init__(self, name, description, mood):
+    def __init__(self, name, description, mood, tag_id):
         self.name = name
         self.description = description
         self.mood = mood
+        self.tag_id = tag_id
         self.created = datetime.now()
 
     def __repr__(self):

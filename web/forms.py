@@ -111,17 +111,25 @@ class PlaylistForm(FlaskForm):
     name        = StringField('Nom')
     description = StringField('Description')
     mood        = SelectField('Mood', coerce=str)
+    tag         = SelectField('Tag', coerce=int)
 
-    def set_moods(self, moods):
+    def set_choices(self, moods, tags):
         self.mood.choices=[]
         for mood in moods:
             self.mood.choices.append((mood,mood))
+
+        self.tag.choices=[]
+        self.tag.choices.append((0, ""))
+        for tag in tags:
+            self.tag.choices.append((tag.id, tag.name))
 
     def populate(self, playlist):
         self.id.process_data(str(playlist.id))
         self.name.process_data(playlist.name)
         self.description.process_data(playlist.description)
         self.mood.process_data(playlist.mood)
+        if playlist.tag:
+            self.tag.process_data(playlist.tag.id)
 
 class MoodForm(FlaskForm):
     mood_file = FileField('Upload moods.xlsx')
