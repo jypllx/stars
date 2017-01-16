@@ -188,8 +188,7 @@ def playlists_edit(id=None):
             playlist.name=form.name.data
             playlist.description=form.description.data
             playlist.mood=form.mood.data
-            if form.tag.data:
-                playlist.tag_id=form.tag.data
+            playlist.tag=None if form.tag.data == 0 else db.session.query(Tag).get(form.tag.data)
         else:
             playlist=Playlist(form.name.data,
                 form.description.data, form.mood.data, form.tag.data)
