@@ -326,7 +326,7 @@ def items_index():
     for result in results:
         countries.append(result[0])
 
-    results = db.engine.execute("Select created FROM channels ORDER BY created DESC LIMIT 1")
+    results = db.engine.execute("Select created FROM items ORDER BY created DESC LIMIT 1")
     for result in results:
         last_add = result[0]
 
