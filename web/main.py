@@ -27,3 +27,4 @@ if __name__ == "__main__":
   
   pp.parse('http://feeds.serialpodcast.org/serialpodcast', 'This American Life', 'USA')
   pp.parse('http://arteradio.com/podcast', 'Arte', 'France')
+  pp.parse_college('./spiders/college.feeds.json')

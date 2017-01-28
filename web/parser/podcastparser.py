@@ -7,6 +7,9 @@ import os
 from app import db
 from models import *
 import traceback
+import json
+import dateparser
+from datetime import datetime
 
 class PodcastParser:
 
@@ -104,4 +107,44 @@ class PodcastParser:
       channel.country,
       channel.image)
     db.session.add(it)
-    db.session.commit()
+    db.session.commit
+
+  def parse_college(self, feed):
+    with open(feed) as fd:
+      data = json.load(fd)
+
+    print('Chargé')
+
+    channel = Channel.query.filter_by(title_='Collège de France').first()
+    print(channel)
+    if not channel:
+      channel = Channel('Collège de France', 
+          'College-de-france.fr', 
+          'Le Collège de France est un établissement public d’enseignement supérieur, institution unique en France, sans équivalent à l’étranger. Depuis le XVIe siècle, le Collège de France répond à une double vocation : être à la fois le lieu de la recherche la plus audacieuse et celui de son enseignement. Voué à la recherche fondamentale, le Collège de France possède cette caractéristique singulière : il enseigne « le savoir en train de se constituer dans tous les domaines des lettres, des sciences ou des arts », en partenariat avec le CNRS, l’INSERM et plusieurs autres grandes institutions.', 
+          None,
+          None,
+          'fr',
+          'Collège de France',
+          'https://www.college-de-france.fr/images/subject/institution-cover.jpg',
+          '2017-01-18', 
+          'Collège de France',
+          'France')
+      db.session.add(channel)
+      db.session.commit()
+      print('Ajouté channel')
+
+    for el in data:
+      item = Item.query.filter_by(audio_url_=el['audio_url_']).filter_by(channel_id=channel.id).first()
+      if not item:
+        pubdate_ = datetime.now()
+        if el['day'] and el['hour']:
+          pubdate_ = dateparser.parse(el['day']+ ' '+el['hour'])
+        elif el['day']:
+          pubdate_ = dateparser.parse(el['day'])
+
+        item = Item(el['title_'], None, channel.id, 
+        None, el['audio_url_'], pubdate_, None, None, 
+        'Collège de France', 'France', el['image'])
+        db.session.add(item)
+        db.session.commit()
+        print('Ajouté item '+el['title_'])
