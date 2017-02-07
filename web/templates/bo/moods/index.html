@@ -13,17 +13,12 @@
             <tr>
                 <th>iTunes Category (présentes dans Tootak)</th>
                 <th>Mood</th>
-                <th>Image</th>
             </tr>
             {% for mood in moods %}
             <tr id="{{mood.id}}">
                 <input id="change-{{mood.id}}" type="hidden" name="change-{{mood.id}}" value="0"></td>
                 <td>{{mood.itunes_category_}}</td>
                 <td><input class="input" data="{{mood.id}}" type="text" name="mood-{{mood.id}}" value="{{mood.mood}}">
-                <td>
-                    <img src="{{mood.image}}" height="80" width="80">
-                    <input class="input" data="{{mood.id}}" type="file" name="img.{{mood.id}}" accept="image/*">
-                </td>
             </tr>
             {% endfor %}
         </table>

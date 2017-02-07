@@ -128,6 +128,9 @@ def channels_get(id):
 
     channel=db.session.query(Channel).get(id)
 
+    if form.mood.data=='None':
+        form.mood.data=None
+
     if form.validate_on_submit():
         channel.title=form.title.data
         channel.description=form.description.data
@@ -348,6 +351,10 @@ def items_edit(id):
 
     form = ItemForm(request.form)
     form.set_moods(moods)
+
+    if form.mood.data=='None':
+        form.mood.data=None
+
     item=db.session.query(Item).get(id)
     if request.method == 'POST' and form.validate():
         item.title      =form.title.data
