@@ -3,8 +3,13 @@
 
 from parser.podcastparser import PodcastParser
 import json
+import os.path
+
 
 def parse_json(pp, feed, source, country):
+  if not os.path.isfile(feed) :
+    return
+
   with open(feed) as fd:
     data = json.load(fd)
 
