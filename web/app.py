@@ -189,22 +189,21 @@ def playlists_edit(id=None):
     if id is not None:
         playlist=db.session.query(Playlist).get(id)
 
-    app.logger.info("V" +str(form.validate_on_submit()))
-    for field, errors in form.errors.items():
-        for error in errors:
-            app.logger.error(field+ " "+error)
+    # app.logger.info("V" +str(form.validate_on_submit()))
+    # for field, errors in form.errors.items():
+    #     for error in errors:
+    #         app.logger.error(field+ " "+error)
 
     if form.validate_on_submit():
+        tag = None if form.tag.data == 0 else db.session.query(Tag).get(form.tag.data)
         if id is not None:
             playlist.name=form.name.data
             playlist.description=form.description.data
             playlist.mood=form.mood.data
-            app.logger.info("T "+form.tag.data)
-            playlist.tag=None if form.tag.data == 0 else db.session.query(Tag).get(form.tag.data)
+            playlist.tag=tag
         else:
-            tag = None if form.tag.data == 0 else db.session.query(Tag).get(form.tag.data)
             playlist=Playlist(form.name.data,
-                form.description.data, form.mood.data, tag)
+                form.description.data, form.mood.data, tag.id)
             db.session.add(playlist)
         db.session.commit()
         return redirect(url_for('playlists_edit', id=playlist.id))

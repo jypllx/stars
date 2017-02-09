@@ -119,7 +119,7 @@ class PlaylistForm(FlaskForm):
             self.mood.choices.append((mood,mood))
 
         self.tag.choices=[]
-        self.tag.choices.append((0, ""))
+        self.tag.choices.append((0, None))
         for tag in tags:
             self.tag.choices.append((tag.id, tag.name))
 
